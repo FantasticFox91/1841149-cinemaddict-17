@@ -1,10 +1,10 @@
 import { createElement } from '../render.js';
 
-const createNewFooterStatisticsTemplate = () => '<p>130 291 movies inside</p>';
+const createFooterStatisticsTemplate = () => '<p>130 291 movies inside</p>';
 
-export default class NewFooterStatistics {
+export default class FooterStatistics {
   getTemplate() {
-    return createNewFooterStatisticsTemplate();
+    return createFooterStatisticsTemplate();
   }
 
   getElement() {

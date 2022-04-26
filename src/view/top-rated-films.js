@@ -1,6 +1,6 @@
 import { createElement } from '../render.js';
 
-const createNewTopRatedFilmsTemplate = () => `
+const createTopRatedFilmsTemplate = () => `
   <section class="films-list films-list--extra">
     <h2 class="films-list__title">Top rated</h2>
 
@@ -47,9 +47,9 @@ const createNewTopRatedFilmsTemplate = () => `
     </div>
   </section>`;
 
-export default class NewTopRatedFilms {
+export default class TopRatedFilms {
   getTemplate() {
-    return createNewTopRatedFilmsTemplate();
+    return createTopRatedFilmsTemplate();
   }
 
   getElement() {
