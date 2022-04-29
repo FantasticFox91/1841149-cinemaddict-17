@@ -16,7 +16,7 @@ const createMainNavigationTemplate = () => `
     </a>
   </nav>`;
 
-export default class MainNavigation {
+export default class MainNavigationView {
   getTemplate() {
     return createMainNavigationTemplate();
   }

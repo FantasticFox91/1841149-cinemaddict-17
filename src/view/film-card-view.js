@@ -21,7 +21,7 @@ const createFilmCardTemplate = () => `
     </div>
   </article>`;
 
-export default class FilmCard {
+export default class FilmCardView {
   getTemplate() {
     return createFilmCardTemplate();
   }
