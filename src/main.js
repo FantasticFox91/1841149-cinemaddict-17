@@ -18,5 +18,3 @@ render(new MainNavigation(), siteMainElement);
 render(new FilterList(), siteMainElement);
 filmListPresenter.init(siteMainElement, filmsModel);
 render(new FooterStatistics(), siteFooterStatisticElement);
-// document.body.classList.toggle('hide-overflow');
-// render(new PopupView(filmsModel.getFilms()[1]),  siteFooterElement, 'afterend');
