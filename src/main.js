@@ -5,12 +5,11 @@ import FooterStatistics from './view/footer-statistics-view.js';
 import { render } from './render.js';
 import FilmListPresenter from './presenter/film-list-presenter.js';
 import FilmsModel from './model/film-model.js';
-import PopupView from './view/popup-view.js';
+
 
 const siteMainElement = document.querySelector('.main');
 const siteHeaderElement = document.querySelector('.header');
 const siteFooterStatisticElement = document.querySelector('.footer__statistics');
-const siteFooterElement = document.querySelector('.footer');
 const filmListPresenter = new FilmListPresenter();
 const filmsModel = new FilmsModel();
 
@@ -19,5 +18,5 @@ render(new MainNavigation(), siteMainElement);
 render(new FilterList(), siteMainElement);
 filmListPresenter.init(siteMainElement, filmsModel);
 render(new FooterStatistics(), siteFooterStatisticElement);
-document.body.classList.toggle('hide-overflow');
-render(new PopupView(filmsModel.getFilms()[1]),  siteFooterElement, 'afterend');
+// document.body.classList.toggle('hide-overflow');
+// render(new PopupView(filmsModel.getFilms()[1]),  siteFooterElement, 'afterend');

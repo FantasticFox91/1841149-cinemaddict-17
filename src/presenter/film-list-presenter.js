@@ -5,9 +5,34 @@ import FilmCardView from '../view/film-card-view';
 import TopRatedFilmsView from '../view/top-rated-films-view';
 import MostCommendedFilmsView from '../view/most-commented-films-view';
 import ShowMoreButtonView from '../view/show-more-button-view';
+import PopupView from '../view/popup-view.js';
 import { render } from '../render';
 
 const EXTRA_CARDS_COUNT = 2;
+const siteFooterElement = document.querySelector('.footer');
+
+const isPressedEscapeKey = (evt) => evt.key === 'Escape';
+
+const onDocumentEscKeydown = (evt) => {
+  if (isPressedEscapeKey(evt)) {
+    evt.preventDefault();
+    closePopUp();
+  }
+};
+
+
+const showPopUp = (film) => {
+  document.body.classList.toggle('hide-overflow');
+  render(new PopupView(film),  siteFooterElement, 'afterend');
+  document.body.addEventListener('keydown', onDocumentEscKeydown);
+  document.querySelector('.film-details__close-btn').addEventListener('click', closePopUp);
+};
+
+function closePopUp () {
+  document.body.classList.toggle('hide-overflow');
+  document.body.removeEventListener('keydown', onDocumentEscKeydown);
+  document.querySelector('.film-details').remove();
+}
 
 export default class FilmListPresenter {
   filmSectionComponent = new FilmSectionView;
@@ -42,5 +67,9 @@ export default class FilmListPresenter {
     for (let i = 0; i < EXTRA_CARDS_COUNT; i++) {
       render(new FilmCardView(this.filmsBoard[i]), this.mostCommentedfilmBoard.getElement());
     }
+    document.querySelectorAll('.film-card').forEach((card) => card.addEventListener('click', () => {
+      const object = this.filmsBoard.filter((film) => film.id === Number(card.dataset.id));
+      showPopUp(object[0]);
+    }));
   };
 }

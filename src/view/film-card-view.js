@@ -9,7 +9,7 @@ const generateDescription = (desc) => {
 };
 
 const createFilmCardTemplate = (film) => {
-  const {comments, filmInfo, userDetails} = film;
+  const {id, comments, filmInfo, userDetails} = film;
 
   const watchlistClassName = userDetails.watchlist
     ? 'film-card__controls-item--active'
@@ -24,7 +24,7 @@ const createFilmCardTemplate = (film) => {
     : '';
 
   return (
-    `<article class="film-card">
+    `<article class="film-card" data-id='${id}'>
       <a class="film-card__link">
         <h3 class="film-card__title">${filmInfo.title}</h3>
         <p class="film-card__rating">${filmInfo.totalRating}</p>
