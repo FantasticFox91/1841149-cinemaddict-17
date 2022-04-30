@@ -7,7 +7,6 @@ import MostCommendedFilmsView from '../view/most-commented-films-view';
 import ShowMoreButtonView from '../view/show-more-button-view';
 import { render } from '../render';
 
-const CARDS_ON_START = 5;
 const EXTRA_CARDS_COUNT = 2;
 
 export default class FilmListPresenter {
@@ -20,25 +19,28 @@ export default class FilmListPresenter {
   mostCommendedFilmsComponent = new MostCommendedFilmsView;
   showMoreButtonComponent = new ShowMoreButtonView;
 
-  init = (filmListContainer) => {
+  init = (filmListContainer, filmsModel) => {
     this.filmListContainer = filmListContainer;
+    this.filmsModel = filmsModel;
+    this.filmsBoard = [...this.filmsModel.getFilms()];
+    console.log(this.filmsBoard)
 
     render(this.filmSectionComponent, this.filmListContainer);
     render(this.filmListComponent, this.filmSectionComponent.getElement());
     render(this.filmBoard, this.filmListComponent.getElement());
-    for (let i = 0; i < CARDS_ON_START; i++) {
-      render(new FilmCardView(), this.filmBoard.getElement());
+    for (let i = 0; i < this.filmsBoard.length; i++) {
+      render(new FilmCardView(this.filmsBoard[i]), this.filmBoard.getElement());
     }
     render(this.showMoreButtonComponent, this.filmListComponent.getElement());
     render(this.topRatedFilmsComponent, this.filmSectionComponent.getElement());
     render(this.topRatedfilmBoard, this.topRatedFilmsComponent.getElement());
     for (let i = 0; i < EXTRA_CARDS_COUNT; i++) {
-      render(new FilmCardView(), this.topRatedfilmBoard.getElement());
+      render(new FilmCardView(this.filmsBoard[i]), this.topRatedfilmBoard.getElement());
     }
     render(this.mostCommendedFilmsComponent, this.filmSectionComponent.getElement());
     render(this.mostCommentedfilmBoard , this.mostCommendedFilmsComponent.getElement());
     for (let i = 0; i < EXTRA_CARDS_COUNT; i++) {
-      render(new FilmCardView(), this.mostCommentedfilmBoard.getElement());
+      render(new FilmCardView(this.filmsBoard[i]), this.mostCommentedfilmBoard.getElement());
     }
   };
 }
