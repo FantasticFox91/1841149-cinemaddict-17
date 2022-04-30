@@ -1,5 +1,12 @@
 import { createElement } from '../render.js';
-import { calculateDuration, humanizeTaskGetYear, isActive } from '../util.js';
+import { calculateDuration, humanizeTaskGetYear, isActive} from '../util.js';
+
+const generateDescription = (desc) => {
+  if (desc.length > 140) {
+    desc = desc.slice(0, 139).concat('...');
+  }
+  return desc;
+};
 
 const createFilmCardTemplate = (film) => {
   const {comments, filmInfo, userDetails} = film;
@@ -24,10 +31,10 @@ const createFilmCardTemplate = (film) => {
         <p class="film-card__info">
           <span class="film-card__year">${humanizeTaskGetYear(filmInfo.release.date)}</span>
           <span class="film-card__duration">${calculateDuration(filmInfo.runtime)}</span>
-          <span class="film-card__genre">${filmInfo.genre}</span>
+          <span class="film-card__genre">${filmInfo.genre[0]}</span>
         </p>
         <img src="${filmInfo.poster}" alt="${filmInfo.title}" class="film-card__poster">
-        <p class="film-card__description">${filmInfo.description}</p>
+        <p class="film-card__description">${generateDescription(filmInfo.description)}</p>
         <span class="film-card__comments">${comments.length} comment${comments.length > 1 ? 's' : ''}</span>
       </a>
       <div class="film-card__controls">

@@ -65,14 +65,6 @@ const descriptions = [
   'Arthur Fleck works as a clown and is an aspiring stand-up comic. He has mental health issues, part of which involves uncontrollable laughter. Times are tough and, due to his issues and occupation, Arthur has an even worse time than most. Over time these issues bear down on him, shaping his actions, making him ultimately take on the persona he is more known as...Joker.'
 ];
 
-const generateDescription = () => {
-  let desc = generateRandomNameFromArray(descriptions);
-  if (desc.length > 140) {
-    desc = desc.slice(0, 139).concat('...');
-  }
-  return desc;
-};
-
 export const generateFilm = () => ({
   id: getRandomInteger(0, 100),
   comments: Array.from({length: getRandomInteger(0, 100)}, generateComment),
@@ -91,7 +83,7 @@ export const generateFilm = () => ({
     },
     runtime: getRandomInteger(60, 180),
     genre: generateRandomArrayFromArray(genres, 3),
-    description: generateDescription()
+    description: generateRandomNameFromArray(descriptions),
   },
   userDetails: {
     watchlist: Boolean(getRandomInteger(0, 1)),

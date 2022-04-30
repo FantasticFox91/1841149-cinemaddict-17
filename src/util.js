@@ -33,6 +33,8 @@ const calculateDuration = (minutes) => {
 
 const humanizeTaskGetYear = (date) => dayjs(date).get('year');
 
+const humanizeTaskGetDate = (date) => dayjs(date).format('YYYY/MM/DD HH:MM');
+
 const isActive = (option) => option;
 
 const generateRandomDayFrom = (rangeType, min, max) => {
@@ -41,4 +43,4 @@ const generateRandomDayFrom = (rangeType, min, max) => {
   return dayjs().add(daysGap, rangeType).toDate();
 };
 
-export {getRandomInteger,generateRandomNameFromArray, getRandomDecimalNumber, calculateDuration, humanizeTaskGetYear, isActive, generateRandomDayFrom, generateRandomArrayFromArray};
+export {getRandomInteger,generateRandomNameFromArray, getRandomDecimalNumber, calculateDuration, humanizeTaskGetYear, isActive, generateRandomDayFrom, generateRandomArrayFromArray, humanizeTaskGetDate};

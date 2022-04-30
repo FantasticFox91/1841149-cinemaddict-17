@@ -10,6 +10,7 @@ import PopupView from './view/popup-view.js';
 const siteMainElement = document.querySelector('.main');
 const siteHeaderElement = document.querySelector('.header');
 const siteFooterStatisticElement = document.querySelector('.footer__statistics');
+const siteFooterElement = document.querySelector('.footer');
 const filmListPresenter = new FilmListPresenter();
 const filmsModel = new FilmsModel();
 
@@ -18,5 +19,5 @@ render(new MainNavigation(), siteMainElement);
 render(new FilterList(), siteMainElement);
 filmListPresenter.init(siteMainElement, filmsModel);
 render(new FooterStatistics(), siteFooterStatisticElement);
-document.body.classList.add('hide-overflow');
-render(new PopupView(), siteMainElement);
+document.body.classList.toggle('hide-overflow');
+render(new PopupView(filmsModel.getFilms()[1]),  siteFooterElement, 'afterend');
