@@ -1,5 +1,5 @@
 import { createElement } from '../render.js';
-import { calculateDuration, humanizeTaskGetYear, isActive} from '../util.js';
+import { calculateDuration, humanizeTaskGetYear} from '../util.js';
 
 const generateDescription = (desc) => {
   if (desc.length > 140) {
@@ -11,15 +11,15 @@ const generateDescription = (desc) => {
 const createFilmCardTemplate = (film) => {
   const {comments, filmInfo, userDetails} = film;
 
-  const watchlistClassName = isActive(userDetails.watchlist)
+  const watchlistClassName = userDetails.watchlist
     ? 'film-card__controls-item--active'
     : '';
 
-  const watchedClassName = isActive(userDetails.alreadyWatched)
+  const watchedClassName = userDetails.alreadyWatched
     ? 'film-card__controls-item--active'
     : '';
 
-  const favoriteClassName = isActive(userDetails.favorite)
+  const favoriteClassName = userDetails.favorite
     ? 'film-card__controls-item--active'
     : '';
 

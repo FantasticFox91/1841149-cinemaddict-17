@@ -1,7 +1,7 @@
 import {getRandomInteger, getRandomDecimalNumber, generateRandomNameFromArray, generateRandomDayFrom, generateRandomArrayFromArray} from '../util.js';
 import { generateComment } from './comment.js';
 
-const titles = [
+const TITLES = [
   'A Little Pony Without The Carpet',
   'The Dance of Life',
   'Sagebrush Trail',
@@ -10,7 +10,7 @@ const titles = [
   'Popeye the Sailor Meets Sindbad the Sailor'
 ];
 
-const directors = [
+const DIRECTORS = [
   'Steven Spielberg',
   'Quentin Tarantino',
   'Martin Scorsese',
@@ -18,7 +18,7 @@ const directors = [
   'Tim Burton',
 ];
 
-const writers = [
+const WRITERS = [
   'Steven Spielberg',
   'Quentin Tarantino',
   'Martin Scorsese',
@@ -26,7 +26,7 @@ const writers = [
   'Spike Lee',
 ];
 
-const actors = [
+const ACTORS = [
   'Tom Hanks',
   'Will Smith',
   'Keanu Reeves',
@@ -34,7 +34,7 @@ const actors = [
   'Samuel L. Jackson',
 ];
 
-const genres = [
+const GENRES = [
   'Musical',
   'Western',
   'Drama',
@@ -42,7 +42,7 @@ const genres = [
   'Horror'
 ];
 
-const countries = [
+const COUNTRIES = [
   'USA',
   'Ukraine',
   'Russia',
@@ -50,7 +50,7 @@ const countries = [
   'Finland'
 ];
 
-const posters = [
+const POSTERS = [
   'sagebrush-trail',
   'the-man-with-the-golden-arm',
   'santa-claus-conquers-the-martians',
@@ -58,7 +58,7 @@ const posters = [
   'the-great-flamarion',
 ];
 
-const descriptions = [
+const DESCRIPTIONS = [
   'The film opens following a murder at a cabaret in Mexico City in 1936, and then presents the events leading up to it in flashback. The Great Flamarion (Erich von Stroheim) is an arrogant, friendless, and misogynous marksman who displays his trick gunshot act in the vaudeville circuit. His show features a beautiful assistant, Connie (Mary Beth Hughes) and her drunken husband Al (Dan Duryea), Flamarion\'s other assistant. Flamarion falls in love with Connie, the movie\'s femme fatale, and is soon manipulated by her into killing her no good husband during one of their acts.',
   'Four years after the destruction of Isla Nublar, dinosaurs now live--and hunt--alongside humans all over the world. This fragile balance will reshape the future and determine, once and for all, whether human beings are to remain the apex predators on a planet they now share with history\'s most fearsome creatures in a new Era',
   'The series follows Steven Grant, a mild- mannered gift-shop employee, who becomes plagued with blackouts and memories of another life. Steven discovers he has dissociative identity disorder and shares a body with mercenary Marc Spector. As Steven/Marc\'s enemies converge upon them, they must navigate their complex identities while thrust into a deadly mystery among the powerful gods of Egypt.',
@@ -69,21 +69,21 @@ export const generateFilm = () => ({
   id: getRandomInteger(0, 100),
   comments: Array.from({length: getRandomInteger(0, 100)}, generateComment),
   filmInfo: {
-    title: generateRandomNameFromArray(titles),
-    alternativeTitle: generateRandomNameFromArray(titles),
+    title: generateRandomNameFromArray(TITLES),
+    alternativeTitle: generateRandomNameFromArray(TITLES),
     totalRating: Number(getRandomDecimalNumber(10, 1)).toFixed(1),
-    poster: `images/posters/${generateRandomNameFromArray(posters)}.jpg`,
+    poster: `images/posters/${generateRandomNameFromArray(POSTERS)}.jpg`,
     ageRating: getRandomInteger(0, 18),
-    director: generateRandomArrayFromArray(directors, 3),
-    writers: generateRandomArrayFromArray(writers, 3),
-    actors: generateRandomArrayFromArray(actors, 3),
+    director: generateRandomArrayFromArray(DIRECTORS, 3),
+    writers: generateRandomArrayFromArray(WRITERS, 3),
+    actors: generateRandomArrayFromArray(ACTORS, 3),
     release: {
       date: generateRandomDayFrom('year', -40, 0),
-      releaseCountry: generateRandomNameFromArray(countries),
+      releaseCountry: generateRandomNameFromArray(COUNTRIES),
     },
     runtime: getRandomInteger(60, 180),
-    genre: generateRandomArrayFromArray(genres, 3),
-    description: generateRandomNameFromArray(descriptions),
+    genre: generateRandomArrayFromArray(GENRES, 3),
+    description: generateRandomNameFromArray(DESCRIPTIONS),
   },
   userDetails: {
     watchlist: Boolean(getRandomInteger(0, 1)),

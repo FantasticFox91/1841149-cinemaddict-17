@@ -1,5 +1,5 @@
 import { createElement } from '../render.js';
-import { calculateDuration, humanizeTaskGetYear, isActive, humanizeTaskGetDate } from '../util.js';
+import { calculateDuration, humanizeTaskGetDate, humanizeTaskGetPublishDate } from '../util.js';
 
 const createPopupTemplate = (film = {}) => {
   const {
@@ -30,15 +30,15 @@ const createPopupTemplate = (film = {}) => {
     },
   } = film;
 
-  const watchlistClassName = isActive(userDetails.watchlist)
+  const watchlistClassName = userDetails.watchlist
     ? 'film-details__control-button--active'
     : '';
 
-  const watchedClassName = isActive(userDetails.alreadyWatched)
+  const watchedClassName = userDetails.alreadyWatched
     ? 'film-details__control-button--active'
     : '';
 
-  const favoriteClassName = isActive(userDetails.favorite)
+  const favoriteClassName = userDetails.favorite
     ? 'film-details__control-button--active'
     : '';
 
@@ -113,7 +113,7 @@ const createPopupTemplate = (film = {}) => {
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Release Date</td>
-                <td class="film-details__cell">${humanizeTaskGetYear(filmInfo.release.date)}</td>
+                <td class="film-details__cell">${humanizeTaskGetPublishDate(filmInfo.release.date)}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Runtime</td>

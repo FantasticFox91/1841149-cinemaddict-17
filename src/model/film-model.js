@@ -1,4 +1,4 @@
-import { generateFilm } from '../fish/film';
+import { generateFilm } from '../data/film';
 
 export default class FilmsModel {
   films = Array.from({length: 20}, generateFilm);

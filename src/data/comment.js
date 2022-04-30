@@ -1,6 +1,6 @@
 import {getRandomInteger, generateRandomNameFromArray, generateRandomDayFrom} from '../util.js';
 
-const authors = [
+const AUTHORS = [
   'Ilya O\'Reilly',
   'Tom Cruise',
   'John Doe',
@@ -8,7 +8,7 @@ const authors = [
   'Tim Burton'
 ];
 
-const comments = [
+const COMMENTS = [
   'a film that changed my life, a true masterpiece, post-credit scene was just amazing omg.',
   'Interesting setting and a good cast',
   'Booooooooooring',
@@ -16,7 +16,7 @@ const comments = [
   'Almost two hours? Seriously?'
 ];
 
-const emotions = [
+const EMOTIONS = [
   'smile',
   'sleeping',
   'puke',
@@ -25,8 +25,8 @@ const emotions = [
 
 export const generateComment = () => ({
   id: getRandomInteger(1,100),
-  author: generateRandomNameFromArray(authors),
-  comment: generateRandomNameFromArray(comments),
+  author: generateRandomNameFromArray(AUTHORS),
+  comment: generateRandomNameFromArray(COMMENTS),
   date: generateRandomDayFrom('day', -7, 0),
-  emotion: generateRandomNameFromArray(emotions)
+  emotion: generateRandomNameFromArray(EMOTIONS)
 });
