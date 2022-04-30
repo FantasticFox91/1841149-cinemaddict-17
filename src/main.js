@@ -18,5 +18,5 @@ render(new MainNavigation(), siteMainElement);
 render(new FilterList(), siteMainElement);
 filmListPresenter.init(siteMainElement, filmsModel);
 render(new FooterStatistics(), siteFooterStatisticElement);
-// document.body.classList.add('hide-overflow');
-// render(new PopupView(), siteMainElement);
+document.body.classList.add('hide-overflow');
+render(new PopupView(), siteMainElement);

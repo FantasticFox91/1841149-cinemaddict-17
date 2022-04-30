@@ -2,7 +2,7 @@ import { createElement } from '../render.js';
 import { calculateDuration } from '../util.js';
 
 const createPopupTemplate = (film) => {
-  const {filmInfo, userDetails} = film;
+  const {filmInfo} = film;
 
   return (`
   <section class="film-details">

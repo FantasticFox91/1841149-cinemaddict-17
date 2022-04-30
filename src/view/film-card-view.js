@@ -5,16 +5,16 @@ const createFilmCardTemplate = (film) => {
   const {comments, filmInfo, userDetails} = film;
 
   const watchlistClassName = isActive(userDetails.watchlist)
-  ? 'film-card__controls-item--active'
-  : '';
+    ? 'film-card__controls-item--active'
+    : '';
 
   const watchedClassName = isActive(userDetails.alreadyWatched)
-  ? 'film-card__controls-item--active'
-  : '';
+    ? 'film-card__controls-item--active'
+    : '';
 
   const favoriteClassName = isActive(userDetails.favorite)
-  ? 'film-card__controls-item--active'
-  : '';
+    ? 'film-card__controls-item--active'
+    : '';
 
   return (
     `<article class="film-card">
