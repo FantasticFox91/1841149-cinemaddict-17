@@ -1,9 +1,10 @@
 import { createElement } from '../render.js';
 import { calculateDuration, humanizeTaskGetYear} from '../util.js';
+import {MAX_SHORT_DESCRIPTION_LENGTH, MIN} from '../const.js';
 
 const generateDescription = (desc) => {
-  if (desc.length > 140) {
-    desc = desc.slice(0, 139).concat('...');
+  if (desc.length > MAX_SHORT_DESCRIPTION_LENGTH) {
+    desc = desc.slice(MIN, MAX_SHORT_DESCRIPTION_LENGTH).concat('...');
   }
   return desc;
 };
