@@ -1,8 +1,9 @@
-import {getRandomInteger, generateRandomNameFromArray, generateRandomDayFrom} from '../util.js';
-import { MIN_ID, MAX_ID, AUTHORS, COMMENTS, MAX_DAY_GAP, MIN, EMOTIONS} from '../const.js';
+import {generateRandomNameFromArray, generateRandomDayFrom} from '../util.js';
+import {AUTHORS, COMMENTS, MAX_DAY_GAP, MIN, EMOTIONS} from '../const.js';
+let counter = 0;
 
 export const generateComment = () => ({
-  id: getRandomInteger(MIN_ID,MAX_ID),
+  id: counter++,
   author: generateRandomNameFromArray(AUTHORS),
   comment: generateRandomNameFromArray(COMMENTS),
   date: generateRandomDayFrom('day', MAX_DAY_GAP, MIN),

@@ -21,9 +21,9 @@ const onDocumentEscKeydown = (evt) => {
 };
 
 
-const showPopUp = (film) => {
+const showPopUp = (film, commentsData) => {
   document.body.classList.toggle('hide-overflow');
-  render(new PopupView(film),  siteFooterElement, 'afterend');
+  render(new PopupView(film, commentsData),  siteFooterElement, 'afterend');
   document.body.addEventListener('keydown', onDocumentEscKeydown);
   document.querySelector('.film-details__close-btn').addEventListener('click', closePopUp);
 };
@@ -44,11 +44,12 @@ export default class FilmListPresenter {
   mostCommendedFilmsComponent = new MostCommendedFilmsView;
   showMoreButtonComponent = new ShowMoreButtonView;
 
+
   init = (filmListContainer, filmsModel) => {
     this.filmListContainer = filmListContainer;
     this.filmsModel = filmsModel;
     this.filmsBoard = [...this.filmsModel.getFilms()];
-    // console.log(this.filmsBoard)
+    this.comments = [...this.filmsModel.getComments()]
 
     render(this.filmSectionComponent, this.filmListContainer);
     render(this.filmListComponent, this.filmSectionComponent.getElement());
@@ -68,8 +69,8 @@ export default class FilmListPresenter {
       render(new FilmCardView(this.filmsBoard[i]), this.mostCommentedfilmBoard.getElement());
     }
     document.querySelectorAll('.film-card').forEach((card) => card.addEventListener('click', () => {
-      const object = this.filmsBoard.filter((film) => film.id === Number(card.dataset.id));
-      showPopUp(object[0]);
+      const object = this.filmsBoard.find((film) => film.id === Number(card.dataset.id));
+      showPopUp(object, this.comments);
     }));
   };
 }

@@ -1,7 +1,7 @@
 import { createElement } from '../render.js';
 import { calculateDuration, humanizeTaskGetDate, humanizeTaskGetPublishDate } from '../util.js';
 
-const createPopupTemplate = (film = {}) => {
+const createPopupTemplate = (film = {}, commentsData) => {
   const {
     // id = 0,
     comments = [''],
@@ -30,6 +30,8 @@ const createPopupTemplate = (film = {}) => {
     },
   } = film;
 
+  const selectedComments = commentsData.filter(({id}) => comments.some((commentId) => commentId === Number(id)));
+
   const watchlistClassName = userDetails.watchlist
     ? 'film-details__control-button--active'
     : '';
@@ -50,9 +52,10 @@ const createPopupTemplate = (film = {}) => {
     return template;
   };
 
-  const generateComments = (comments2) => {
+  const generateComments = () => {
     let commentsList = '';
-    comments2.forEach((el) => {
+
+    selectedComments.forEach((el) => {
       commentsList += `
       <li class="film-details__comment">
         <span class="film-details__comment-emoji">
@@ -146,7 +149,7 @@ const createPopupTemplate = (film = {}) => {
 
       <div class="film-details__bottom-container">
         <section class="film-details__comments-wrap">
-          <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${comments.length}</span></h3>
+          <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${selectedComments.length}</span></h3>
 
           <ul class="film-details__comments-list">
             ${generateComments(comments)}
@@ -189,12 +192,13 @@ const createPopupTemplate = (film = {}) => {
 };
 
 export default class PopupView {
-  constructor(task) {
-    this.task = task;
+  constructor(films, comments) {
+    this.films = films;
+    this.comments = comments;
   }
 
   getTemplate() {
-    return createPopupTemplate(this.task);
+    return createPopupTemplate(this.films, this.comments);
   }
 
   getElement() {
