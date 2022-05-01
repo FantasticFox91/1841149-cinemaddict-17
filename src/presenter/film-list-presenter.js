@@ -71,7 +71,6 @@ export default class FilmListPresenter {
     document.querySelectorAll('.film-card').forEach((card) => card.addEventListener('click', () => {
       const object = this.filmsBoard.find((film) => film.id === Number(card.dataset.id));
       const selectedComments = this.comments.filter(({id}) => object.comments.some((commentId) => commentId === Number(id)));
-      console.log(object.comments, selectedComments)
       showPopUp(object, selectedComments);
     }));
   };

@@ -4,7 +4,6 @@ import { calculateDuration, humanizeTaskGetDate, humanizeTaskGetPublishDate } fr
 const createPopupTemplate = (film = {}, commentsData) => {
   const {
     // id = 0,
-    comments = [commentsData],
     filmInfo = {
       title: 'RandomTitle',
       alternativeTitle: 'RandomTitle',
