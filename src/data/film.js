@@ -1,8 +1,6 @@
 import {getRandomInteger, getRandomDecimalNumber, generateRandomNameFromArray, generateRandomDayFrom, generateRandomArrayFromArray} from '../util.js';
 import {TITLES, DIRECTORS, WRITERS, ACTORS, GENRES, COUNTRIES, POSTERS, DESCRIPTIONS, MIN_ID, MAX_ID, MAX_RATING, MAX_AGE_RATING, MAX_ARRAY_LENGTH, MIN, MAX_YEAR_GAP, MIN_RUNTIME, MAX_RUNTIME} from '../const.js';
 
-let counter = 0;
-
 export const generateFilm = () => ({
   id: getRandomInteger(MIN_ID, MAX_ID),
   comments: [getRandomInteger(0, 100), getRandomInteger(0, 100), getRandomInteger(0, 100)],
@@ -29,5 +27,4 @@ export const generateFilm = () => ({
     watchingDate: '2019-04-12T16:12:32.554Z',
     favorite: Boolean(getRandomInteger(0, 1))
   },
-  commentsId: counter++
 });
