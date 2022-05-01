@@ -1,5 +1,4 @@
 import {getRandomInteger, getRandomDecimalNumber, generateRandomNameFromArray, generateRandomDayFrom, generateRandomArrayFromArray} from '../util.js';
-import { generateComment } from './comment.js';
 import {TITLES, DIRECTORS, WRITERS, ACTORS, GENRES, COUNTRIES, POSTERS, DESCRIPTIONS, MIN_ID, MAX_ID, MAX_RATING, MAX_AGE_RATING, MAX_ARRAY_LENGTH, MIN, MAX_YEAR_GAP, MIN_RUNTIME, MAX_RUNTIME} from '../const.js';
 
 let counter = 0;

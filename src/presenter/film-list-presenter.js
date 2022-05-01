@@ -49,7 +49,7 @@ export default class FilmListPresenter {
     this.filmListContainer = filmListContainer;
     this.filmsModel = filmsModel;
     this.filmsBoard = [...this.filmsModel.getFilms()];
-    this.comments = [...this.filmsModel.getComments()]
+    this.comments = [...this.filmsModel.getComments()];
 
     render(this.filmSectionComponent, this.filmListContainer);
     render(this.filmListComponent, this.filmSectionComponent.getElement());
