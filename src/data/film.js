@@ -3,7 +3,7 @@ import {TITLES, DIRECTORS, WRITERS, ACTORS, GENRES, COUNTRIES, POSTERS, DESCRIPT
 
 export const generateFilm = () => ({
   id: getRandomInteger(MIN_ID, MAX_ID),
-  comments: [getRandomInteger(0, 100), getRandomInteger(0, 100), getRandomInteger(0, 100)],
+  comments: [...new Set(Array.from({length: getRandomInteger(1, 20)}, () => getRandomInteger(0, 100)))],
   filmInfo: {
     title: generateRandomNameFromArray(TITLES),
     alternativeTitle: generateRandomNameFromArray(TITLES),

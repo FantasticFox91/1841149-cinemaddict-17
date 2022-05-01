@@ -4,7 +4,7 @@ import { calculateDuration, humanizeTaskGetDate, humanizeTaskGetPublishDate } fr
 const createPopupTemplate = (film = {}, commentsData) => {
   const {
     // id = 0,
-    comments = [''],
+    comments = [commentsData],
     filmInfo = {
       title: 'RandomTitle',
       alternativeTitle: 'RandomTitle',
@@ -30,7 +30,6 @@ const createPopupTemplate = (film = {}, commentsData) => {
     },
   } = film;
 
-  const selectedComments = commentsData.filter(({id}) => comments.some((commentId) => commentId === Number(id)));
 
   const watchlistClassName = userDetails.watchlist
     ? 'film-details__control-button--active'
@@ -55,7 +54,7 @@ const createPopupTemplate = (film = {}, commentsData) => {
   const generateComments = () => {
     let commentsList = '';
 
-    selectedComments.forEach((el) => {
+    commentsData.forEach((el) => {
       commentsList += `
       <li class="film-details__comment">
         <span class="film-details__comment-emoji">
@@ -149,10 +148,10 @@ const createPopupTemplate = (film = {}, commentsData) => {
 
       <div class="film-details__bottom-container">
         <section class="film-details__comments-wrap">
-          <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${selectedComments.length}</span></h3>
+          <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${commentsData.length}</span></h3>
 
           <ul class="film-details__comments-list">
-            ${generateComments(comments)}
+            ${generateComments()}
           </ul>
 
           <div class="film-details__new-comment">
