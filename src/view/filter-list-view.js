@@ -13,7 +13,7 @@ const createFilterListTemplate = () => `
   </li>
 </ul>`;
 
-export default class FilterList {
+export default class FilterListView {
   getTemplate() {
     return createFilterListTemplate();
   }
