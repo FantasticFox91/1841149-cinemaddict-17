@@ -1,9 +1,11 @@
 import {getRandomInteger, getRandomDecimalNumber, generateRandomNameFromArray, generateRandomDayFrom, generateRandomArrayFromArray} from '../util.js';
-import {TITLES, DIRECTORS, WRITERS, ACTORS, GENRES, COUNTRIES, POSTERS, DESCRIPTIONS, MIN_ID, MAX_ID, MAX_RATING, MAX_AGE_RATING, MAX_ARRAY_LENGTH, MIN, MAX_YEAR_GAP, MIN_RUNTIME, MAX_RUNTIME} from '../const.js';
+import {TITLES, DIRECTORS, WRITERS, ACTORS, GENRES, COUNTRIES, POSTERS, DESCRIPTIONS, MAX_RATING, MAX_AGE_RATING, MAX_ARRAY_LENGTH, MIN, MAX_YEAR_GAP, MIN_RUNTIME, MAX_RUNTIME} from '../const.js';
+
+let counter = 0;
 
 export const generateFilm = () => ({
-  id: getRandomInteger(MIN_ID, MAX_ID),
-  comments: [...new Set(Array.from({length: getRandomInteger(1, 20)}, () => getRandomInteger(0, 100)))],
+  id: counter++,
+  comments: [...new Set(Array.from({length: getRandomInteger(1, 20)}, () => getRandomInteger(1, 90)))],
   filmInfo: {
     title: generateRandomNameFromArray(TITLES),
     alternativeTitle: generateRandomNameFromArray(TITLES),

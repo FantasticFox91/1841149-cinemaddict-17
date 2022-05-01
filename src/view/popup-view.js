@@ -4,6 +4,7 @@ import { calculateDuration, humanizeTaskGetDate, humanizeTaskGetPublishDate } fr
 const createPopupTemplate = (film = {}, commentsData) => {
   const {
     // id = 0,
+    comments = [''],
     filmInfo = {
       title: 'RandomTitle',
       alternativeTitle: 'RandomTitle',
@@ -52,7 +53,6 @@ const createPopupTemplate = (film = {}, commentsData) => {
 
   const generateComments = () => {
     let commentsList = '';
-
     commentsData.forEach((el) => {
       commentsList += `
       <li class="film-details__comment">
@@ -190,13 +190,13 @@ const createPopupTemplate = (film = {}, commentsData) => {
 };
 
 export default class PopupView {
-  constructor(films, comments) {
-    this.films = films;
+  constructor(film, comments) {
+    this.film = film;
     this.comments = comments;
   }
 
   getTemplate() {
-    return createPopupTemplate(this.films, this.comments);
+    return createPopupTemplate(this.film, this.comments);
   }
 
   getElement() {

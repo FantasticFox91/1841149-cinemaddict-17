@@ -20,7 +20,6 @@ const onDocumentEscKeydown = (evt) => {
   }
 };
 
-
 const showPopUp = (film, commentsData) => {
   document.body.classList.toggle('hide-overflow');
   render(new PopupView(film, commentsData),  siteFooterElement, 'afterend');
