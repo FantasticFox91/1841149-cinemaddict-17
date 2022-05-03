@@ -33,6 +33,13 @@ function closePopUp () {
   document.querySelector('.film-details').remove();
 }
 
+const onCardClick = (film, commentsList) => {
+  if(!document.querySelector('.film-details')) {
+    const selectedComments = commentsList.filter(({id}) => film.comments.some((commentId) => commentId === Number(id)));
+    showPopUp(film, selectedComments);
+  }
+};
+
 export default class FilmListPresenter {
   #filmListContainer = null;
   #filmsModel = null;
@@ -46,7 +53,7 @@ export default class FilmListPresenter {
   #mostCommendedFilmsComponent = new MostCommendedFilmsView;
   #showMoreButtonComponent = new ShowMoreButtonView;
 
-  #filmsBoard = [];
+  #filmsList = [];
   #comments = [];
   #topRatedFilms = [];
   #mostCommentedFilms = [];
@@ -54,18 +61,18 @@ export default class FilmListPresenter {
   init = (filmListContainer, filmsModel) => {
     this.#filmListContainer = filmListContainer;
     this.#filmsModel = filmsModel;
-    this.#filmsBoard = [...this.#filmsModel.films];
+    this.#filmsList = [...this.#filmsModel.films];
     this.#comments = [...this.#filmsModel.comments];
-    this.#topRatedFilms = this.#filmsBoard.slice();
-    this.#mostCommentedFilms = this.#filmsBoard.slice();
+    this.#topRatedFilms = this.#filmsList.slice();
+    this.#mostCommentedFilms = this.#filmsList.slice();
     this.#topRatedFilms = this.#topRatedFilms.sort((a, b) => b.filmInfo.totalRating - a.filmInfo.totalRating);
     this.#mostCommentedFilms = this.#mostCommentedFilms.sort((a, b) => b.comments.length - a.comments.length);
 
     render(this.#filmSectionComponent, this.#filmListContainer);
     render(this.#filmListComponent, this.#filmSectionComponent.element);
     render(this.#filmBoard, this.#filmListComponent.element);
-    for (let i = 0; i < this.#filmsBoard.length; i++) {
-      this.#renderFilm(this.#filmsBoard[i]);
+    for (let i = 0; i < this.#filmsList.length; i++) {
+      this.#renderFilm(this.#filmsList[i]);
     }
     render(this.#showMoreButtonComponent, this.#filmListComponent.element);
     render(this.#topRatedFilmsComponent, this.#filmSectionComponent.element);
@@ -82,23 +89,19 @@ export default class FilmListPresenter {
 
   #renderFilm = (film) => {
     const filmCard  = new FilmCardView(film);
-    filmCard.element.querySelector('.film-card__link').addEventListener('click', () => {
-      if(!document.querySelector('.film-details')) {
-        const object = this.#filmsBoard.find((film2) => film2.id === Number(filmCard.element.dataset.id));
-        const selectedComments = this.#comments.filter(({id}) => object.comments.some((commentId) => commentId === Number(id)));
-        showPopUp(object, selectedComments);
-      }
-    });
+    filmCard.element.querySelector('.film-card__link').addEventListener('click', () => onCardClick(film, this.#comments));
     render(filmCard, this.#filmBoard.element);
   };
 
   #renderTopRatedFilm = (film) => {
     const filmCard  = new FilmCardView(film);
+    filmCard.element.querySelector('.film-card__link').addEventListener('click', () => onCardClick(film, this.#comments));
     render(filmCard, this.#topRatedfilmBoard.element);
   };
 
   #renderMostCommentedFilm = (film) => {
     const filmCard  = new FilmCardView(film);
+    filmCard.element.querySelector('.film-card__link').addEventListener('click', () => onCardClick(film, this.#comments));
     render(filmCard, this.#mostCommentedfilmBoard.element);
   };
 }
