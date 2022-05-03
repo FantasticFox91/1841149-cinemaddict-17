@@ -87,9 +87,9 @@ export default class FilmListPresenter {
     }
   };
 
-  #renderFilm = (film, appendTo) => {
+  #renderFilm = (film, container) => {
     const filmCard  = new FilmCardView(film);
     filmCard.element.querySelector('.film-card__link').addEventListener('click', () => onCardClick(film, this.#comments));
-    render(filmCard, appendTo);
+    render(filmCard, container);
   };
 }
