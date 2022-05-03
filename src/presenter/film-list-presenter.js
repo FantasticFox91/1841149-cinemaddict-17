@@ -72,36 +72,24 @@ export default class FilmListPresenter {
     render(this.#filmListComponent, this.#filmSectionComponent.element);
     render(this.#filmBoard, this.#filmListComponent.element);
     for (let i = 0; i < this.#filmsList.length; i++) {
-      this.#renderFilm(this.#filmsList[i]);
+      this.#renderFilm(this.#filmsList[i], this.#filmBoard.element);
     }
     render(this.#showMoreButtonComponent, this.#filmListComponent.element);
     render(this.#topRatedFilmsComponent, this.#filmSectionComponent.element);
     render(this.#topRatedfilmBoard, this.#topRatedFilmsComponent.element);
     for (let i = 0; i < EXTRA_CARDS_COUNT; i++) {
-      this.#renderTopRatedFilm(this.#topRatedFilms[i]);
+      this.#renderFilm(this.#topRatedFilms[i], this.#topRatedfilmBoard.element);
     }
     render(this.#mostCommendedFilmsComponent, this.#filmSectionComponent.element);
     render(this.#mostCommentedfilmBoard , this.#mostCommendedFilmsComponent.element);
     for (let i = 0; i < EXTRA_CARDS_COUNT; i++) {
-      this.#renderMostCommentedFilm(this.#mostCommentedFilms[i]);
+      this.#renderFilm(this.#mostCommentedFilms[i], this.#mostCommentedfilmBoard.element);
     }
   };
 
-  #renderFilm = (film) => {
+  #renderFilm = (film, appendTo) => {
     const filmCard  = new FilmCardView(film);
     filmCard.element.querySelector('.film-card__link').addEventListener('click', () => onCardClick(film, this.#comments));
-    render(filmCard, this.#filmBoard.element);
-  };
-
-  #renderTopRatedFilm = (film) => {
-    const filmCard  = new FilmCardView(film);
-    filmCard.element.querySelector('.film-card__link').addEventListener('click', () => onCardClick(film, this.#comments));
-    render(filmCard, this.#topRatedfilmBoard.element);
-  };
-
-  #renderMostCommentedFilm = (film) => {
-    const filmCard  = new FilmCardView(film);
-    filmCard.element.querySelector('.film-card__link').addEventListener('click', () => onCardClick(film, this.#comments));
-    render(filmCard, this.#mostCommentedfilmBoard.element);
+    render(filmCard, appendTo);
   };
 }
