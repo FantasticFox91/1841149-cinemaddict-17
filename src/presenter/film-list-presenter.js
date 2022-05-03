@@ -33,44 +33,63 @@ function closePopUp () {
   document.querySelector('.film-details').remove();
 }
 
-export default class FilmListPresenter {
-  filmSectionComponent = new FilmSectionView;
-  filmListComponent = new FilmListView;
-  filmBoard = new FilmBoardView;
-  topRatedfilmBoard = new FilmBoardView;
-  mostCommentedfilmBoard = new FilmBoardView;
-  topRatedFilmsComponent = new TopRatedFilmsView;
-  mostCommendedFilmsComponent = new MostCommendedFilmsView;
-  showMoreButtonComponent = new ShowMoreButtonView;
+const onCardClick = (film, commentsList) => {
+  if(!document.querySelector('.film-details')) {
+    const selectedComments = commentsList.filter(({id}) => film.comments.some((commentId) => commentId === Number(id)));
+    showPopUp(film, selectedComments);
+  }
+};
 
+export default class FilmListPresenter {
+  #filmListContainer = null;
+  #filmsModel = null;
+
+  #filmSectionComponent = new FilmSectionView;
+  #filmListComponent = new FilmListView;
+  #filmBoard = new FilmBoardView;
+  #topRatedfilmBoard = new FilmBoardView;
+  #mostCommentedfilmBoard = new FilmBoardView;
+  #topRatedFilmsComponent = new TopRatedFilmsView;
+  #mostCommendedFilmsComponent = new MostCommendedFilmsView;
+  #showMoreButtonComponent = new ShowMoreButtonView;
+
+  #filmsList = [];
+  #comments = [];
+  #topRatedFilms = [];
+  #mostCommentedFilms = [];
 
   init = (filmListContainer, filmsModel) => {
-    this.filmListContainer = filmListContainer;
-    this.filmsModel = filmsModel;
-    this.filmsBoard = [...this.filmsModel.getFilms()];
-    this.comments = [...this.filmsModel.getComments()];
+    this.#filmListContainer = filmListContainer;
+    this.#filmsModel = filmsModel;
+    this.#filmsList = [...this.#filmsModel.films];
+    this.#comments = [...this.#filmsModel.comments];
+    this.#topRatedFilms = this.#filmsList.slice();
+    this.#mostCommentedFilms = this.#filmsList.slice();
+    this.#topRatedFilms = this.#topRatedFilms.sort((a, b) => b.filmInfo.totalRating - a.filmInfo.totalRating);
+    this.#mostCommentedFilms = this.#mostCommentedFilms.sort((a, b) => b.comments.length - a.comments.length);
 
-    render(this.filmSectionComponent, this.filmListContainer);
-    render(this.filmListComponent, this.filmSectionComponent.getElement());
-    render(this.filmBoard, this.filmListComponent.getElement());
-    for (let i = 0; i < this.filmsBoard.length; i++) {
-      render(new FilmCardView(this.filmsBoard[i]), this.filmBoard.getElement());
+    render(this.#filmSectionComponent, this.#filmListContainer);
+    render(this.#filmListComponent, this.#filmSectionComponent.element);
+    render(this.#filmBoard, this.#filmListComponent.element);
+    for (let i = 0; i < this.#filmsList.length; i++) {
+      this.#renderFilm(this.#filmsList[i], this.#filmBoard.element);
     }
-    render(this.showMoreButtonComponent, this.filmListComponent.getElement());
-    render(this.topRatedFilmsComponent, this.filmSectionComponent.getElement());
-    render(this.topRatedfilmBoard, this.topRatedFilmsComponent.getElement());
+    render(this.#showMoreButtonComponent, this.#filmListComponent.element);
+    render(this.#topRatedFilmsComponent, this.#filmSectionComponent.element);
+    render(this.#topRatedfilmBoard, this.#topRatedFilmsComponent.element);
     for (let i = 0; i < EXTRA_CARDS_COUNT; i++) {
-      render(new FilmCardView(this.filmsBoard[i]), this.topRatedfilmBoard.getElement());
+      this.#renderFilm(this.#topRatedFilms[i], this.#topRatedfilmBoard.element);
     }
-    render(this.mostCommendedFilmsComponent, this.filmSectionComponent.getElement());
-    render(this.mostCommentedfilmBoard , this.mostCommendedFilmsComponent.getElement());
+    render(this.#mostCommendedFilmsComponent, this.#filmSectionComponent.element);
+    render(this.#mostCommentedfilmBoard , this.#mostCommendedFilmsComponent.element);
     for (let i = 0; i < EXTRA_CARDS_COUNT; i++) {
-      render(new FilmCardView(this.filmsBoard[i]), this.mostCommentedfilmBoard.getElement());
+      this.#renderFilm(this.#mostCommentedFilms[i], this.#mostCommentedfilmBoard.element);
     }
-    document.querySelectorAll('.film-card').forEach((card) => card.addEventListener('click', () => {
-      const object = this.filmsBoard.find((film) => film.id === Number(card.dataset.id));
-      const selectedComments = this.comments.filter(({id}) => object.comments.some((commentId) => commentId === Number(id)));
-      showPopUp(object, selectedComments);
-    }));
+  };
+
+  #renderFilm = (film, container) => {
+    const filmCard  = new FilmCardView(film);
+    filmCard.element.querySelector('.film-card__link').addEventListener('click', () => onCardClick(film, this.#comments));
+    render(filmCard, container);
   };
 }
