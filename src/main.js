@@ -10,11 +10,11 @@ import FilmsModel from './model/film-model.js';
 const siteMainElement = document.querySelector('.main');
 const siteHeaderElement = document.querySelector('.header');
 const siteFooterStatisticElement = document.querySelector('.footer__statistics');
-const filmListPresenter = new FilmListPresenter();
 const filmsModel = new FilmsModel();
+const filmListPresenter = new FilmListPresenter(siteMainElement, filmsModel);
 
 render(new UserProfile(), siteHeaderElement);
 render(new MainNavigation(), siteMainElement);
 render(new FilterList(), siteMainElement);
-filmListPresenter.init(siteMainElement, filmsModel);
+filmListPresenter.init();
 render(new FooterStatistics(), siteFooterStatisticElement);
