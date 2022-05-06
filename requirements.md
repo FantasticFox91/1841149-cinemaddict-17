@@ -7,7 +7,6 @@ npm i <package>@<version> -E
 npm i dayjs@1.11.1 -E
 npm i eslint@8.13.0 -DE
 ```
-
 ## Зависимости приложения (`dependencies`)
 
 - dayjs@1.11.1
