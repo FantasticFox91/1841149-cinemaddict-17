@@ -1,3 +1,4 @@
+import { render } from '../framework/render';
 import FilmListView from '../view/film-list-view';
 import FilmBoardView from '../view/film-board-view';
 import FilmSectionView from '../view/film-section-view';
@@ -7,7 +8,6 @@ import MostCommendedFilmsView from '../view/most-commented-films-view';
 import ShowMoreButtonView from '../view/show-more-button-view';
 import PopupView from '../view/popup-view';
 import EmptyFilmListView from '../view/empty-films-view';
-import { render } from '../render';
 
 const EXTRA_CARDS_COUNT = 2;
 const FILMS_PER_STEP = 5;

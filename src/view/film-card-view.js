@@ -1,6 +1,6 @@
-import { createElement } from '../render.js';
 import { calculateDuration, humanizeTaskGetYear} from '../util.js';
 import {MAX_SHORT_DESCRIPTION_LENGTH, MIN} from '../const.js';
+import AbstractView from '../framework/view/abstract-view.js';
 
 const generateDescription = (desc) => {
   if (desc.length > MAX_SHORT_DESCRIPTION_LENGTH) {
@@ -46,27 +46,15 @@ const createFilmCardTemplate = (film) => {
     </article>`
   );
 };
-export default class FilmCardView {
-  #element = null;
+export default class FilmCardView extends AbstractView {
   #film = null;
 
   constructor(film) {
+    super();
     this.#film = film;
   }
 
   get template() {
     return createFilmCardTemplate(this.#film);
-  }
-
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-
-    return this.#element;
-  }
-
-  removeElement() {
-    this.#element = null;
   }
 }
