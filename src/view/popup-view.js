@@ -30,7 +30,6 @@ const BLANK_FILM = {
 const createPopupTemplate = (commentsData, film = BLANK_FILM) => {
   const { userDetails, filmInfo } = film;
 
-
   const watchlistClassName = userDetails.watchlist
     ? 'film-details__control-button--active'
     : '';
@@ -193,7 +192,7 @@ export default class PopupView extends AbstractView {
   #film = null;
   #comments = null;
 
-  constructor(film, comments) {
+  constructor(comments, film) {
     super();
     this.#film = film;
     this.#comments = comments;

@@ -1,4 +1,4 @@
-import { render } from '../framework/render';
+import {render} from '../framework/render';
 import FilmListView from '../view/film-list-view';
 import FilmBoardView from '../view/film-board-view';
 import FilmSectionView from '../view/film-section-view';
@@ -22,9 +22,9 @@ const onDocumentEscKeydown = (evt) => {
   }
 };
 
-const showPopUp = (film, commentsData) => {
+const showPopUp = (commentsData, film) => {
   document.body.classList.toggle('hide-overflow');
-  render(new PopupView(film, commentsData),  siteFooterElement, 'afterend');
+  render(new PopupView(commentsData, film),  siteFooterElement, 'afterend');
   document.body.addEventListener('keydown', onDocumentEscKeydown);
   document.querySelector('.film-details__close-btn').addEventListener('click', closePopUp);
 };
@@ -78,8 +78,7 @@ export default class FilmListPresenter {
     this.#renderList();
   };
 
-  #onShowMoreButtonClick = (evt) => {
-    evt.preventDefault();
+  #onShowMoreButtonClick = () => {
     this.#filmsList
       .slice(this.#renderFilmCount, this.#renderFilmCount + FILMS_PER_STEP)
       .forEach((film) => this.#renderFilm(film, this.#filmBoard.element));
@@ -93,7 +92,7 @@ export default class FilmListPresenter {
 
   #renderFilm = (film, container) => {
     const filmCard  = new FilmCardView(film);
-    filmCard.element.querySelector('.film-card__link').addEventListener('click', () => onCardClick(film, this.#comments));
+    filmCard.setClickHandler(() => onCardClick(film, this.#comments));
     render(filmCard, container);
   };
 
@@ -111,7 +110,7 @@ export default class FilmListPresenter {
 
       if (this.#filmsList.length > FILMS_PER_STEP) {
         render(this.#showMoreButtonComponent, this.#filmListComponent.element);
-        this.#showMoreButtonComponent.element.addEventListener('click', this.#onShowMoreButtonClick);
+        this.#showMoreButtonComponent.setClickHandler(this.#onShowMoreButtonClick);
       }
 
       render(this.#topRatedFilmsComponent, this.#filmSectionComponent.element);
