@@ -29,4 +29,4 @@ const calculateDuration = (minutes) => {
   return `${hours.toFixed(0)}h ${minutes % 60}m` ;
 };
 
-export {getRandomInteger, generateRandomNameFromArray, getRandomDecimalNumber, calculateDuration, generateRandomArrayFromArray}
+export {getRandomInteger, generateRandomNameFromArray, getRandomDecimalNumber, calculateDuration, generateRandomArrayFromArray};
