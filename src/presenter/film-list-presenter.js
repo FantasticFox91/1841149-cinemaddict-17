@@ -1,4 +1,4 @@
-import {render} from '../framework/render';
+import {render, remove} from '../framework/render';
 import FilmListView from '../view/film-list-view';
 import FilmBoardView from '../view/film-board-view';
 import FilmSectionView from '../view/film-section-view';
@@ -34,13 +34,6 @@ function closePopUp () {
   document.body.removeEventListener('keydown', onDocumentEscKeydown);
   document.querySelector('.film-details').remove();
 }
-
-const onCardClick = (film, commentsList) => {
-  if(!document.querySelector('.film-details')) {
-    const selectedComments = commentsList.filter(({id}) => film.comments.some((commentId) => commentId === Number(id)));
-    showPopUp(film, selectedComments);
-  }
-};
 
 export default class FilmListPresenter {
   #filmListContainer = null;
@@ -78,6 +71,13 @@ export default class FilmListPresenter {
     this.#renderList();
   };
 
+  #onCardClick = (film, commentsList) => {
+    if(!document.querySelector('.film-details')) {
+      const selectedComments = commentsList.filter(({id}) => film.comments.some((commentId) => commentId === Number(id)));
+      showPopUp(film, selectedComments);
+    }
+  };
+
   #onShowMoreButtonClick = () => {
     this.#filmsList
       .slice(this.#renderFilmCount, this.#renderFilmCount + FILMS_PER_STEP)
@@ -85,14 +85,13 @@ export default class FilmListPresenter {
     this.#renderFilmCount += FILMS_PER_STEP;
 
     if(this.#renderFilmCount >= this.#filmsList.length) {
-      this.#showMoreButtonComponent.element.remove();
-      this.#showMoreButtonComponent.removeElement();
+      remove(this.#showMoreButtonComponent);
     }
   };
 
   #renderFilm = (film, container) => {
     const filmCard  = new FilmCardView(film);
-    filmCard.setClickHandler(() => onCardClick(film, this.#comments));
+    filmCard.setClickHandler(() => this.#onCardClick(film, this.#comments));
     render(filmCard, container);
   };
 

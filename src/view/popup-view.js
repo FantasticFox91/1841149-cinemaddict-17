@@ -1,5 +1,6 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { calculateDuration, humanizeTaskGetDate, humanizeTaskGetPublishDate } from '../util.js';
+import { humanizeTaskGetDate, humanizeTaskGetPublishDate } from '../utils/task.js';
+import { calculateDuration } from '../utils/common.js';
 
 const BLANK_FILM = {
   filmInfo: {

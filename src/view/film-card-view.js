@@ -1,4 +1,5 @@
-import { calculateDuration, humanizeTaskGetYear} from '../util.js';
+import { humanizeTaskGetYear} from '../utils/task.js';
+import { calculateDuration } from '../utils/common.js';
 import {MAX_SHORT_DESCRIPTION_LENGTH, MIN} from '../const.js';
 import AbstractView from '../framework/view/abstract-view.js';
 

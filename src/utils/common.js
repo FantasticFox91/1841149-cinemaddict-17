@@ -1,5 +1,3 @@
-import dayjs from 'dayjs';
-
 // Функция из интернета по генерации случайного числа из диапазона
 // Источник - https://github.com/you-dont-need/You-Dont-Need-Lodash-Underscore#_random
 const getRandomInteger = (a = 0, b = 1) => {
@@ -31,16 +29,4 @@ const calculateDuration = (minutes) => {
   return `${hours.toFixed(0)}h ${minutes % 60}m` ;
 };
 
-const humanizeTaskGetYear = (date) => dayjs(date).get('year');
-
-const humanizeTaskGetDate = (date) => dayjs(date).format('YYYY/MM/DD HH:MM');
-
-const humanizeTaskGetPublishDate = (date) => dayjs(date).format('DD MMMM YYYY');
-
-const generateRandomDayFrom = (rangeType, min, max) => {
-  const daysGap = getRandomInteger(max, min);
-
-  return dayjs().add(daysGap, rangeType).toDate();
-};
-
-export {getRandomInteger,generateRandomNameFromArray, getRandomDecimalNumber, calculateDuration, humanizeTaskGetYear, generateRandomDayFrom, generateRandomArrayFromArray, humanizeTaskGetDate, humanizeTaskGetPublishDate};
+export {getRandomInteger, generateRandomNameFromArray, getRandomDecimalNumber, calculateDuration, generateRandomArrayFromArray}
