@@ -8,36 +8,15 @@ import MostCommendedFilmsView from '../view/most-commented-films-view';
 import ShowMoreButtonView from '../view/show-more-button-view';
 import PopupView from '../view/popup-view';
 import EmptyFilmListView from '../view/empty-films-view';
+import { isPressedEscapeKey } from '../utils/common';
 
 const EXTRA_CARDS_COUNT = 2;
 const FILMS_PER_STEP = 5;
-const siteFooterElement = document.querySelector('.footer');
-
-const isPressedEscapeKey = (evt) => evt.key === 'Escape';
-
-const onDocumentEscKeydown = (evt) => {
-  if (isPressedEscapeKey(evt)) {
-    evt.preventDefault();
-    closePopUp();
-  }
-};
-
-const showPopUp = (commentsData, film) => {
-  document.body.classList.toggle('hide-overflow');
-  render(new PopupView(commentsData, film),  siteFooterElement, 'afterend');
-  document.body.addEventListener('keydown', onDocumentEscKeydown);
-  document.querySelector('.film-details__close-btn').addEventListener('click', closePopUp);
-};
-
-function closePopUp () {
-  document.body.classList.toggle('hide-overflow');
-  document.body.removeEventListener('keydown', onDocumentEscKeydown);
-  document.querySelector('.film-details').remove();
-}
 
 export default class FilmListPresenter {
   #filmListContainer = null;
   #filmsModel = null;
+  #filmPopup = null;
 
   #filmSectionComponent = new FilmSectionView;
   #filmListComponent = new FilmListView;
@@ -74,7 +53,7 @@ export default class FilmListPresenter {
   #onCardClick = (film, commentsList) => {
     if(!document.querySelector('.film-details')) {
       const selectedComments = commentsList.filter(({id}) => film.comments.some((commentId) => commentId === Number(id)));
-      showPopUp(film, selectedComments);
+      this.#showPopUp(film, selectedComments);
     }
   };
 
@@ -124,6 +103,32 @@ export default class FilmListPresenter {
       for (let i = 0; i < EXTRA_CARDS_COUNT; i++) {
         this.#renderFilm(this.#mostCommentedFilms[i], this.#mostCommentedfilmBoard.element);
       }
+    }
+  };
+
+  #showPopUp = (commentsData, film) => {
+    const siteFooterElement = document.querySelector('.footer');
+    this.#filmPopup = new PopupView(commentsData, film);
+    document.body.classList.toggle('hide-overflow');
+    render(this.#filmPopup, siteFooterElement, 'afterend');
+    document.body.addEventListener('keydown', this.#onDocumentEscKeydown);
+    this.#filmPopup.element.querySelector('.film-details__close-btn').addEventListener('click', this.#onCloseButtonClick);
+  };
+
+  #closePopUp = () => {
+    document.body.classList.toggle('hide-overflow');
+    document.body.removeEventListener('keydown', this.#onDocumentEscKeydown);
+    this.#filmPopup.element.remove();
+  };
+
+  #onCloseButtonClick = () => {
+    this.#closePopUp();
+  };
+
+  #onDocumentEscKeydown = (evt) => {
+    if (isPressedEscapeKey(evt)) {
+      evt.preventDefault();
+      this.#closePopUp();
     }
   };
 }

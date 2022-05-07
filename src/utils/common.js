@@ -29,4 +29,6 @@ const calculateDuration = (minutes) => {
   return `${hours.toFixed(0)}h ${minutes % 60}m` ;
 };
 
-export {getRandomInteger, generateRandomNameFromArray, getRandomDecimalNumber, calculateDuration, generateRandomArrayFromArray};
+const isPressedEscapeKey = (evt) => evt.key === 'Escape';
+
+export {getRandomInteger, generateRandomNameFromArray, getRandomDecimalNumber, calculateDuration, generateRandomArrayFromArray, isPressedEscapeKey};

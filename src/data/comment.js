@@ -1,5 +1,5 @@
 import {generateRandomNameFromArray} from '../utils/common.js';
-import {generateRandomDayFrom} from '../utils/task.js';
+import {generateRandomDayFrom} from '../utils/film.js';
 import {AUTHORS, COMMENTS, MAX_DAY_GAP, MIN, EMOTIONS} from '../const.js';
 let counter = 0;
 
