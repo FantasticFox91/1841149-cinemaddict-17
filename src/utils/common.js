@@ -31,4 +31,5 @@ const calculateDuration = (minutes) => {
 
 const isPressedEscapeKey = (evt) => evt.key === 'Escape';
 
+
 export {getRandomInteger, generateRandomNameFromArray, getRandomDecimalNumber, calculateDuration, generateRandomArrayFromArray, isPressedEscapeKey};
