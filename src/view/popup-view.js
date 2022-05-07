@@ -1,33 +1,35 @@
-import { createElement } from '../render.js';
-import { calculateDuration, humanizeTaskGetDate, humanizeTaskGetPublishDate } from '../util.js';
+import AbstractView from '../framework/view/abstract-view.js';
+import { humanizeDate, humanizeDateAndTime } from '../utils/film.js';
+import { calculateDuration } from '../utils/common.js';
 
-const createPopupTemplate = (film = {}, commentsData) => {
-  const {
-    filmInfo = {
-      title: 'RandomTitle',
-      alternativeTitle: 'RandomTitle',
-      totalRating: 5.0,
-      poster: 'images/posters/the-man-with-the-golden-arm.jpg',
-      ageRating: 18,
-      director: 'Tim Burton',
-      writers: 'Tim Burton',
-      actors: 'Tim Burton',
-      release: {
-        date: 2022,
-        releaseCountry: 'USA',
-      },
-      runtime: 80,
-      genre: 'Horror',
-      description: 'Arthur Fleck works as a clown and is an aspiring stand-up comic. He has mental health issues, part of which involves uncontrollable laughter. Times are tough and, due to his issues and occupation, Arthur has an even worse time than most. Over time these issues bear down on him, shaping his actions, making him ultimately take on the persona he is more known as...Joker.'
+const BLANK_FILM = {
+  filmInfo: {
+    title: 'RandomTitle',
+    alternativeTitle: 'RandomTitle',
+    totalRating: 5.0,
+    poster: 'images/posters/the-man-with-the-golden-arm.jpg',
+    ageRating: 18,
+    director: 'Tim Burton',
+    writers: 'Tim Burton',
+    actors: 'Tim Burton',
+    release: {
+      date: 2022,
+      releaseCountry: 'USA',
     },
-    userDetails = {
-      watchlist: true,
-      alreadyWatched: false,
-      watchingDate: '2019-04-12T16:12:32.554Z',
-      favorite: false
-    },
-  } = film;
+    runtime: 80,
+    genre: 'Horror',
+    description: 'Arthur Fleck works as a clown and is an aspiring stand-up comic. He has mental health issues, part of which involves uncontrollable laughter. Times are tough and, due to his issues and occupation, Arthur has an even worse time than most. Over time these issues bear down on him, shaping his actions, making him ultimately take on the persona he is more known as...Joker.'
+  },
+  userDetails: {
+    watchlist: true,
+    alreadyWatched: false,
+    watchingDate: '2019-04-12T16:12:32.554Z',
+    favorite: false
+  },
+};
 
+const createPopupTemplate = (commentsData, film = BLANK_FILM) => {
+  const { userDetails, filmInfo } = film;
 
   const watchlistClassName = userDetails.watchlist
     ? 'film-details__control-button--active'
@@ -61,7 +63,7 @@ const createPopupTemplate = (film = {}, commentsData) => {
           <p class="film-details__comment-text">${el.comment}</p>
           <p class="film-details__comment-info">
             <span class="film-details__comment-author">${el.author}</span>
-            <span class="film-details__comment-day">${humanizeTaskGetDate(el.date)}</span>
+            <span class="film-details__comment-day">${humanizeDateAndTime(el.date)}</span>
             <button class="film-details__comment-delete">Delete</button>
           </p>
         </div>
@@ -112,7 +114,7 @@ const createPopupTemplate = (film = {}, commentsData) => {
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Release Date</td>
-                <td class="film-details__cell">${humanizeTaskGetPublishDate(filmInfo.release.date)}</td>
+                <td class="film-details__cell">${humanizeDate(filmInfo.release.date)}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Runtime</td>
@@ -187,29 +189,17 @@ const createPopupTemplate = (film = {}, commentsData) => {
   );
 };
 
-export default class PopupView {
-  #element = null;
+export default class PopupView extends AbstractView {
   #film = null;
   #comments = null;
 
-  constructor(film, comments) {
+  constructor(comments, film) {
+    super();
     this.#film = film;
     this.#comments = comments;
   }
 
   get template() {
     return createPopupTemplate(this.#film, this.#comments);
-  }
-
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-
-    return this.#element;
-  }
-
-  removeElement() {
-    this.#element = null;
   }
 }

@@ -1,3 +1,4 @@
+import {render, remove} from '../framework/render';
 import FilmListView from '../view/film-list-view';
 import FilmBoardView from '../view/film-board-view';
 import FilmSectionView from '../view/film-section-view';
@@ -7,44 +8,15 @@ import MostCommendedFilmsView from '../view/most-commented-films-view';
 import ShowMoreButtonView from '../view/show-more-button-view';
 import PopupView from '../view/popup-view';
 import EmptyFilmListView from '../view/empty-films-view';
-import { render } from '../render';
+import { isPressedEscapeKey } from '../utils/common';
 
 const EXTRA_CARDS_COUNT = 2;
 const FILMS_PER_STEP = 5;
-const siteFooterElement = document.querySelector('.footer');
-
-const isPressedEscapeKey = (evt) => evt.key === 'Escape';
-
-const onDocumentEscKeydown = (evt) => {
-  if (isPressedEscapeKey(evt)) {
-    evt.preventDefault();
-    closePopUp();
-  }
-};
-
-const showPopUp = (film, commentsData) => {
-  document.body.classList.toggle('hide-overflow');
-  render(new PopupView(film, commentsData),  siteFooterElement, 'afterend');
-  document.body.addEventListener('keydown', onDocumentEscKeydown);
-  document.querySelector('.film-details__close-btn').addEventListener('click', closePopUp);
-};
-
-function closePopUp () {
-  document.body.classList.toggle('hide-overflow');
-  document.body.removeEventListener('keydown', onDocumentEscKeydown);
-  document.querySelector('.film-details').remove();
-}
-
-const onCardClick = (film, commentsList) => {
-  if(!document.querySelector('.film-details')) {
-    const selectedComments = commentsList.filter(({id}) => film.comments.some((commentId) => commentId === Number(id)));
-    showPopUp(film, selectedComments);
-  }
-};
 
 export default class FilmListPresenter {
   #filmListContainer = null;
   #filmsModel = null;
+  #filmPopup = null;
 
   #filmSectionComponent = new FilmSectionView;
   #filmListComponent = new FilmListView;
@@ -78,22 +50,27 @@ export default class FilmListPresenter {
     this.#renderList();
   };
 
-  #onShowMoreButtonClick = (evt) => {
-    evt.preventDefault();
+  #onCardClick = (film, commentsList) => {
+    if(!document.querySelector('.film-details')) {
+      const selectedComments = commentsList.filter(({id}) => film.comments.some((commentId) => commentId === Number(id)));
+      this.#showPopUp(film, selectedComments);
+    }
+  };
+
+  #onShowMoreButtonClick = () => {
     this.#filmsList
       .slice(this.#renderFilmCount, this.#renderFilmCount + FILMS_PER_STEP)
       .forEach((film) => this.#renderFilm(film, this.#filmBoard.element));
     this.#renderFilmCount += FILMS_PER_STEP;
 
     if(this.#renderFilmCount >= this.#filmsList.length) {
-      this.#showMoreButtonComponent.element.remove();
-      this.#showMoreButtonComponent.removeElement();
+      remove(this.#showMoreButtonComponent);
     }
   };
 
   #renderFilm = (film, container) => {
     const filmCard  = new FilmCardView(film);
-    filmCard.element.querySelector('.film-card__link').addEventListener('click', () => onCardClick(film, this.#comments));
+    filmCard.setClickHandler(() => this.#onCardClick(film, this.#comments));
     render(filmCard, container);
   };
 
@@ -111,7 +88,7 @@ export default class FilmListPresenter {
 
       if (this.#filmsList.length > FILMS_PER_STEP) {
         render(this.#showMoreButtonComponent, this.#filmListComponent.element);
-        this.#showMoreButtonComponent.element.addEventListener('click', this.#onShowMoreButtonClick);
+        this.#showMoreButtonComponent.setClickHandler(this.#onShowMoreButtonClick);
       }
 
       render(this.#topRatedFilmsComponent, this.#filmSectionComponent.element);
@@ -126,6 +103,32 @@ export default class FilmListPresenter {
       for (let i = 0; i < EXTRA_CARDS_COUNT; i++) {
         this.#renderFilm(this.#mostCommentedFilms[i], this.#mostCommentedfilmBoard.element);
       }
+    }
+  };
+
+  #showPopUp = (commentsData, film) => {
+    const siteFooterElement = document.querySelector('.footer');
+    this.#filmPopup = new PopupView(commentsData, film);
+    document.body.classList.toggle('hide-overflow');
+    render(this.#filmPopup, siteFooterElement, 'afterend');
+    document.body.addEventListener('keydown', this.#onDocumentEscKeydown);
+    this.#filmPopup.element.querySelector('.film-details__close-btn').addEventListener('click', this.#onCloseButtonClick);
+  };
+
+  #closePopUp = () => {
+    document.body.classList.toggle('hide-overflow');
+    document.body.removeEventListener('keydown', this.#onDocumentEscKeydown);
+    this.#filmPopup.element.remove();
+  };
+
+  #onCloseButtonClick = () => {
+    this.#closePopUp();
+  };
+
+  #onDocumentEscKeydown = (evt) => {
+    if (isPressedEscapeKey(evt)) {
+      evt.preventDefault();
+      this.#closePopUp();
     }
   };
 }
