@@ -85,8 +85,13 @@ const DESCRIPTIONS = [
   'The series follows Steven Grant, a mild- mannered gift-shop employee, who becomes plagued with blackouts and memories of another life. Steven discovers he has dissociative identity disorder and shares a body with mercenary Marc Spector. As Steven/Marc\'s enemies converge upon them, they must navigate their complex identities while thrust into a deadly mystery among the powerful gods of Egypt.',
   'Arthur Fleck works as a clown and is an aspiring stand-up comic. He has mental health issues, part of which involves uncontrollable laughter. Times are tough and, due to his issues and occupation, Arthur has an even worse time than most. Over time these issues bear down on him, shaping his actions, making him ultimately take on the persona he is more known as...Joker.'
 ];
+const FILTERS = {
+  WATCHLIST: 'Watchlist',
+  HISTORY: 'History',
+  FAVORITES: 'Favorites'
+};
 
 export {MIN_ID, MAX_ID, MAX_DAY_GAP, AUTHORS, COMMENTS, EMOTIONS, TITLES, DIRECTORS, WRITERS, ACTORS, GENRES,
   COUNTRIES, POSTERS, DESCRIPTIONS, MIN, MAX_RATING, MAX_AGE_RATING, MAX_ARRAY_LENGTH, MAX_YEAR_GAP, MIN_RUNTIME,
-  MAX_RUNTIME, MAX_SHORT_DESCRIPTION_LENGTH};
+  MAX_RUNTIME, MAX_SHORT_DESCRIPTION_LENGTH, FILTERS};
 

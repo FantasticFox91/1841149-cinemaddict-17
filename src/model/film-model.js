@@ -3,7 +3,7 @@ import { generateComment } from '../data/comment.js';
 
 export default class FilmsModel {
   #comments = Array.from({length: 101}, generateComment);
-  #films = Array.from({length: 20}, generateFilm);
+  #films = Array.from({length: 30}, generateFilm);
 
   get comments() {
     return this.#comments;
