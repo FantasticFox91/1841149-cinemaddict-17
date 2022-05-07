@@ -1,5 +1,5 @@
 import {getRandomInteger, getRandomDecimalNumber, generateRandomNameFromArray, generateRandomArrayFromArray} from '../utils/common.js';
-import {generateRandomDayFrom} from '../utils/film.js';
+import {generateRandomDate} from '../utils/film.js';
 import {TITLES, DIRECTORS, WRITERS, ACTORS, GENRES, COUNTRIES, POSTERS, DESCRIPTIONS, MAX_RATING, MAX_AGE_RATING, MAX_ARRAY_LENGTH, MIN, MAX_YEAR_GAP, MIN_RUNTIME, MAX_RUNTIME} from '../const.js';
 
 let counter = 0;
@@ -17,7 +17,7 @@ export const generateFilm = () => ({
     writers: generateRandomArrayFromArray(WRITERS, MAX_ARRAY_LENGTH),
     actors: generateRandomArrayFromArray(ACTORS, MAX_ARRAY_LENGTH),
     release: {
-      date: generateRandomDayFrom('year', MAX_YEAR_GAP, MIN),
+      date: generateRandomDate('year', MAX_YEAR_GAP, MIN),
       releaseCountry: generateRandomNameFromArray(COUNTRIES),
     },
     runtime: getRandomInteger(MIN_RUNTIME, MAX_RUNTIME),

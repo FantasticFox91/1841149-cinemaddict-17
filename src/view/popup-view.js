@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { humanizeFilmGetDate, humanizeFilmGetPublishDate } from '../utils/film.js';
+import { humanizeDate, humanizeDateAndTime } from '../utils/film.js';
 import { calculateDuration } from '../utils/common.js';
 
 const BLANK_FILM = {
@@ -63,7 +63,7 @@ const createPopupTemplate = (commentsData, film = BLANK_FILM) => {
           <p class="film-details__comment-text">${el.comment}</p>
           <p class="film-details__comment-info">
             <span class="film-details__comment-author">${el.author}</span>
-            <span class="film-details__comment-day">${humanizeFilmGetDate(el.date)}</span>
+            <span class="film-details__comment-day">${humanizeDateAndTime(el.date)}</span>
             <button class="film-details__comment-delete">Delete</button>
           </p>
         </div>
@@ -114,7 +114,7 @@ const createPopupTemplate = (commentsData, film = BLANK_FILM) => {
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Release Date</td>
-                <td class="film-details__cell">${humanizeFilmGetPublishDate(filmInfo.release.date)}</td>
+                <td class="film-details__cell">${humanizeDate(filmInfo.release.date)}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Runtime</td>
