@@ -23,11 +23,11 @@ export default class FilmPresenter {
     this.#film = film;
     const prevFilmComponent = this.#filmComponent;
     this.#filmComponent = new FilmCardView(film);
-    this.#filmComponent.setWatchlistCickHandler(this.#handleWatchlistClick);
-    this.#filmComponent.setWatchedCickHandler(this.#handleWatchedClick);
-    this.#filmComponent.setFavouriteCickHandler(this.#handleFavouriteClick);
+    this.#filmComponent.setWatchlistClickHandler(this.#onWatchlistClick);
+    this.#filmComponent.setWatchedClickHandler(this.#onWatchedClick);
+    this.#filmComponent.setFavouriteClickHandler(this.#onFavouriteClick);
     this.#filmComponent.setClickHandler(() => this.#onCardClick(film, this.#comments));
-    if (prevFilmComponent === null) {
+    if (!prevFilmComponent) {
       render(this.#filmComponent, container);
       return;
     }
@@ -49,9 +49,9 @@ export default class FilmPresenter {
   #showPopUp = (commentsData, film) => {
     const siteFooterElement = document.querySelector('.footer');
     this.#filmPopup = new PopupView(commentsData, film);
-    this.#filmPopup.setWatchlistCickHandler(this.#handleWatchlistClick);
-    this.#filmPopup.setWatchedCickHandler(this.#handleWatchedClick);
-    this.#filmPopup.setFavouriteCickHandler(this.#handleFavouriteClick);
+    this.#filmPopup.setWatchlistClickHandler(this.#onWatchlistClick);
+    this.#filmPopup.setWatchedClickHandler(this.#onWatchedClick);
+    this.#filmPopup.setFavouriteClickHandler(this.#onFavouriteClick);
     document.body.classList.toggle('hide-overflow');
     render(this.#filmPopup, siteFooterElement, 'afterend');
     document.body.addEventListener('keydown', this.#onDocumentEscKeydown);
@@ -75,15 +75,15 @@ export default class FilmPresenter {
     }
   };
 
-  #handleWatchlistClick = () => {
+  #onWatchlistClick = () => {
     this.#changeFilm({...this.#film, userDetails: {...this.#film.userDetails, watchlist: !this.#film.userDetails.watchlist}});
   };
 
-  #handleWatchedClick = () => {
+  #onWatchedClick = () => {
     this.#changeFilm({...this.#film, userDetails: {...this.#film.userDetails, alreadyWatched: !this.#film.userDetails.alreadyWatched}});
   };
 
-  #handleFavouriteClick = () => {
+  #onFavouriteClick = () => {
     this.#changeFilm({...this.#film, userDetails: {...this.#film.userDetails, favorite: !this.#film.userDetails.favorite}});
   };
 }

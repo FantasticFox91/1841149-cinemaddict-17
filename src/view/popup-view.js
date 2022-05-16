@@ -203,34 +203,34 @@ export default class PopupView extends AbstractView {
     return createPopupTemplate(this.#film, this.#comments);
   }
 
-  setWatchlistCickHandler = (callback) => {
+  setWatchlistClickHandler = (callback) => {
     this._callback.watchlistClick = callback;
-    this.element.querySelector('.film-details__control-button--watchlist').addEventListener('click', this.#watchlistCickHandler);
+    this.element.querySelector('.film-details__control-button--watchlist').addEventListener('click', this.#onWatchlistClick);
   };
 
-  setWatchedCickHandler = (callback) => {
+  setWatchedClickHandler = (callback) => {
     this._callback.watchedClick = callback;
-    this.element.querySelector('.film-details__control-button--watched').addEventListener('click', this.#watchedCickHandler);
+    this.element.querySelector('.film-details__control-button--watched').addEventListener('click', this.#onWatchedClick);
   };
 
-  setFavouriteCickHandler = (callback) => {
+  setFavouriteClickHandler = (callback) => {
     this._callback.favouriteClick = callback;
-    this.element.querySelector('.film-details__control-button--favorite').addEventListener('click', this.#favouriteCickHandler);
+    this.element.querySelector('.film-details__control-button--favorite').addEventListener('click', this.#onFavouriteClick);
   };
 
-  #watchlistCickHandler = (evt) => {
+  #onWatchlistClick = (evt) => {
     evt.preventDefault();
     this._callback.watchlistClick();
     this.element.querySelector('.film-details__control-button--watchlist').classList.toggle('film-details__control-button--active');
   };
 
-  #watchedCickHandler = (evt) => {
+  #onWatchedClick = (evt) => {
     evt.preventDefault();
     this._callback.watchedClick();
     this.element.querySelector('.film-details__control-button--watched').classList.toggle('film-details__control-button--active');
   };
 
-  #favouriteCickHandler = (evt) => {
+  #onFavouriteClick = (evt) => {
     evt.preventDefault();
     this._callback.favouriteClick();
     this.element.querySelector('.film-details__control-button--favorite').classList.toggle('film-details__control-button--active');

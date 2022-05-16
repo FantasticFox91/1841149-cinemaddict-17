@@ -74,7 +74,7 @@ export default class FilmListPresenter {
   };
 
   #handleFilmChange = (updatedFilm) => {
-    this.#filmBoard = updateFilm(this.#filmsList, updatedFilm);
+    this.#filmsList = updateFilm(this.#filmsList, updatedFilm);
     this.#filmPresenter.get(updatedFilm.id).init(updatedFilm, this.#filmListContainer);
   };
 
