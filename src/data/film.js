@@ -1,11 +1,10 @@
 import {getRandomInteger, getRandomDecimalNumber, generateRandomNameFromArray, generateRandomArrayFromArray} from '../utils/common.js';
 import {generateRandomDate} from '../utils/film.js';
 import {TITLES, DIRECTORS, WRITERS, ACTORS, GENRES, COUNTRIES, POSTERS, DESCRIPTIONS, MAX_RATING, MAX_AGE_RATING, MAX_ARRAY_LENGTH, MIN, MAX_YEAR_GAP, MIN_RUNTIME, MAX_RUNTIME} from '../const.js';
-
-let counter = 0;
+import {nanoid} from 'nanoid';
 
 export const generateFilm = () => ({
-  id: counter++,
+  id: nanoid(),
   comments: [...new Set(Array.from({length: getRandomInteger(1, 20)}, () => getRandomInteger(1, 90)))],
   filmInfo: {
     title: generateRandomNameFromArray(TITLES),
