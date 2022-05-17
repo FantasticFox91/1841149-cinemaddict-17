@@ -37,7 +37,6 @@ const updateFilm = (films, update) => {
   if(index === -1) {
     return films;
   }
-
   return [
     ...films.slice(0, index),
     update,

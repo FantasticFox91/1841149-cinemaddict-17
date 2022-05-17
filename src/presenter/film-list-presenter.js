@@ -30,6 +30,8 @@ export default class FilmListPresenter {
   #topRatedFilms = [];
   #mostCommentedFilms = [];
   #filmPresenter = new Map();
+  #topRatedPresnter = new Map();
+  #mostCommentedPresenter = new Map();
   #renderFilmCount = FILMS_PER_STEP;
 
   constructor(filmListContainer, filmsModel) {
@@ -38,8 +40,8 @@ export default class FilmListPresenter {
     this.#filmsList = [...this.#filmsModel.films];
     this.#topRatedFilms = this.#filmsList.slice();
     this.#mostCommentedFilms = this.#filmsList.slice();
-    this.#topRatedFilms = this.#topRatedFilms.sort((a, b) => b.filmInfo.totalRating - a.filmInfo.totalRating);
-    this.#mostCommentedFilms = this.#mostCommentedFilms.sort((a, b) => b.comments.length - a.comments.length);
+    this.#topRatedFilms = this.#topRatedFilms.sort((a, b) => b.filmInfo.totalRating - a.filmInfo.totalRating).slice(0,EXTRA_CARDS_COUNT);
+    this.#mostCommentedFilms = this.#mostCommentedFilms.sort((a, b) => b.comments.length - a.comments.length).slice(0,EXTRA_CARDS_COUNT);
   }
 
   init = () => {
@@ -56,14 +58,20 @@ export default class FilmListPresenter {
     }
   };
 
-  #renderFilms = (from, to) => {
-    this.#filmsList.slice(from, to).forEach((film) => this.#renderFilm(film, this.#filmBoard.element));
+  #renderFilms = (from, to, presenter) => {
+    this.#filmsList.slice(from, to).forEach((film) => this.#renderFilm(film, this.#filmBoard.element, presenter));
   };
 
-  #renderFilm = (film, container) => {
-    const filmPresenter = new FilmPresenter(this.#filmBoard.element, this.#filmsModel, this.#handleFilmChange);
+  #renderFilm = (film, container, presenter) => {
+    const filmPresenter = new FilmPresenter(container, this.#filmsModel, this.#handleFilmChange);
     filmPresenter.init(film, container);
-    this.#filmPresenter.set(film.id, filmPresenter);
+    if(presenter === this.#filmPresenter) {
+      this.#filmPresenter.set(film.id, filmPresenter);
+    } else if (presenter === this.#topRatedPresnter) {
+      this.#topRatedPresnter.set(film.id, filmPresenter);
+    } else if (presenter === this.#mostCommentedPresenter) {
+      this.#mostCommentedPresenter.set(film.id, filmPresenter);
+    }
   };
 
   #clearFilmList = () => {
@@ -75,7 +83,22 @@ export default class FilmListPresenter {
 
   #handleFilmChange = (updatedFilm) => {
     this.#filmsList = updateFilm(this.#filmsList, updatedFilm);
-    this.#filmPresenter.get(updatedFilm.id).init(updatedFilm, this.#filmListContainer);
+    this.#topRatedFilms = updateFilm(this.#topRatedFilms, updatedFilm);
+    this.#mostCommentedFilms = updateFilm(this.#mostCommentedFilms, updatedFilm);
+
+    if (this.#filmPresenter.get(updatedFilm.id)) {
+      this.#filmPresenter.get(updatedFilm.id).init(updatedFilm);
+    }
+
+    const topRatedPresnter = this.#topRatedPresnter.get(updatedFilm.id);
+    if (topRatedPresnter) {
+      topRatedPresnter.init(updatedFilm);
+    }
+
+    const mostCommentedPresenter = this.#mostCommentedPresenter.get(updatedFilm.id);
+    if (mostCommentedPresenter) {
+      mostCommentedPresenter.init(updatedFilm);
+    }
   };
 
   #renderNoFilms = () => {
@@ -85,25 +108,19 @@ export default class FilmListPresenter {
   #renderMostCommentedFilms = () => {
     render(this.#mostCommendedFilmsComponent, this.#filmSectionComponent.element);
     render(this.#mostCommentedfilmBoard , this.#mostCommendedFilmsComponent.element);
-
-    for (let i = 0; i < EXTRA_CARDS_COUNT; i++) {
-      this.#renderFilm(this.#mostCommentedFilms[i], this.#mostCommentedfilmBoard.element);
-    }
+    this.#mostCommentedFilms.forEach((film) => this.#renderFilm(film, this.#mostCommentedfilmBoard.element, this.#mostCommentedPresenter));
   };
 
   #renderTopRatedFilms = () => {
     render(this.#topRatedFilmsComponent, this.#filmSectionComponent.element);
     render(this.#topRatedfilmBoard, this.#topRatedFilmsComponent.element);
-
-    for (let i = 0; i < EXTRA_CARDS_COUNT; i++) {
-      this.#renderFilm(this.#topRatedFilms[i], this.#topRatedfilmBoard.element);
-    }
+    this.#topRatedFilms.forEach((film) => this.#renderFilm(film, this.#topRatedfilmBoard.element, this.#topRatedPresnter));
   };
 
   #renderFilmsList = () => {
     render(this.#filmListComponent, this.#filmSectionComponent.element);
     render(this.#filmBoard, this.#filmListComponent.element);
-    this.#renderFilms(0, Math.min(this.#filmsList.length, FILMS_PER_STEP));
+    this.#renderFilms(0, Math.min(this.#filmsList.length, FILMS_PER_STEP), this.#filmPresenter);
     if (this.#filmsList.length > FILMS_PER_STEP) {
       this.#renderShowMoreButton();
     }

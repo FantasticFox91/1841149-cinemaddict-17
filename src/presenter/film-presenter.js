@@ -19,7 +19,7 @@ export default class FilmPresenter {
     this.#comments = [...this.#filmsModel.comments];
   }
 
-  init(film, container) {
+  init(film) {
     this.#film = film;
     const prevFilmComponent = this.#filmComponent;
     this.#filmComponent = new FilmCardView(film);
@@ -28,7 +28,7 @@ export default class FilmPresenter {
     this.#filmComponent.setFavouriteClickHandler(this.#onFavouriteClick);
     this.#filmComponent.setClickHandler(() => this.#onCardClick(film, this.#comments));
     if (!prevFilmComponent) {
-      render(this.#filmComponent, container);
+      render(this.#filmComponent, this.#filmListContainer);
       return;
     }
     if (this.#filmListContainer.contains(prevFilmComponent.element)) {
