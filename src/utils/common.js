@@ -1,4 +1,7 @@
 // Функция из интернета по генерации случайного числа из диапазона
+
+import dayjs from 'dayjs';
+
 // Источник - https://github.com/you-dont-need/You-Dont-Need-Lodash-Underscore#_random
 const getRandomInteger = (a = 0, b = 1) => {
   const lower = Math.ceil(Math.min(a, b));
@@ -37,6 +40,7 @@ const updateFilm = (films, update) => {
   if(index === -1) {
     return films;
   }
+
   return [
     ...films.slice(0, index),
     update,
@@ -44,5 +48,14 @@ const updateFilm = (films, update) => {
   ];
 };
 
+const SortType = {
+  DDEFAULT: 'default',
+  DATE_DOWN: 'date-down',
+  RATE_DOWN: 'rate-down'
+};
 
-export {getRandomInteger, generateRandomNameFromArray, getRandomDecimalNumber, calculateDuration, generateRandomArrayFromArray, isPressedEscapeKey, updateFilm};
+const sortDateDown = (filmA, filmB) => dayjs(filmB.filmInfo.release.date).diff(dayjs(filmA.filmInfo.release.date));
+
+const sortRateDown = (filmA, filmB) => filmB.filmInfo.totalRating - filmA.filmInfo.totalRating;
+
+export {getRandomInteger, generateRandomNameFromArray, getRandomDecimalNumber, calculateDuration, generateRandomArrayFromArray, isPressedEscapeKey, updateFilm, SortType, sortDateDown, sortRateDown};
