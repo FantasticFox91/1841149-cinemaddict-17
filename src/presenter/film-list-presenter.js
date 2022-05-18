@@ -54,7 +54,7 @@ export default class FilmListPresenter {
   };
 
   #onShowMoreButtonClick = () => {
-    this.#renderFilms(this.#renderFilmCount, this.#renderFilmCount + FILMS_PER_STEP);
+    this.#renderFilms(this.#renderFilmCount, this.#renderFilmCount + FILMS_PER_STEP, this.#filmPresenter);
     this.#renderFilmCount += FILMS_PER_STEP;
 
     if(this.#renderFilmCount >= this.#filmsList.length) {
@@ -84,8 +84,6 @@ export default class FilmListPresenter {
     this.#renderFilmCount = FILMS_PER_STEP;
     remove(this.#showMoreButtonComponent);
     remove(this.#filmListComponent);
-    remove(this.#mostCommentedfilmBoard);
-    remove(this.#topRatedfilmBoard);
   };
 
   #handleFilmChange = (updatedFilm) => {
@@ -129,7 +127,7 @@ export default class FilmListPresenter {
     }
     this.#sortFilms(sortType);
     this.#clearFilmList();
-    this.#renderList();
+    this.#renderFilmsList();
   };
 
   #renderNoFilms = () => {
@@ -149,9 +147,9 @@ export default class FilmListPresenter {
   };
 
   #renderFilmsList = () => {
-    render(this.#filmListComponent, this.#filmSectionComponent.element);
+    render(this.#filmListComponent, this.#filmSectionComponent.element, RenderPosition.BEFOREBEGIN);
     render(this.#filmBoard, this.#filmListComponent.element);
-    this.#renderFilms(0, Math.min(this.#filmsList.length, FILMS_PER_STEP), this.#filmPresenter);
+    this.#renderFilms(0, Math.min(this.#renderFilmCount, FILMS_PER_STEP), this.#filmPresenter);
     if (this.#filmsList.length > FILMS_PER_STEP) {
       this.#renderShowMoreButton();
     }
@@ -163,7 +161,7 @@ export default class FilmListPresenter {
   };
 
   #renderSort = () => {
-    render(this.#filtersList, this.#filmSectionComponent.element, RenderPosition.AFTERBEGIN);
+    render(this.#filtersList, this.#filmListContainer);
     this.#filtersList.setSortTypeChangeHandler(this.#handleSortTypeChange);
   };
 
