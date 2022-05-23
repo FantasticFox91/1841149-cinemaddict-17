@@ -74,7 +74,7 @@ const createPopupTemplate = (commentsData, film = BLANK_FILM, emojiSelected, typ
     );
   };
 
-  const generateComments = (comments) => comments.reduce((acc, comment) => acc + createCommentTemplate(comment), '');
+  const generateComments = (comments) => comments.reduce((acc, comment) => `${acc} ${createCommentTemplate(comment)}`, '');
 
   const showSelectedEmoji = (emoji) => emoji ? `<img src="./images/emoji/${emoji}.png" width="55" height="55" alt="emoji">` : '';
 
