@@ -56,6 +56,7 @@ export default class FilmPresenter {
     document.body.classList.toggle('hide-overflow');
     render(this.#filmPopup, siteFooterElement, 'afterend');
     document.body.addEventListener('keydown', this.#onDocumentEscKeydown);
+    this.#filmPopup.element.querySelector('.film-details__close-btn').addEventListener('click', this.#onCloseButtonClick);
   };
 
   #closePopUp = () => {

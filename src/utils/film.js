@@ -5,7 +5,7 @@ const humanizeYear = (date) => dayjs(date).get('year');
 
 const humanizeDate = (date) => dayjs(date).format('DD MMMM YYYY');
 
-const humanizeDateAndTime = (date) => dayjs(date).format('YYYY/MM/DD HH:MM');
+const humanizeDateAndTime = (date) => dayjs(date).format('YYYY/MM/DD HH:mm');
 
 const generateRandomDate = (rangeType, min, max) => {
   const daysGap = getRandomInteger(max, min);

@@ -1,5 +1,5 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view';
-import { humanizeDate, humanizeDateAndTime } from '../utils/film.js';
+import { humanizeDate, humanizeDateAndTime, humanizeYear } from '../utils/film.js';
 import { calculateDuration, isPressedEscapeKey } from '../utils/common.js';
 import { nanoid } from 'nanoid';
 
@@ -279,8 +279,10 @@ export default class PopupView extends AbstractStatefulView {
 
   #onSubmitForm = (evt) => {
     if (evt.ctrlKey && evt.code === 'Enter') {
-      this.parseCommentToState(this.#onSubmitFormPress());
-      this.updateElement({...this._state});
+      const scrollPosition = this.element.scrollTop;
+      this._state.comments.push(this.#onSubmitFormPress());
+      this.updateElement({emojiSelected: null, typedComment: null});
+      this.element.scrollTop = scrollPosition;
     }
   };
 
@@ -289,7 +291,7 @@ export default class PopupView extends AbstractStatefulView {
       id: nanoid(),
       author: 'Tom Fisher',
       comment: this.element.querySelector('.film-details__comment-input').value,
-      date: Date.now(),
+      date: humanizeDateAndTime(new Date()),
       emotion: this.element.querySelector('.film-details__emoji-item:checked').value
     });
 
