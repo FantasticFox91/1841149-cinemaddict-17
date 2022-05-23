@@ -1,5 +1,5 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view';
-import { humanizeDate, humanizeDateAndTime, humanizeYear } from '../utils/film.js';
+import { humanizeDate, humanizeDateAndTime } from '../utils/film.js';
 import { calculateDuration, isPressedEscapeKey } from '../utils/common.js';
 import { nanoid } from 'nanoid';
 
