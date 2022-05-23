@@ -40,10 +40,12 @@ export default class FilmPresenter {
   destroy = () => remove(this.#filmComponent);
 
   #onCardClick = (commentsList, film) => {
-    if(!document.querySelector('.film-details')) {
-      const selectedComments = commentsList.filter(({id}) => film.comments.some((commentId) => commentId === Number(id)));
-      this.#showPopUp(selectedComments, film);
+    if(document.querySelector('.film-details')) {
+      document.querySelector('.film-details').remove();
+      document.body.classList.toggle('hide-overflow');
     }
+    const selectedComments = commentsList.filter(({id}) => film.comments.some((commentId) => commentId === Number(id)));
+    this.#showPopUp(selectedComments, film);
   };
 
   #showPopUp = (commentsData, film) => {
@@ -60,7 +62,7 @@ export default class FilmPresenter {
   };
 
   #closePopUp = () => {
-    document.body.classList.toggle('hide-overflow');
+    document.body.classList.toggle('hide-overflow', false);
     document.body.removeEventListener('keydown', this.#onDocumentEscKeydown);
     this.#filmPopup.element.remove();
   };
