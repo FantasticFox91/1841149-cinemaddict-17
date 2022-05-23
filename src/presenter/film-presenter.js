@@ -26,7 +26,7 @@ export default class FilmPresenter {
     this.#filmComponent.setWatchlistClickHandler(this.#onWatchlistClick);
     this.#filmComponent.setWatchedClickHandler(this.#onWatchedClick);
     this.#filmComponent.setFavouriteClickHandler(this.#onFavouriteClick);
-    this.#filmComponent.setClickHandler(() => this.#onCardClick(film, this.#comments));
+    this.#filmComponent.setClickHandler(() => this.#onCardClick(this.#comments, film));
     if (!prevFilmComponent) {
       render(this.#filmComponent, this.#filmListContainer);
       return;
@@ -39,11 +39,13 @@ export default class FilmPresenter {
 
   destroy = () => remove(this.#filmComponent);
 
-  #onCardClick = (film, commentsList) => {
-    if(!document.querySelector('.film-details')) {
-      const selectedComments = commentsList.filter(({id}) => film.comments.some((commentId) => commentId === Number(id)));
-      this.#showPopUp(film, selectedComments);
+  #onCardClick = (commentsList, film) => {
+    if(document.querySelector('.film-details')) {
+      document.querySelector('.film-details').remove();
+      document.body.classList.toggle('hide-overflow');
     }
+    const selectedComments = commentsList.filter(({id}) => film.comments.some((commentId) => commentId === Number(id)));
+    this.#showPopUp(selectedComments, film);
   };
 
   #showPopUp = (commentsData, film) => {
@@ -52,6 +54,7 @@ export default class FilmPresenter {
     this.#filmPopup.setWatchlistClickHandler(this.#onWatchlistClick);
     this.#filmPopup.setWatchedClickHandler(this.#onWatchedClick);
     this.#filmPopup.setFavouriteClickHandler(this.#onFavouriteClick);
+    this.#filmPopup.setCloseButtonClickHandler(this.#onCloseButtonClick);
     document.body.classList.toggle('hide-overflow');
     render(this.#filmPopup, siteFooterElement, 'afterend');
     document.body.addEventListener('keydown', this.#onDocumentEscKeydown);
@@ -59,7 +62,7 @@ export default class FilmPresenter {
   };
 
   #closePopUp = () => {
-    document.body.classList.toggle('hide-overflow');
+    document.body.classList.toggle('hide-overflow', false);
     document.body.removeEventListener('keydown', this.#onDocumentEscKeydown);
     this.#filmPopup.element.remove();
   };
