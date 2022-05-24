@@ -1,4 +1,4 @@
-import AbstarctView from '../framework/view/abstract-view.js';
+import AbstarctView from '../framework/view/abstract-view';
 
 const createTopRatedFilmsTemplate = () => `
   <section class="films-list films-list--extra">

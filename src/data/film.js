@@ -1,7 +1,7 @@
-import {getRandomInteger, getRandomDecimalNumber, generateRandomNameFromArray, generateRandomArrayFromArray} from '../utils/common.js';
-import {generateRandomDate} from '../utils/film.js';
-import {TITLES, DIRECTORS, WRITERS, ACTORS, GENRES, COUNTRIES, POSTERS, DESCRIPTIONS, MAX_RATING, MAX_AGE_RATING, MAX_ARRAY_LENGTH, MIN, MAX_YEAR_GAP, MIN_RUNTIME, MAX_RUNTIME} from '../const.js';
-import {nanoid} from 'nanoid';
+import { getRandomInteger, getRandomDecimalNumber, generateRandomNameFromArray, generateRandomArrayFromArray } from '../utils/common';
+import { generateRandomDate } from '../utils/film';
+import { TITLES, DIRECTORS, WRITERS, ACTORS, GENRES, COUNTRIES, POSTERS, DESCRIPTIONS, MAX_RATING, MAX_AGE_RATING, MAX_ARRAY_LENGTH, MIN, MAX_YEAR_GAP, MIN_RUNTIME, MAX_RUNTIME, DEFAULT_DATE_AND_TIME } from '../const';
+import { nanoid } from 'nanoid';
 
 export const generateFilm = () => ({
   id: nanoid(),
@@ -26,7 +26,7 @@ export const generateFilm = () => ({
   userDetails: {
     watchlist: Boolean(getRandomInteger(0, 1)),
     alreadyWatched: Boolean(getRandomInteger(0, 1)),
-    watchingDate: '2019-04-12T16:12:32.554Z',
+    watchingDate: DEFAULT_DATE_AND_TIME,
     favorite: Boolean(getRandomInteger(0, 1))
   },
 });

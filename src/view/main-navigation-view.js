@@ -1,7 +1,7 @@
-import AbstarctView from '../framework/view/abstract-view.js';
+import AbstarctView from '../framework/view/abstract-view';
 
 const createFilterItemTemplate = (filter) => {
-  const {name, count} = filter;
+  const { name, count } = filter;
 
   return (
     `
@@ -13,15 +13,14 @@ const createFilterItemTemplate = (filter) => {
 };
 
 const createMainNavigationTemplate = (filterItems) => {
-  const filterItemsTemplate = filterItems.reduce((acc, filter) => acc + createFilterItemTemplate(filter), '');
+  const filterItemsTemplate = filterItems.reduce((acc, filter) => `${acc} ${createFilterItemTemplate(filter)}`, '');
   return (
-    `
-  <nav class="main-navigation">
-    <a href="#all" class="main-navigation__item main-navigation__item--active">
-      All movies
-    </a>
-    ${filterItemsTemplate}
-  </nav>`
+    `<nav class="main-navigation">
+      <a href="#all" class="main-navigation__item main-navigation__item--active">
+        All movies
+      </a>
+      ${filterItemsTemplate}
+    </nav>`
   );
 };
 

@@ -1,4 +1,4 @@
-import AbstarctView from '../framework/view/abstract-view.js';
+import AbstarctView from '../framework/view/abstract-view';
 
 const createFooterStatisticsTemplate = () => '<p>130 291 movies inside</p>';
 

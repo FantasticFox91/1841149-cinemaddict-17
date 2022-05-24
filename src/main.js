@@ -1,9 +1,9 @@
 import { render } from './framework/render';
-import UserProfile from './view/user-profiile-view.js';
-import MainNavigationView from './view/main-navigation-view.js';
-import FooterStatistics from './view/footer-statistics-view.js';
-import FilmListPresenter from './presenter/film-list-presenter.js';
-import FilmsModel from './model/film-model.js';
+import UserProfile from './view/user-profile-view';
+import MainNavigationView from './view/main-navigation-view';
+import FooterStatistics from './view/footer-statistics-view';
+import FilmListPresenter from './presenter/film-list-presenter';
+import FilmsModel from './model/films-model';
 import { generateFilter } from './data/filters';
 
 const siteMainElement = document.querySelector('.main');

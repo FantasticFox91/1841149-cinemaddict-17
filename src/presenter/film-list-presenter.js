@@ -1,17 +1,15 @@
-import {render, remove, RenderPosition} from '../framework/render';
+import { render, remove, RenderPosition } from '../framework/render';
 import FilmListView from '../view/film-list-view';
 import FilmBoardView from '../view/film-board-view';
 import FilmSectionView from '../view/film-section-view';
 import TopRatedFilmsView from '../view/top-rated-films-view';
 import MostCommendedFilmsView from '../view/most-commented-films-view';
 import ShowMoreButtonView from '../view/show-more-button-view';
-import EmptyFilmListView from '../view/empty-films-view';
+import EmptyFilmsListView from '../view/empty-films-list-view';
 import FilmPresenter from './film-presenter';
 import FilterList from '../view/filter-list-view';
-import { updateFilm, SortType, sortDateDown, sortRateDown } from '../utils/common';
-
-const EXTRA_CARDS_COUNT = 2;
-const FILMS_PER_STEP = 5;
+import { updateFilm, sortDateDown, sortRateDown } from '../utils/common';
+import { EXTRA_CARDS_COUNT, FILMS_PER_STEP, SortType } from '../const';
 
 export default class FilmListPresenter {
   #filmListContainer = null;
@@ -21,7 +19,7 @@ export default class FilmListPresenter {
   #filmBoard = new FilmBoardView;
   #topRatedfilmBoard = new FilmBoardView;
   #mostCommentedfilmBoard = new FilmBoardView;
-  #emptyFilmList = new EmptyFilmListView;
+  #emptyFilmList = new EmptyFilmsListView;
   #topRatedFilmsComponent = new TopRatedFilmsView;
   #mostCommendedFilmsComponent = new MostCommendedFilmsView;
   #showMoreButtonComponent = new ShowMoreButtonView;

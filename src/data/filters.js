@@ -17,4 +17,4 @@ const generateFilter = (films) => Object.entries(Filter).map(
   }),
 );
 
-export {generateFilter};
+export { generateFilter };
