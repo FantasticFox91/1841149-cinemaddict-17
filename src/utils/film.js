@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { getRandomInteger } from './common.js';
+import { getRandomInteger } from './common';
 
 const humanizeYear = (date) => dayjs(date).get('year');
 
@@ -13,4 +13,4 @@ const generateRandomDate = (rangeType, min, max) => {
   return dayjs().add(daysGap, rangeType).toDate();
 };
 
-export { humanizeYear, generateRandomDate, humanizeDateAndTime, humanizeDate};
+export { humanizeYear, generateRandomDate, humanizeDateAndTime, humanizeDate };

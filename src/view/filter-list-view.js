@@ -1,18 +1,18 @@
 import AbstarctView from '../framework/view/abstract-view.js';
-import { SortType } from '../utils/common.js';
+import { SortType } from '../const.js';
 
 const createFilterListTemplate = () => `
-<ul class="sort">
-  <li>
-    <a href="#" class="sort__button sort__button--active" data-sort-type="${SortType.DEFAULT}">Sort by default</a>
-  </li>
-  <li>
-    <a href="#" class="sort__button" data-sort-type="${SortType.DATE_DOWN}">Sort by date</a>
-  </li>
-  <li>
-  <a href="#" class="sort__button" data-sort-type="${SortType.RATE_DOWN}">Sort by rating</a>
-  </li>
-</ul>`;
+  <ul class="sort">
+    <li>
+      <a href="#" class="sort__button sort__button--active" data-sort-type="${SortType.DEFAULT}">Sort by default</a>
+    </li>
+    <li>
+      <a href="#" class="sort__button" data-sort-type="${SortType.DATE_DOWN}">Sort by date</a>
+    </li>
+    <li>
+    <a href="#" class="sort__button" data-sort-type="${SortType.RATE_DOWN}">Sort by rating</a>
+    </li>
+  </ul>`;
 
 export default class FilterListView extends AbstarctView {
   get template() {

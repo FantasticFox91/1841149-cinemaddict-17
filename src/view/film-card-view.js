@@ -1,13 +1,13 @@
-import { humanizeYear} from '../utils/film.js';
-import { calculateDuration } from '../utils/common.js';
-import {MAX_SHORT_DESCRIPTION_LENGTH, MIN} from '../const.js';
-import AbstractView from '../framework/view/abstract-view.js';
+import { humanizeYear} from '../utils/film';
+import { calculateDuration } from '../utils/common';
+import { MAX_SHORT_DESCRIPTION_LENGTH, MIN } from '../const';
+import AbstractView from '../framework/view/abstract-view';
 
-const generateDescription = (desc) => {
-  if (desc.length > MAX_SHORT_DESCRIPTION_LENGTH) {
-    desc = desc.slice(MIN, MAX_SHORT_DESCRIPTION_LENGTH).concat('...');
+const generateDescription = (description) => {
+  if (description.length > MAX_SHORT_DESCRIPTION_LENGTH) {
+    description = description.slice(MIN, MAX_SHORT_DESCRIPTION_LENGTH).concat('...');
   }
-  return desc;
+  return description;
 };
 
 const createFilmCardTemplate = (film) => {
@@ -64,11 +64,6 @@ export default class FilmCardView extends AbstractView {
     this.element.querySelector('.film-card__link').addEventListener('click', this.#clickHandler);
   };
 
-  #clickHandler = (evt) => {
-    evt.preventDefault();
-    this._callback.click();
-  };
-
   setWatchlistClickHandler = (callback) => {
     this._callback.watchlistClick = callback;
     this.element.querySelector('.film-card__controls-item--add-to-watchlist').addEventListener('click', this.#onWatchlistClick);
@@ -82,6 +77,11 @@ export default class FilmCardView extends AbstractView {
   setFavouriteClickHandler = (callback) => {
     this._callback.favouriteClick = callback;
     this.element.querySelector('.film-card__controls-item--favorite').addEventListener('click', this.#onFavouriteClick);
+  };
+
+  #clickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.click();
   };
 
   #onWatchlistClick = (evt) => {

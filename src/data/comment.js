@@ -1,6 +1,6 @@
-import {generateRandomNameFromArray} from '../utils/common.js';
-import {generateRandomDate} from '../utils/film.js';
-import {AUTHORS, COMMENTS, MAX_DAY_GAP, MIN, EMOTIONS} from '../const.js';
+import { generateRandomNameFromArray } from '../utils/common';
+import { generateRandomDate } from '../utils/film';
+import { AUTHORS, COMMENTS, MAX_DAY_GAP, MIN, EMOTIONS } from '../const';
 let counter = 0;
 
 export const generateComment = () => ({

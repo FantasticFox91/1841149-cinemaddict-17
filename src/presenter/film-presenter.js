@@ -1,4 +1,4 @@
-import {remove, render, replace} from '../framework/render';
+import { remove, render, replace } from '../framework/render';
 import FilmCardView from '../view/film-card-view';
 import PopupView from '../view/popup-view';
 import { isPressedEscapeKey } from '../utils/common';
@@ -78,15 +78,9 @@ export default class FilmPresenter {
     }
   };
 
-  #onWatchlistClick = () => {
-    this.#changeFilm({...this.#film, userDetails: {...this.#film.userDetails, watchlist: !this.#film.userDetails.watchlist}});
-  };
+  #onWatchlistClick = () => this.#changeFilm({...this.#film, userDetails: {...this.#film.userDetails, watchlist: !this.#film.userDetails.watchlist}});
 
-  #onWatchedClick = () => {
-    this.#changeFilm({...this.#film, userDetails: {...this.#film.userDetails, alreadyWatched: !this.#film.userDetails.alreadyWatched}});
-  };
+  #onWatchedClick = () => this.#changeFilm({...this.#film, userDetails: {...this.#film.userDetails, alreadyWatched: !this.#film.userDetails.alreadyWatched}});
 
-  #onFavouriteClick = () => {
-    this.#changeFilm({...this.#film, userDetails: {...this.#film.userDetails, favorite: !this.#film.userDetails.favorite}});
-  };
+  #onFavouriteClick = () => this.#changeFilm({...this.#film, userDetails: {...this.#film.userDetails, favorite: !this.#film.userDetails.favorite}});
 }

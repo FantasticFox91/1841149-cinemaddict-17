@@ -1,12 +1,12 @@
-import AbstarctView from '../framework/view/abstract-view.js';
+import AbstarctView from '../framework/view/abstract-view';
 
-const createMostCommendedFilmsTemplate = () => `
+const createMostCommentedFilmsTemplate = () => `
   <section class="films-list films-list--extra">
     <h2 class="films-list__title">Most commented</h2>
   </section>`;
 
-export default class MostCommendedFilmsView extends AbstarctView {
+export default class MostCommentedFilmsView extends AbstarctView {
   get template() {
-    return createMostCommendedFilmsTemplate();
+    return createMostCommentedFilmsTemplate();
   }
 }
