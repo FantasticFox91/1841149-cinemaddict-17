@@ -1,10 +1,9 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view';
-import { humanizeDate, humanizeDateAndTime } from '../utils/film';
+import { humanizeDate } from '../utils/film';
 import { calculateDuration, isPressedEscapeKey } from '../utils/common';
-import { nanoid } from 'nanoid';
 import { BLANK_FILM } from '../const';
 
-const createPopupTemplate = (commentsData, film = BLANK_FILM, emojiSelected, typedComment) => {
+const createPopupTemplate = (film = BLANK_FILM) => {
   const { userDetails, filmInfo } = film;
 
   const watchlistClassName = userDetails.watchlist
@@ -22,34 +21,6 @@ const createPopupTemplate = (commentsData, film = BLANK_FILM, emojiSelected, typ
   const createGenreTemplate = (genre) => `<span class="film-details__genre">${genre}</span>`;
 
   const showGenres = ({genre}) => genre.reduce((acc, genr) => `${acc} ${createGenreTemplate(genr)}`, '');
-
-  const createCommentTemplate = (commentData) => {
-    const { emotion, comment, author, date } = commentData;
-
-    return (
-      `
-      <li class="film-details__comment">
-        <span class="film-details__comment-emoji">
-          <img src="./images/emoji/${emotion}.png" width="55" height="55" alt="emoji-${emotion}">
-        </span>
-        <div>
-          <p class="film-details__comment-text">${comment}</p>
-          <p class="film-details__comment-info">
-            <span class="film-details__comment-author">${author}</span>
-            <span class="film-details__comment-day">${humanizeDateAndTime(date)}</span>
-            <button class="film-details__comment-delete">Delete</button>
-          </p>
-        </div>
-        </li>
-      `
-    );
-  };
-
-  const generateComments = (comments) => comments.reduce((acc, comment) => `${acc} ${createCommentTemplate(comment)}`, '');
-
-  const showSelectedEmoji = (emoji) => emoji ? `<img src="./images/emoji/${emoji}.png" width="55" height="55" alt="emoji">` : '';
-
-  const showTypedComment = (comment) => comment ? `<textarea class='film-details__comment-input' name='comment'>${comment}</textarea>` : '<textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>';
 
   return (`
   <section class="film-details">
@@ -115,53 +86,10 @@ const createPopupTemplate = (commentsData, film = BLANK_FILM, emojiSelected, typ
               </p>
             </div>
           </div>
-
           <section class="film-details__controls">
             <button type="button" class="film-details__control-button film-details__control-button--watchlist ${watchlistClassName}" id="watchlist" name="watchlist">Add to watchlist</button>
             <button type="button" class="film-details__control-button film-details__control-button--watched ${watchedClassName}" id="watched" name="watched">Already watched</button>
             <button type="button" class="film-details__control-button film-details__control-button--favorite ${favoriteClassName}" id="favorite" name="favorite">Add to favorites</button>
-          </section>
-        </div>
-
-        <div class="film-details__bottom-container">
-          <section class="film-details__comments-wrap">
-            <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${commentsData.length}</span></h3>
-
-            <ul class="film-details__comments-list">
-              ${generateComments(commentsData)}
-            </ul>
-
-            <div class="film-details__new-comment">
-              <div class="film-details__add-emoji-label">
-                ${showSelectedEmoji(emojiSelected)}
-              </div>
-
-              <label class="film-details__comment-label">
-                ${showTypedComment(typedComment)}
-              </label>
-
-              <div class="film-details__emoji-list">
-                <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile">
-                <label class="film-details__emoji-label" for="emoji-smile">
-                  <img src="./images/emoji/smile.png" width="30" height="30" alt="emoji">
-                </label>
-
-                <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="sleeping">
-                <label class="film-details__emoji-label" for="emoji-sleeping">
-                  <img src="./images/emoji/sleeping.png" width="30" height="30" alt="emoji">
-                </label>
-
-                <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-puke" value="puke">
-                <label class="film-details__emoji-label" for="emoji-puke">
-                  <img src="./images/emoji/puke.png" width="30" height="30" alt="emoji">
-                </label>
-
-                <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry" value="angry">
-                <label class="film-details__emoji-label" for="emoji-angry">
-                  <img src="./images/emoji/angry.png" width="30" height="30" alt="emoji">
-                </label>
-              </div>
-            </div>
           </section>
         </div>
       </form>
@@ -170,14 +98,20 @@ const createPopupTemplate = (commentsData, film = BLANK_FILM, emojiSelected, typ
 };
 
 export default class PopupView extends AbstractStatefulView {
-  constructor(comments, film) {
+  #changeFilm = null;
+  #film = null;
+  #filmsModel = null;
+
+  constructor(film, filmsModel, changeFilm) {
     super();
-    this._state = PopupView.parseDataToState(film, comments);
-    this.#setInnerHandlers();
+    this._state = PopupView.parseDataToState(film);
+    this.#changeFilm = changeFilm;
+    this.#film = film;
+    this.#filmsModel = filmsModel;
   }
 
   get template() {
-    return createPopupTemplate(this._state.comments, this._state, this._state.emojiSelected, this._state.typedComment);
+    return createPopupTemplate(this._state, this._state.emojiSelected, this._state.typedComment);
   }
 
   setWatchlistClickHandler = (callback) => {
@@ -200,13 +134,7 @@ export default class PopupView extends AbstractStatefulView {
     this.element.querySelector('.film-details__close-btn').addEventListener('click', this.#onCloseButtonClick);
   };
 
-  #setInnerHandlers = () => {
-    document.addEventListener('keypress', this.#onSubmitForm);
-    this.element.querySelector('.film-details__emoji-list').addEventListener('click', this.#onEmojiImageClick);
-  };
-
   _restoreHandlers = () => {
-    this.#setInnerHandlers();
     this.setCloseButtonClickHandler(this._callback.closeButtonClick);
     this.setFavouriteClickHandler(this._callback.favouriteClick);
     this.setWatchlistClickHandler(this._callback.watchlistClick);
@@ -245,43 +173,13 @@ export default class PopupView extends AbstractStatefulView {
     }
   };
 
-  #onEmojiImageClick = (evt) => {
-    const commentText = this.element.querySelector('.film-details__comment-input').value;
-    if (evt.target.nodeName === 'IMG') {
-      const emojiName = evt.target.src.slice(evt.target.src.lastIndexOf('/')+1, evt.target.src.lastIndexOf('.'));
-      if(this._state.emojiSelected !== emojiName){
-        const scrollPosition = this.element.scrollTop;
-        this.updateElement({emojiSelected: emojiName, typedComment: commentText});
-        this.element.scrollTop = scrollPosition;
-      }
-    }
-  };
-
   #close = () => {
     document.body.classList.toggle('hide-overflow');
     document.body.removeEventListener('keydown', this.#onDocumentEscKeydown);
     this.element.remove();
   };
 
-  #onSubmitForm = (evt) => {
-    if (evt.ctrlKey && evt.code === 'Enter') {
-      const scrollPosition = this.element.scrollTop;
-      this._state.comments.push(this.#onSubmitFormPress());
-      this.updateElement({emojiSelected: null, typedComment: null});
-      this.element.scrollTop = scrollPosition;
-    }
-  };
-
-  #onSubmitFormPress = () =>
-    ({
-      id: nanoid(),
-      author: 'Tom Fisher',
-      comment: this.element.querySelector('.film-details__comment-input').value,
-      date: humanizeDateAndTime(new Date()),
-      emotion: this.element.querySelector('.film-details__emoji-item:checked').value
-    });
-
   static parseCommentToState = (comment) => this._state.comments.push(comment);
 
-  static parseDataToState = (film, comments) => ({...film, comments, emojiSelected: null, typedComment: null});
+  static parseDataToState = (film) => ({...film, emojiSelected: null, typedComment: null});
 }

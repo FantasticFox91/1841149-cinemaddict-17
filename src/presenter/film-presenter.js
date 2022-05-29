@@ -2,6 +2,12 @@ import { remove, render, replace } from '../framework/render';
 import FilmCardView from '../view/film-card-view';
 import PopupView from '../view/popup-view';
 import { isPressedEscapeKey } from '../utils/common';
+import { UserAction, UpdateType } from '../const';
+import FilmCommentsPresenter from './film-comments-presenter';
+
+const Mode = {
+  DEFAULT: 'DEFAULT',
+};
 
 export default class FilmPresenter {
   #filmListContainer = null;
@@ -9,14 +15,17 @@ export default class FilmPresenter {
   #filmComponent = null;
   #film = null;
   #filmsModel = null;
+  #commentsModel = null;
   #filmPopup = null;
+  #filmComments = null;
   #comments = [];
+  #mode = Mode.DEFAULT;
 
-  constructor(filmListContainer, filmsModel, changeFilm) {
+  constructor(filmListContainer, filmsModel, commentsModel, changeFilm) {
     this.#filmListContainer = filmListContainer;
     this.#filmsModel = filmsModel;
     this.#changeFilm = changeFilm;
-    this.#comments = [...this.#filmsModel.comments];
+    this.#commentsModel = commentsModel;
   }
 
   init(film) {
@@ -26,7 +35,7 @@ export default class FilmPresenter {
     this.#filmComponent.setWatchlistClickHandler(this.#onWatchlistClick);
     this.#filmComponent.setWatchedClickHandler(this.#onWatchedClick);
     this.#filmComponent.setFavouriteClickHandler(this.#onFavouriteClick);
-    this.#filmComponent.setClickHandler(() => this.#onCardClick(this.#comments, film));
+    this.#filmComponent.setClickHandler(() => this.#onCardClick(film));
     if (!prevFilmComponent) {
       render(this.#filmComponent, this.#filmListContainer);
       return;
@@ -39,18 +48,19 @@ export default class FilmPresenter {
 
   destroy = () => remove(this.#filmComponent);
 
-  #onCardClick = (commentsList, film) => {
+  #onCardClick = (film) => {
     if(document.querySelector('.film-details')) {
       document.querySelector('.film-details').remove();
       document.body.classList.toggle('hide-overflow');
     }
-    const selectedComments = commentsList.filter(({id}) => film.comments.some((commentId) => commentId === Number(id)));
-    this.#showPopUp(selectedComments, film);
+    this.#showPopUp(film);
   };
 
-  #showPopUp = (commentsData, film) => {
+  #showPopUp = (film) => {
     const siteFooterElement = document.querySelector('.footer');
-    this.#filmPopup = new PopupView(commentsData, film);
+    this.#filmPopup = new PopupView(film, this.#filmsModel, this.#changeFilm);
+    this.#filmComments = new FilmCommentsPresenter(this.#filmPopup.element.querySelector('.film-details__inner'), this.#commentsModel.comments, this.#changeFilm);
+    this.#filmComments.init(film);
     this.#filmPopup.setWatchlistClickHandler(this.#onWatchlistClick);
     this.#filmPopup.setWatchedClickHandler(this.#onWatchedClick);
     this.#filmPopup.setFavouriteClickHandler(this.#onFavouriteClick);
@@ -78,9 +88,27 @@ export default class FilmPresenter {
     }
   };
 
-  #onWatchlistClick = () => this.#changeFilm({...this.#film, userDetails: {...this.#film.userDetails, watchlist: !this.#film.userDetails.watchlist}});
+  #onWatchlistClick = () => {
+    this.#changeFilm(
+      UserAction.UPDATE_FILM,
+      UpdateType.PATCH,
+      {...this.#film, userDetails: {...this.#film.userDetails, watchlist: !this.#film.userDetails.watchlist}},
+    );
+  };
 
-  #onWatchedClick = () => this.#changeFilm({...this.#film, userDetails: {...this.#film.userDetails, alreadyWatched: !this.#film.userDetails.alreadyWatched}});
+  #onWatchedClick = () => {
+    this.#changeFilm(
+      UserAction.UPDATE_FILM,
+      UpdateType.PATCH,
+      {...this.#film, userDetails: {...this.#film.userDetails, alreadyWatched: !this.#film.userDetails.alreadyWatched}},
+    );
+  };
 
-  #onFavouriteClick = () => this.#changeFilm({...this.#film, userDetails: {...this.#film.userDetails, favorite: !this.#film.userDetails.favorite}});
+  #onFavouriteClick = () => {
+    this.#changeFilm(
+      UserAction.UPDATE_FILM,
+      UpdateType.PATCH,
+      {...this.#film, userDetails: {...this.#film.userDetails, favorite: !this.#film.userDetails.favorite}},
+    );
+  };
 }

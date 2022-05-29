@@ -33,20 +33,8 @@ const calculateDuration = (minutes) => {
 
 const isPressedEscapeKey = (evt) => evt.key === 'Escape';
 
-const updateFilm = (films, update) => {
-  const index = films.findIndex((film) => film.id === update.id);
-  if(index === -1) {
-    return films;
-  }
-  return [
-    ...films.slice(0, index),
-    update,
-    ...films.slice(index + 1),
-  ];
-};
-
 const sortDateDown = (filmA, filmB) => dayjs(filmB.filmInfo.release.date).diff(dayjs(filmA.filmInfo.release.date));
 
 const sortRateDown = (filmA, filmB) => filmB.filmInfo.totalRating - filmA.filmInfo.totalRating;
 
-export { getRandomInteger, generateRandomNameFromArray, getRandomDecimalNumber, calculateDuration, generateRandomArrayFromArray, isPressedEscapeKey, updateFilm, sortDateDown, sortRateDown };
+export { getRandomInteger, generateRandomNameFromArray, getRandomDecimalNumber, calculateDuration, generateRandomArrayFromArray, isPressedEscapeKey, sortDateDown, sortRateDown };
