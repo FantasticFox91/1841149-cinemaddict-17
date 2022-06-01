@@ -3,17 +3,18 @@ import { humanizeCommentDate, humanizeDateAndTime } from '../utils/film';
 import dayjs from 'dayjs';
 import { UpdateType, UserAction } from '../const';
 import { nanoid } from 'nanoid';
+import he from 'he';
 
 const showSelectedEmoji = (emoji) => emoji ? `<img src="./images/emoji/${emoji}.png" width="55" height="55" alt="emoji">` : '';
 
 const showTypedComment = (comment) => comment ? `<textarea class='film-details__comment-input' name='comment'>${comment}</textarea>` : '<textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>';
 
 const createCommentTemplate = (commentData) => {
-  const { emotion, comment, author, date } = commentData;
+  const { emotion, comment, author, date, id } = commentData;
 
   return (
     `
-    <li class="film-details__comment">
+    <li class="film-details__comment" data-id="${id}">
       <span class="film-details__comment-emoji">
         <img src="./images/emoji/${emotion}.png" width="55" height="55" alt="emoji-${emotion}">
       </span>
@@ -106,6 +107,7 @@ export default class FilmCommentsView extends AbstractStatefulView {
     this.#filmComments = comments.filter(({id}) => this.#filmCommentsIds.some((commentId) => commentId === id));
     this.#setInnerHandlers();
     this._state = FilmCommentsView.parseDataToState(film, this.#filmComments);
+    this.element.querySelectorAll('.film-details__comment').forEach((comment) => comment.addEventListener('click', this.#onDeleteButtonClick));
   }
 
   get template() {
@@ -118,7 +120,7 @@ export default class FilmCommentsView extends AbstractStatefulView {
       const emojiName = evt.target.src.slice(evt.target.src.lastIndexOf('/')+1, evt.target.src.lastIndexOf('.'));
       if(this._state.emojiSelected !== emojiName){
         const scrollPosition = this.element.scrollTop;
-        this.updateElement({emojiSelected: emojiName, typedComment: commentText});
+        this.updateElement({emojiSelected: emojiName, typedComment: he.encode(commentText)});
         this.element.scrollTop = scrollPosition;
       }
     }
@@ -138,7 +140,7 @@ export default class FilmCommentsView extends AbstractStatefulView {
         UpdateType.MINOR,
         {...this._state, comments: commentsId},
         comment
-        );
+      );
     }
   };
 
@@ -146,7 +148,7 @@ export default class FilmCommentsView extends AbstractStatefulView {
     ({
       id: nanoid(),
       author: 'Tom Fisher',
-      comment: this.element.querySelector('.film-details__comment-input').value,
+      comment: he.encode(this.element.querySelector('.film-details__comment-input').value),
       date: humanizeCommentDate(new Date()),
       emotion: this.element.querySelector('.film-details__emoji-item:checked').value
     });
@@ -158,6 +160,22 @@ export default class FilmCommentsView extends AbstractStatefulView {
 
   _restoreHandlers = () => {
     this.#setInnerHandlers();
+  };
+
+  #onDeleteButtonClick = (evt) => {
+    evt.preventDefault();
+    const commentId = Number(evt.target.parentNode.parentNode.parentNode.dataset.id);
+    const selectedComment = this.#filmComments.filter((comments) =>  commentId === comments.id);
+    const updatedFilmComments = this._state.comments.filter((comments) => commentId !== comments.id);
+    this._state.comments = updatedFilmComments;
+    const commentsId = [];
+    this._state.comments.forEach((el) => commentsId.push(el.id));
+    this.#changeComments(
+      UserAction.DELETE_COMMENT,
+      UpdateType.MINOR,
+      {...this._state, comments: commentsId},
+      selectedComment[0]
+    );
   };
 
   static parseDataToState = (film, comments) => ({...film, comments, emojiSelected: null, typedComment: null});

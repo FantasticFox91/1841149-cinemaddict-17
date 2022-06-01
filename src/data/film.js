@@ -24,7 +24,7 @@ export const generateFilm = () => ({
     description: generateRandomNameFromArray(DESCRIPTIONS),
   },
   userDetails: {
-    watchlist: Boolean(getRandomInteger(0, 1)),
+    watchlist: false,
     alreadyWatched: Boolean(getRandomInteger(0, 1)),
     watchingDate: DEFAULT_DATE_AND_TIME,
     favorite: Boolean(getRandomInteger(0, 1))
