@@ -134,13 +134,6 @@ export default class PopupView extends AbstractStatefulView {
     this.element.querySelector('.film-details__close-btn').addEventListener('click', this.#onCloseButtonClick);
   };
 
-  _restoreHandlers = () => {
-    this.setCloseButtonClickHandler(this._callback.closeButtonClick);
-    this.setFavouriteClickHandler(this._callback.favouriteClick);
-    this.setWatchlistClickHandler(this._callback.watchlistClick);
-    this.setWatchedClickHandler(this._callback.watchedClick);
-  };
-
   #onWatchlistClick = (evt) => {
     evt.preventDefault();
     this._callback.watchlistClick();

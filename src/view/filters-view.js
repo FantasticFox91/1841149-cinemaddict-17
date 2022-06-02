@@ -4,7 +4,7 @@ const createFilterItemTemplate = (filter, currentFilterType) => {
   const { type, name, count } = filter;
   return (
     `
-      <a href="#${type}" class="main-navigation__item ${currentFilterType === type ? 'main-navigation__item--active' : ''}">
+      <a href="#${type}" class="main-navigation__item ${currentFilterType === type ? 'main-navigation__item--active' : ''}" data-filter-type='${name}'>
         ${name}
         ${type !== 'All' ? `<span class="main-navigation__item-count"> ${count} </span>` : ''}
       </a>
@@ -12,7 +12,7 @@ const createFilterItemTemplate = (filter, currentFilterType) => {
   );
 };
 
-const createMainNavigationTemplate = (filterItems, currentFilterType) => {
+const createFiltersTemplate = (filterItems, currentFilterType) => {
   const filterItemsTemplate = filterItems.reduce((acc, filter) => `${acc} ${createFilterItemTemplate(filter, currentFilterType  )}`, '');
   return (
     `<nav class="main-navigation">
@@ -21,7 +21,7 @@ const createMainNavigationTemplate = (filterItems, currentFilterType) => {
   );
 };
 
-export default class MainNavigationView extends AbstarctView {
+export default class FiltersView extends AbstarctView {
   #filters = null;
   #currentFilter = null;
 
@@ -32,7 +32,7 @@ export default class MainNavigationView extends AbstarctView {
   }
 
   get template() {
-    return createMainNavigationTemplate(this.#filters, this.#currentFilter);
+    return createFiltersTemplate(this.#filters, this.#currentFilter);
   }
 
   setFilterTypeChangeHandler = (callback) => {
@@ -45,7 +45,7 @@ export default class MainNavigationView extends AbstarctView {
       return;
     }
     evt.preventDefault();
-    const filterName = evt.target.href.slice(23);
+    const filterName = evt.target.dataset.filterType;
     this.element.querySelector('.main-navigation__item--active').classList.remove('main-navigation__item--active');
     evt.target.classList.add('main-navigation__item--active');
     this._callback.filterTypeChange(filterName);

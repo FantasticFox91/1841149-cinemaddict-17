@@ -1,9 +1,7 @@
 import { remove, render, replace } from '../framework/render';
 import FilmCardView from '../view/film-card-view';
-import PopupView from '../view/popup-view';
-import { isPressedEscapeKey } from '../utils/common';
 import { UserAction, UpdateType } from '../const';
-import FilmCommentsPresenter from './film-comments-presenter';
+import PopupPresenter from './popup-presenter';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -58,34 +56,8 @@ export default class FilmPresenter {
 
   #showPopUp = (film) => {
     const siteFooterElement = document.querySelector('.footer');
-    this.#filmPopup = new PopupView(film, this.#filmsModel, this.#changeFilm);
-    this.#filmComments = new FilmCommentsPresenter(this.#filmPopup.element.querySelector('.film-details__inner'), this.#commentsModel.comments, this.#changeFilm);
-    this.#filmComments.init(film);
-    this.#filmPopup.setWatchlistClickHandler(this.#onWatchlistClick);
-    this.#filmPopup.setWatchedClickHandler(this.#onWatchedClick);
-    this.#filmPopup.setFavouriteClickHandler(this.#onFavouriteClick);
-    this.#filmPopup.setCloseButtonClickHandler(this.#onCloseButtonClick);
-    document.body.classList.toggle('hide-overflow');
-    render(this.#filmPopup, siteFooterElement, 'afterend');
-    document.body.addEventListener('keydown', this.#onDocumentEscKeydown);
-    this.#filmPopup.element.querySelector('.film-details__close-btn').addEventListener('click', this.#onCloseButtonClick);
-  };
-
-  #closePopUp = () => {
-    document.body.classList.toggle('hide-overflow', false);
-    document.body.removeEventListener('keydown', this.#onDocumentEscKeydown);
-    this.#filmPopup.element.remove();
-  };
-
-  #onCloseButtonClick = () => {
-    this.#closePopUp();
-  };
-
-  #onDocumentEscKeydown = (evt) => {
-    if (isPressedEscapeKey(evt)) {
-      evt.preventDefault();
-      this.#closePopUp();
-    }
+    this.#filmPopup = new PopupPresenter(siteFooterElement, film, this.#filmsModel, this.#commentsModel, this.#changeFilm);
+    this.#filmPopup.init(film);
   };
 
   #onWatchlistClick = () => {
@@ -94,6 +66,10 @@ export default class FilmPresenter {
       UpdateType.PATCH,
       {...this.#film, userDetails: {...this.#film.userDetails, watchlist: !this.#film.userDetails.watchlist}},
     );
+    if (this.#filmPopup) {
+      document.body.classList.toggle('hide-overflow');
+      this.#showPopUp(this.#film);
+    }
   };
 
   #onWatchedClick = () => {
@@ -102,6 +78,10 @@ export default class FilmPresenter {
       UpdateType.PATCH,
       {...this.#film, userDetails: {...this.#film.userDetails, alreadyWatched: !this.#film.userDetails.alreadyWatched}},
     );
+    if (this.#filmPopup) {
+      document.body.classList.toggle('hide-overflow');
+      this.#showPopUp(this.#film);
+    }
   };
 
   #onFavouriteClick = () => {
@@ -110,5 +90,9 @@ export default class FilmPresenter {
       UpdateType.PATCH,
       {...this.#film, userDetails: {...this.#film.userDetails, favorite: !this.#film.userDetails.favorite}},
     );
+    if (this.#filmPopup) {
+      document.body.classList.toggle('hide-overflow');
+      this.#showPopUp(this.#film);
+    }
   };
 }

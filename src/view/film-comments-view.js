@@ -116,8 +116,8 @@ export default class FilmCommentsView extends AbstractStatefulView {
 
   #onEmojiImageClick = (evt) => {
     const commentText = this.element.querySelector('.film-details__comment-input').value;
-    if (evt.target.nodeName === 'IMG') {
-      const emojiName = evt.target.src.slice(evt.target.src.lastIndexOf('/')+1, evt.target.src.lastIndexOf('.'));
+    if (evt.target.nodeName === 'INPUT') {
+      const emojiName = evt.target.value;
       if(this._state.emojiSelected !== emojiName){
         const scrollPosition = this.element.scrollTop;
         this.updateElement({emojiSelected: emojiName, typedComment: he.encode(commentText)});
