@@ -2,7 +2,6 @@ import { remove, render, replace } from '../framework/render';
 import FilmCardView from '../view/film-card-view';
 import { UserAction, UpdateType } from '../const';
 import PopupPresenter from './popup-presenter';
-import { isPressedEscapeKey } from '../utils/common';
 
 export default class FilmPresenter {
   #filmListContainer = null;
@@ -55,18 +54,6 @@ export default class FilmPresenter {
     this.#filmPopup.init(film);
   };
 
-  #closePopUp = () => {
-    document.body.classList.toggle('hide-overflow', false);
-    this.destroy();
-  };
-
-  #onDocumentEscKeydown = (evt) => {
-    if (isPressedEscapeKey(evt)) {
-      evt.preventDefault();
-      this.#closePopUp();
-    }
-  };
-
   #onWatchlistClick = () => this.#handleCardControls('Watchlist', {...this.#film, userDetails: {...this.#film.userDetails, watchlist: !this.#film.userDetails.watchlist}});
 
   #onWatchedClick = () => this.#handleCardControls('History', {...this.#film, userDetails: {...this.#film.userDetails, alreadyWatched: !this.#film.userDetails.alreadyWatched}});
@@ -93,6 +80,4 @@ export default class FilmPresenter {
       this.#showPopUp(this.#film);
     }
   };
-
-
 }
