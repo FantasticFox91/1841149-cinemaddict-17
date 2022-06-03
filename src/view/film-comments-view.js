@@ -154,7 +154,7 @@ export default class FilmCommentsView extends AbstractStatefulView {
     });
 
   #setInnerHandlers = () => {
-    document.addEventListener('keypress', this.#onSubmitForm);
+    this.element.addEventListener('keypress', this.#onSubmitForm);
     this.element.querySelector('.film-details__emoji-list').addEventListener('click', this.#onEmojiImageClick);
   };
 
@@ -164,18 +164,20 @@ export default class FilmCommentsView extends AbstractStatefulView {
 
   #onDeleteButtonClick = (evt) => {
     evt.preventDefault();
-    const commentId = Number(evt.target.parentNode.parentNode.parentNode.dataset.id);
-    const selectedComment = this.#filmComments.filter((comments) =>  commentId === comments.id);
-    const updatedFilmComments = this._state.comments.filter((comments) => commentId !== comments.id);
-    this._state.comments = updatedFilmComments;
-    const commentsId = [];
-    this._state.comments.forEach((el) => commentsId.push(el.id));
-    this.#changeComments(
-      UserAction.DELETE_COMMENT,
-      UpdateType.MINOR,
-      {...this._state, comments: commentsId},
-      selectedComment[0]
-    );
+    if (evt.target.nodeName === 'BUTTON') {
+      const commentId = Number(evt.target.parentNode.parentNode.parentNode.dataset.id);
+      const selectedComment = this.#filmComments.filter((comments) =>  commentId === comments.id);
+      const updatedFilmComments = this._state.comments.filter((comments) => commentId !== comments.id);
+      this._state.comments = updatedFilmComments;
+      const commentsId = [];
+      this._state.comments.forEach((el) => commentsId.push(el.id));
+      this.#changeComments(
+        UserAction.DELETE_COMMENT,
+        UpdateType.MINOR,
+        {...this._state, comments: commentsId},
+        selectedComment[0]
+      );
+    }
   };
 
   static parseDataToState = (film, comments) => ({...film, comments, emojiSelected: null, typedComment: null});

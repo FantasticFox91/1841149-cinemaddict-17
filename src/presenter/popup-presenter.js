@@ -20,9 +20,6 @@ export default class PopupPresenter {
     this.#filmsModel = filmsModel;
     this.#film = film;
     this.#changeFilm = changeFilm;
-
-    this.#filmsModel.addObserver(this.#handleModelEvent);
-    this.#commentsModel.addObserver(this.#handleModelEvent);
   }
 
   init = (film) => {
@@ -30,12 +27,11 @@ export default class PopupPresenter {
 
     this.#popupComponent = new PopupView(film, this.#filmsModel, this.#changeFilm);
     this.#filmComments = new FilmCommentsPresenter(this.#popupComponent.element, this.#commentsModel, this.#changeFilm);
-    this.#filmComments.init(film);
+    this.#filmComments.init(this.#film);
     this.#popupComponent.setWatchlistClickHandler(this.#onWatchlistClick);
     this.#popupComponent.setWatchedClickHandler(this.#onWatchedClick);
     this.#popupComponent.setFavouriteClickHandler(this.#onFavouriteClick);
     this.#popupComponent.setCloseButtonClickHandler(this.#onCloseButtonClick);
-    document.body.classList.toggle('hide-overflow');
     document.body.addEventListener('keydown', this.#onDocumentEscKeydown);
 
     if (prevFilterComponent === null) {
@@ -47,39 +43,32 @@ export default class PopupPresenter {
     remove(prevFilterComponent);
   };
 
-  destroy = () => remove(this.#popupComponent);
+  destroy = () => {
+    remove(this.#popupComponent);
+    document.body.removeEventListener('keydown', this.#onDocumentEscKeydown);
+  };
 
-  #handleModelEvent = (updateType, data) => {
-    switch (updateType) {
-      case UpdateType.PATCH:
-        this.init(data);
-        break;
+  #onWatchlistClick = () => this.#handleCardControls('Watchlist', {...this.#film, userDetails: {...this.#film.userDetails, watchlist: !this.#film.userDetails.watchlist}});
+
+  #onWatchedClick = () => this.#handleCardControls('History', {...this.#film, userDetails: {...this.#film.userDetails, alreadyWatched: !this.#film.userDetails.alreadyWatched}});
+
+  #onFavouriteClick = () => this.#handleCardControls('Favorites', {...this.#film, userDetails: {...this.#film.userDetails, favorite: !this.#film.userDetails.favorite}});
+
+  #handleCardControls = (filter, updatedFilm) => {
+    const currentFilter = document.querySelector('.main-navigation__item--active').dataset.filterType;
+    if (currentFilter === filter) {
+      this.#changeFilm(
+        UserAction.UPDATE_FILM,
+        UpdateType.MINOR,
+        updatedFilm,
+      );
+    } else {
+      this.#changeFilm(
+        UserAction.UPDATE_FILM,
+        UpdateType.PATCH,
+        updatedFilm,
+      );
     }
-    document.body.classList.toggle('hide-overflow');
-  };
-
-  #onWatchlistClick = () => {
-    this.#changeFilm(
-      UserAction.UPDATE_FILM,
-      UpdateType.PATCH,
-      {...this.#film, userDetails: {...this.#film.userDetails, watchlist: !this.#film.userDetails.watchlist}},
-    );
-  };
-
-  #onWatchedClick = () => {
-    this.#changeFilm(
-      UserAction.UPDATE_FILM,
-      UpdateType.PATCH,
-      {...this.#film, userDetails: {...this.#film.userDetails, alreadyWatched: !this.#film.userDetails.alreadyWatched}},
-    );
-  };
-
-  #onFavouriteClick = () => {
-    this.#changeFilm(
-      UserAction.UPDATE_FILM,
-      UpdateType.PATCH,
-      {...this.#film, userDetails: {...this.#film.userDetails, favorite: !this.#film.userDetails.favorite}},
-    );
   };
 
   #onDocumentEscKeydown = (evt) => {

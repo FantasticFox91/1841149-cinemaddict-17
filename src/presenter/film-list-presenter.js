@@ -12,12 +12,14 @@ import { EXTRA_CARDS_COUNT, FILMS_PER_STEP, SortType, UpdateType, UserAction, Fi
 import SortListView from '../view/sort-list-view';
 import FilterPresenter from './filter-presenter';
 import { Filter } from '../data/filters';
+import PopupPresenter from './popup-presenter';
 
 export default class FilmListPresenter {
   #filmListContainer = null;
   #filmsModel = null;
   #commentsModel = null;
   #filterModel = null;
+  #filmPopup = null;
   #filmSectionComponent = new FilmSectionView;
   #filmListComponent = new FilmListView;
   #filmBoard = new FilmBoardView;
@@ -50,6 +52,7 @@ export default class FilmListPresenter {
     this.#commentsModel.addObserver(this.#handleModelEvent);
     this.#filmsModel.addObserver(this.#handleModelEvent);
     this.#filterModel.addObserver(this.#handleModelEvent);
+    this.#filmsModel.addObserver(this.#handlePopupModelEvent);
   }
 
   #handleViewAction = (actionType, updateType, update, updatedComment) => {
@@ -59,13 +62,28 @@ export default class FilmListPresenter {
         break;
       case UserAction.ADD_COMMENT:
         this.#filmsModel.updateFilm(updateType, update);
-        this.#commentsModel.addСomment(updateType, update, updatedComment);
+        this.#commentsModel.addComment(updateType, update, updatedComment);
         break;
       case UserAction.DELETE_COMMENT:
         this.#filmsModel.updateFilm(updateType, update);
         this.#commentsModel.deleteComment(updateType,update, updatedComment);
         break;
     }
+  };
+
+  #handlePopupModelEvent = (updateType, updatedFilm) => {
+    if (document.body.querySelector('.film-details')) {
+      this.#updatePopUp(updatedFilm);
+    }
+  };
+
+  #updatePopUp = (film) => {
+    const siteFooterElement = document.querySelector('.footer');
+    const scroll = document.body.querySelector('.film-details').scrollTop;
+    document.body.querySelector('.film-details').remove();
+    this.#filmPopup = new PopupPresenter(siteFooterElement, film, this.#filmsModel, this.#commentsModel, this.#handleViewAction);
+    this.#filmPopup.init(film);
+    document.body.querySelector('.film-details').scrollTop = scroll;
   };
 
   #handleModelEvent = (updateType, data) => {

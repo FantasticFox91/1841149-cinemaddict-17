@@ -13,6 +13,10 @@ export default class FilmCommentsPresenter {
     this.#changeFilm = changeFilm;
   }
 
+  destroy = () => {
+    remove(this.#commentsComponent);
+  };
+
   init(film) {
     const prevCommentsComponent = this.#commentsComponent;
     this.#commentsComponent = new FilmCommentsView(film, film.comments, this.#commentsModel.comments, this.#changeFilm);

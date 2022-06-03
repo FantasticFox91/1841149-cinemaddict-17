@@ -2,10 +2,7 @@ import { remove, render, replace } from '../framework/render';
 import FilmCardView from '../view/film-card-view';
 import { UserAction, UpdateType } from '../const';
 import PopupPresenter from './popup-presenter';
-
-const Mode = {
-  DEFAULT: 'DEFAULT',
-};
+import { isPressedEscapeKey } from '../utils/common';
 
 export default class FilmPresenter {
   #filmListContainer = null;
@@ -15,9 +12,6 @@ export default class FilmPresenter {
   #filmsModel = null;
   #commentsModel = null;
   #filmPopup = null;
-  #filmComments = null;
-  #comments = [];
-  #mode = Mode.DEFAULT;
 
   constructor(filmListContainer, filmsModel, commentsModel, changeFilm) {
     this.#filmListContainer = filmListContainer;
@@ -57,42 +51,48 @@ export default class FilmPresenter {
   #showPopUp = (film) => {
     const siteFooterElement = document.querySelector('.footer');
     this.#filmPopup = new PopupPresenter(siteFooterElement, film, this.#filmsModel, this.#commentsModel, this.#changeFilm);
+    document.body.classList.toggle('hide-overflow');
     this.#filmPopup.init(film);
   };
 
-  #onWatchlistClick = () => {
-    this.#changeFilm(
-      UserAction.UPDATE_FILM,
-      UpdateType.PATCH,
-      {...this.#film, userDetails: {...this.#film.userDetails, watchlist: !this.#film.userDetails.watchlist}},
-    );
+  #closePopUp = () => {
+    document.body.classList.toggle('hide-overflow', false);
+    this.destroy();
+  };
+
+  #onDocumentEscKeydown = (evt) => {
+    if (isPressedEscapeKey(evt)) {
+      evt.preventDefault();
+      this.#closePopUp();
+    }
+  };
+
+  #onWatchlistClick = () => this.#handleCardControls('Watchlist', {...this.#film, userDetails: {...this.#film.userDetails, watchlist: !this.#film.userDetails.watchlist}});
+
+  #onWatchedClick = () => this.#handleCardControls('History', {...this.#film, userDetails: {...this.#film.userDetails, alreadyWatched: !this.#film.userDetails.alreadyWatched}});
+
+  #onFavouriteClick = () => this.#handleCardControls('Favorites', {...this.#film, userDetails: {...this.#film.userDetails, favorite: !this.#film.userDetails.favorite}});
+
+  #handleCardControls = (filter, updatedFilm) => {
+    const currentFilter = document.querySelector('.main-navigation__item--active').dataset.filterType;
+    if (currentFilter === filter) {
+      this.#changeFilm(
+        UserAction.UPDATE_FILM,
+        UpdateType.MINOR,
+        updatedFilm,
+      );
+    } else {
+      this.#changeFilm(
+        UserAction.UPDATE_FILM,
+        UpdateType.PATCH,
+        updatedFilm,
+      );
+    }
     if (this.#filmPopup) {
       document.body.classList.toggle('hide-overflow');
       this.#showPopUp(this.#film);
     }
   };
 
-  #onWatchedClick = () => {
-    this.#changeFilm(
-      UserAction.UPDATE_FILM,
-      UpdateType.PATCH,
-      {...this.#film, userDetails: {...this.#film.userDetails, alreadyWatched: !this.#film.userDetails.alreadyWatched}},
-    );
-    if (this.#filmPopup) {
-      document.body.classList.toggle('hide-overflow');
-      this.#showPopUp(this.#film);
-    }
-  };
 
-  #onFavouriteClick = () => {
-    this.#changeFilm(
-      UserAction.UPDATE_FILM,
-      UpdateType.PATCH,
-      {...this.#film, userDetails: {...this.#film.userDetails, favorite: !this.#film.userDetails.favorite}},
-    );
-    if (this.#filmPopup) {
-      document.body.classList.toggle('hide-overflow');
-      this.#showPopUp(this.#film);
-    }
-  };
 }
