@@ -12,9 +12,6 @@ import { EXTRA_CARDS_COUNT, FILMS_PER_STEP, SortType, UpdateType, UserAction, Fi
 import SortListView from '../view/sort-list-view';
 import FilterPresenter from './filter-presenter';
 import { Filter } from '../data/filters';
-import PopupPresenter from './popup-presenter';
-
-const siteFooterElement = document.querySelector('.footer');
 
 export default class FilmListPresenter {
   #filmListContainer = null;
