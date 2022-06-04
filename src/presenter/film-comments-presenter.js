@@ -11,6 +11,7 @@ export default class FilmCommentsPresenter {
     this.#commentsContainer = commentsContainer;
     this.#commentsModel = commentsModel;
     this.#changeFilm = changeFilm;
+    this.#commentsModel.addObserver(this.#handleCommentModelChange);
   }
 
   destroy = () => {
@@ -29,4 +30,8 @@ export default class FilmCommentsPresenter {
     }
     remove(prevCommentsComponent);
   }
+
+  #handleCommentModelChange = (updateType, updatedFilm) => {
+    this.init(updatedFilm);
+  };
 }

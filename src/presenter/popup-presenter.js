@@ -11,7 +11,6 @@ export default class PopupPresenter {
   #filmsModel = null;
   #filmComments = null;
   #commentsModel = null;
-
   #popupComponent = null;
 
   constructor(popupContainer, film, filmsModel, commentsModel, changeFilm) {
@@ -23,7 +22,7 @@ export default class PopupPresenter {
   }
 
   init = (film) => {
-    const prevFilterComponent = this.#popupComponent;
+    const prevPopupComponent = this.#popupComponent;
 
     this.#popupComponent = new PopupView(film, this.#filmsModel, this.#changeFilm);
     this.#filmComments = new FilmCommentsPresenter(this.#popupComponent.element, this.#commentsModel, this.#changeFilm);
@@ -34,13 +33,13 @@ export default class PopupPresenter {
     this.#popupComponent.setCloseButtonClickHandler(this.#onCloseButtonClick);
     document.body.addEventListener('keydown', this.#onDocumentEscKeydown);
 
-    if (prevFilterComponent === null) {
+    if (prevPopupComponent === null) {
       render(this.#popupComponent, this.#popupContainer);
       return;
     }
 
-    replace(this.#popupComponent, prevFilterComponent);
-    remove(prevFilterComponent);
+    replace(this.#popupComponent, prevPopupComponent);
+    remove(prevPopupComponent);
   };
 
   destroy = () => {

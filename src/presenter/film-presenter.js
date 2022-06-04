@@ -71,4 +71,8 @@ export default class FilmPresenter {
       updatedFilm,
     );
   };
+
+  updatedPopup(film) {
+    this.#filmPopup.init(film);
+  }
 }

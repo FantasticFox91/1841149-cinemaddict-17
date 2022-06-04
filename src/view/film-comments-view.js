@@ -173,7 +173,7 @@ export default class FilmCommentsView extends AbstractStatefulView {
       this._state.comments.forEach((el) => commentsId.push(el.id));
       this.#changeComments(
         UserAction.DELETE_COMMENT,
-        UpdateType.MINOR,
+        UpdateType.PATCH,
         {...this._state, comments: commentsId},
         selectedComment[0]
       );
