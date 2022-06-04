@@ -7,10 +7,12 @@ const humanizeDate = (date) => dayjs(date).format('DD MMMM YYYY');
 
 const humanizeDateAndTime = (date) => dayjs(date).format('YYYY/MM/DD HH:mm');
 
+const humanizeCommentDate = (date) => dayjs(date).format('YYYY/MM/DD HH:mm:ss');
+
 const generateRandomDate = (rangeType, min, max) => {
   const daysGap = getRandomInteger(max, min);
 
   return dayjs().add(daysGap, rangeType).toDate();
 };
 
-export { humanizeYear, generateRandomDate, humanizeDateAndTime, humanizeDate };
+export { humanizeYear, generateRandomDate, humanizeDateAndTime, humanizeDate, humanizeCommentDate };
