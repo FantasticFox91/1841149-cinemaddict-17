@@ -137,7 +137,7 @@ export default class FilmCommentsView extends AbstractStatefulView {
       this._state.comments.forEach((el) => commentsId.push(el.id));
       this.#changeComments(
         UserAction.ADD_COMMENT,
-        UpdateType.MINOR,
+        UpdateType.PATCH,
         {...this._state, comments: commentsId},
         comment
       );
@@ -165,8 +165,8 @@ export default class FilmCommentsView extends AbstractStatefulView {
   #onDeleteButtonClick = (evt) => {
     evt.preventDefault();
     if (evt.target.nodeName === 'BUTTON') {
-      const commentId = Number(evt.target.parentNode.parentNode.parentNode.dataset.id);
-      const selectedComment = this.#filmComments.filter((comments) =>  commentId === comments.id);
+      const commentId = evt.target.parentNode.parentNode.parentNode.dataset.id;
+      const selectedComment = this.#filmComments.filter((comments) =>  commentId === String(comments.id));
       const updatedFilmComments = this._state.comments.filter((comments) => commentId !== comments.id);
       this._state.comments = updatedFilmComments;
       const commentsId = [];
