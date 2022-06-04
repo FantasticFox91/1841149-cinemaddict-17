@@ -81,9 +81,7 @@ export default class FilmListPresenter {
 
   #updatePopUp = (film) => {
     const scroll = document.body.querySelector('.film-details').scrollTop;
-    const clickedFilm = this.#filmPresenter.get(film.id);
-    clickedFilm.destoryPopup();
-    // document.body.querySelector('.film-details').remove();
+    document.querySelector('.film-details').remove();
     this.#filmPopup = new PopupPresenter(siteFooterElement, film, this.#filmsModel, this.#commentsModel, this.#handleViewAction);
     this.#filmPopup.init(film);
     document.body.querySelector('.film-details').scrollTop = scroll;

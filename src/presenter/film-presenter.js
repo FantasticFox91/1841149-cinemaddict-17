@@ -51,6 +51,7 @@ export default class FilmPresenter {
   };
 
   #showPopUp = (film) => {
+    this.#filmPopup = new PopupPresenter(siteFooterElement, film, this.#filmsModel, this.#commentsModel, this.#changeFilm);
     document.body.classList.toggle('hide-overflow');
     this.#filmPopup.init(film);
   };
@@ -69,9 +70,5 @@ export default class FilmPresenter {
       (currentFilter === filter) ? UpdateType.MINOR : UpdateType.PATCH,
       updatedFilm,
     );
-  };
-
-  destoryPopup = () => {
-    document.querySelector('.film-details').remove();
   };
 }
