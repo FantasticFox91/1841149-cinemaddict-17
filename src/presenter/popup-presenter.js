@@ -56,19 +56,11 @@ export default class PopupPresenter {
 
   #handleCardControls = (filter, updatedFilm) => {
     const currentFilter = document.querySelector('.main-navigation__item--active').dataset.filterType;
-    if (currentFilter === filter) {
-      this.#changeFilm(
-        UserAction.UPDATE_FILM,
-        UpdateType.MINOR,
-        updatedFilm,
-      );
-    } else {
-      this.#changeFilm(
-        UserAction.UPDATE_FILM,
-        UpdateType.PATCH,
-        updatedFilm,
-      );
-    }
+    this.#changeFilm(
+      UserAction.UPDATE_FILM,
+      (currentFilter === filter) ? UpdateType.MINOR : UpdateType.PATCH,
+      updatedFilm,
+    );
   };
 
   #onDocumentEscKeydown = (evt) => {
