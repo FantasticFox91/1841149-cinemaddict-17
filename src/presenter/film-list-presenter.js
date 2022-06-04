@@ -14,6 +14,8 @@ import FilterPresenter from './filter-presenter';
 import { Filter } from '../data/filters';
 import PopupPresenter from './popup-presenter';
 
+const siteFooterElement = document.querySelector('.footer');
+
 export default class FilmListPresenter {
   #filmListContainer = null;
   #filmsModel = null;
@@ -78,9 +80,10 @@ export default class FilmListPresenter {
   };
 
   #updatePopUp = (film) => {
-    const siteFooterElement = document.querySelector('.footer');
     const scroll = document.body.querySelector('.film-details').scrollTop;
-    document.body.querySelector('.film-details').remove();
+    const clickedFilm = this.#filmPresenter.get(film.id);
+    clickedFilm.destoryPopup();
+    // document.body.querySelector('.film-details').remove();
     this.#filmPopup = new PopupPresenter(siteFooterElement, film, this.#filmsModel, this.#commentsModel, this.#handleViewAction);
     this.#filmPopup.init(film);
     document.body.querySelector('.film-details').scrollTop = scroll;

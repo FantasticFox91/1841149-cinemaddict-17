@@ -3,6 +3,8 @@ import FilmCardView from '../view/film-card-view';
 import { UserAction, UpdateType } from '../const';
 import PopupPresenter from './popup-presenter';
 
+const siteFooterElement = document.querySelector('.footer');
+
 export default class FilmPresenter {
   #filmListContainer = null;
   #changeFilm = null;
@@ -23,6 +25,7 @@ export default class FilmPresenter {
     this.#film = film;
     const prevFilmComponent = this.#filmComponent;
     this.#filmComponent = new FilmCardView(film);
+    this.#filmPopup = new PopupPresenter(siteFooterElement, film, this.#filmsModel, this.#commentsModel, this.#changeFilm);
     this.#filmComponent.setWatchlistClickHandler(this.#onWatchlistClick);
     this.#filmComponent.setWatchedClickHandler(this.#onWatchedClick);
     this.#filmComponent.setFavouriteClickHandler(this.#onFavouriteClick);
@@ -48,8 +51,6 @@ export default class FilmPresenter {
   };
 
   #showPopUp = (film) => {
-    const siteFooterElement = document.querySelector('.footer');
-    this.#filmPopup = new PopupPresenter(siteFooterElement, film, this.#filmsModel, this.#commentsModel, this.#changeFilm);
     document.body.classList.toggle('hide-overflow');
     this.#filmPopup.init(film);
   };
@@ -61,23 +62,16 @@ export default class FilmPresenter {
   #onFavouriteClick = () => this.#handleCardControls('Favorites', {...this.#film, userDetails: {...this.#film.userDetails, favorite: !this.#film.userDetails.favorite}});
 
   #handleCardControls = (filter, updatedFilm) => {
+
     const currentFilter = document.querySelector('.main-navigation__item--active').dataset.filterType;
-    if (currentFilter === filter) {
-      this.#changeFilm(
-        UserAction.UPDATE_FILM,
-        UpdateType.MINOR,
-        updatedFilm,
-      );
-    } else {
-      this.#changeFilm(
-        UserAction.UPDATE_FILM,
-        UpdateType.PATCH,
-        updatedFilm,
-      );
-    }
-    if (this.#filmPopup) {
-      document.body.classList.toggle('hide-overflow');
-      this.#showPopUp(this.#film);
-    }
+    this.#changeFilm(
+      UserAction.UPDATE_FILM,
+      (currentFilter === filter) ? UpdateType.MINOR : UpdateType.PATCH,
+      updatedFilm,
+    );
+  };
+
+  destoryPopup = () => {
+    document.querySelector('.film-details').remove();
   };
 }

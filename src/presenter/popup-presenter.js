@@ -74,15 +74,15 @@ export default class PopupPresenter {
   #onDocumentEscKeydown = (evt) => {
     if (isPressedEscapeKey(evt)) {
       evt.preventDefault();
-      this.#closePopUp();
+      this.closePopUp();
     }
   };
 
   #onCloseButtonClick = () => {
-    this.#closePopUp();
+    this.closePopUp();
   };
 
-  #closePopUp = () => {
+  closePopUp = () => {
     document.body.classList.toggle('hide-overflow', false);
     document.body.removeEventListener('keydown', this.#onDocumentEscKeydown);
     this.destroy();
