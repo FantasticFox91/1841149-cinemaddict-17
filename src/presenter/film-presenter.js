@@ -19,6 +19,8 @@ export default class FilmPresenter {
     this.#filmsModel = filmsModel;
     this.#changeFilm = changeFilm;
     this.#commentsModel = commentsModel;
+
+    // this.#filmsModel.addObserver(this.#handlePopupModelEvent);
   }
 
   init(film) {
@@ -41,6 +43,12 @@ export default class FilmPresenter {
   }
 
   destroy = () => remove(this.#filmComponent);
+
+  // #handlePopupModelEvent = (updateType, updatedFilm) => {
+  //   if(this.#film.id === updatedFilm.id) {
+  //     this.#filmPopup.init(updatedFilm);
+  //   }
+  // };
 
   #onCardClick = (film) => {
     if(document.querySelector('.film-details')) {

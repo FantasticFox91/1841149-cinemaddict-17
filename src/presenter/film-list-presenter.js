@@ -54,8 +54,7 @@ export default class FilmListPresenter {
     this.#commentsModel.addObserver(this.#handleModelEvent);
     this.#filmsModel.addObserver(this.#handleModelEvent);
     this.#filterModel.addObserver(this.#handleModelEvent);
-    // this.#filmsModel.addObserver(this.#handlePopupModelEvent);
-    // this.#commentsModel.addObserver(this.#handlePopupModelEvent);
+    this.#filmsModel.addObserver(this.#handlePopupModelEvent);
   }
 
   #handleViewAction = (actionType, updateType, update, updatedComment) => {
@@ -74,19 +73,19 @@ export default class FilmListPresenter {
     }
   };
 
-  // #handlePopupModelEvent = (updateType, updatedFilm) => {
-  //   if (document.body.querySelector('.film-details')) {
-  //     this.#updatePopUp(updatedFilm);
-  //   }
-  // };
+  #handlePopupModelEvent = (updateType, updatedFilm) => {
+    if (document.body.querySelector('.film-details')) {
+      this.#updatePopUp(updatedFilm);
+    }
+  };
 
-  // #updatePopUp = (film) => {
-  //   const scroll = document.body.querySelector('.film-details').scrollTop;
-  //   const clickedFilm = this.#filmPresenter.get(film.id);
-  //   document.querySelector('.film-details').remove();
-  //   clickedFilm.updatedPopup(film);
-  //   document.body.querySelector('.film-details').scrollTop = scroll;
-  // };
+  #updatePopUp = (film) => {
+    const scroll = document.body.querySelector('.film-details').scrollTop;
+    const clickedFilm = this.#filmPresenter.get(film.id);
+    document.querySelector('.film-details').remove();
+    clickedFilm.updatedPopup(film);
+    document.body.querySelector('.film-details').scrollTop = scroll;
+  };
 
   #handleModelEvent = (updateType, data) => {
     switch (updateType) {

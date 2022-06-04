@@ -23,7 +23,6 @@ export default class PopupPresenter {
 
   init = (film) => {
     const prevPopupComponent = this.#popupComponent;
-
     this.#popupComponent = new PopupView(film, this.#filmsModel, this.#changeFilm);
     this.#filmComments = new FilmCommentsPresenter(this.#popupComponent.element, this.#commentsModel, this.#changeFilm);
     this.#filmComments.init(this.#film);
@@ -32,7 +31,6 @@ export default class PopupPresenter {
     this.#popupComponent.setFavouriteClickHandler(this.#onFavouriteClick);
     this.#popupComponent.setCloseButtonClickHandler(this.#onCloseButtonClick);
     document.body.addEventListener('keydown', this.#onDocumentEscKeydown);
-
     if (prevPopupComponent === null) {
       render(this.#popupComponent, this.#popupContainer);
       return;
