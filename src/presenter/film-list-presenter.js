@@ -55,6 +55,7 @@ export default class FilmListPresenter {
     this.#filmsModel.addObserver(this.#handleModelEvent);
     this.#filterModel.addObserver(this.#handleModelEvent);
     this.#filmsModel.addObserver(this.#handlePopupModelEvent);
+    this.#commentsModel.addObserver(this.#handlePopupModelEvent);
   }
 
   #handleViewAction = (actionType, updateType, update, updatedComment) => {
