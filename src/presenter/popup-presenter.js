@@ -9,14 +9,14 @@ export default class PopupPresenter {
   #changeFilm = null;
   #popupContainer = null;
   #filmsModel = null;
-  #filmComments = null;
   #commentsModel = null;
+  #filmComments = null;
   #popupComponent = null;
 
   constructor(popupContainer, film, filmsModel, commentsModel, changeFilm) {
     this.#popupContainer = popupContainer;
-    this.#commentsModel = commentsModel;
     this.#filmsModel = filmsModel;
+    this.#commentsModel = commentsModel;
     this.#film = film;
     this.#changeFilm = changeFilm;
   }
@@ -24,7 +24,7 @@ export default class PopupPresenter {
   init = (film) => {
     const prevPopupComponent = this.#popupComponent;
     this.#popupComponent = new PopupView(film, this.#filmsModel, this.#changeFilm);
-    this.#filmComments = new FilmCommentsPresenter(this.#popupComponent.element, this.#commentsModel, this.#changeFilm);
+    this.#filmComments = new FilmCommentsPresenter(this.#popupComponent.element, film, this.#commentsModel, this.#changeFilm);
     this.#filmComments.init(this.#film);
     this.#popupComponent.setWatchlistClickHandler(this.#onWatchlistClick);
     this.#popupComponent.setWatchedClickHandler(this.#onWatchedClick);

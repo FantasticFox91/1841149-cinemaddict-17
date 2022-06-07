@@ -34,7 +34,6 @@ const createCommentTemplate = (commentData) => {
 const generateComments = (comments) => comments.sort((commentA, commentB) => dayjs(commentA.date).diff(dayjs(commentB.date))).reduce((acc, comment) => `${acc} ${createCommentTemplate(comment)}`, '');
 
 const createFilmListTemplate = (commentsData, state) => {
-
   const isSmile = state.emojiSelected === 'smile'
     ? 'checked'
     : '';
@@ -100,11 +99,11 @@ export default class FilmCommentsView extends AbstractStatefulView {
   #filmComments = null;
   #changeComments = null;
 
-  constructor(film, filmComments, comments, changeComments) {
+  constructor(film, filmComments, changeComments) {
     super();
     this.#filmCommentsIds = filmComments;
     this.#changeComments = changeComments;
-    this.#filmComments = comments.filter(({id}) => this.#filmCommentsIds.some((commentId) => commentId === id));
+    this.#filmComments = filmComments;
     this.#setInnerHandlers();
     this._state = FilmCommentsView.parseDataToState(film, this.#filmComments);
     this.element.querySelectorAll('.film-details__comment').forEach((comment) => comment.addEventListener('click', this.#onDeleteButtonClick));

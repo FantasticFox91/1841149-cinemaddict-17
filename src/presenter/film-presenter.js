@@ -19,15 +19,13 @@ export default class FilmPresenter {
     this.#filmsModel = filmsModel;
     this.#changeFilm = changeFilm;
     this.#commentsModel = commentsModel;
-
-    // this.#filmsModel.addObserver(this.#handlePopupModelEvent);
   }
 
   init(film) {
     this.#film = film;
     const prevFilmComponent = this.#filmComponent;
     this.#filmComponent = new FilmCardView(film);
-    this.#filmPopup = new PopupPresenter(siteFooterElement, film, this.#filmsModel, this.#commentsModel, this.#changeFilm);
+    this.#filmPopup = new PopupPresenter(siteFooterElement, film, this.#commentsModel, this.#changeFilm);
     this.#filmComponent.setWatchlistClickHandler(this.#onWatchlistClick);
     this.#filmComponent.setWatchedClickHandler(this.#onWatchedClick);
     this.#filmComponent.setFavouriteClickHandler(this.#onFavouriteClick);
@@ -43,12 +41,6 @@ export default class FilmPresenter {
   }
 
   destroy = () => remove(this.#filmComponent);
-
-  // #handlePopupModelEvent = (updateType, updatedFilm) => {
-  //   if(this.#film.id === updatedFilm.id) {
-  //     this.#filmPopup.init(updatedFilm);
-  //   }
-  // };
 
   #onCardClick = (film) => {
     if(document.querySelector('.film-details')) {
