@@ -2,7 +2,7 @@ import AbstractStatefulView from '../framework/view/abstract-stateful-view';
 import { humanizeDate } from '../utils/film';
 import { calculateDuration, isPressedEscapeKey } from '../utils/common';
 
-const createPopupTemplate = () => {
+const createPopupTemplate = (film) => {
   const { userDetails, filmInfo } = film;
 
   const watchlistClassName = userDetails.watchlist
