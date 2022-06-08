@@ -3,32 +3,33 @@ import { render, replace, remove } from '../framework/render.js';
 import { isPressedEscapeKey } from '../utils/common.js';
 import PopupView from '../view/popup-view';
 import FilmCommentsPresenter from './film-comments-presenter.js';
+import PopupButtonsPresenter from './popup-buttons-presenter.js';
 
 export default class PopupPresenter {
   #film = null;
   #changeFilm = null;
   #popupContainer = null;
-  #filmsModel = null;
   #commentsModel = null;
+  #filmsModel = null;
   #filmComments = null;
   #popupComponent = null;
+  #popupButtons = null;
 
   constructor(popupContainer, film, filmsModel, commentsModel, changeFilm) {
     this.#popupContainer = popupContainer;
-    this.#filmsModel = filmsModel;
     this.#commentsModel = commentsModel;
     this.#film = film;
     this.#changeFilm = changeFilm;
+    this.#filmsModel = filmsModel;
   }
 
   init = (film) => {
     const prevPopupComponent = this.#popupComponent;
-    this.#popupComponent = new PopupView(film, this.#filmsModel, this.#changeFilm);
+    this.#popupComponent = new PopupView(film, this.#changeFilm);
+    this.#popupButtons = new PopupButtonsPresenter(this.#popupComponent.element, film, this.#filmsModel, this.#changeFilm);
+    this.#popupButtons.init(film);
     this.#filmComments = new FilmCommentsPresenter(this.#popupComponent.element, film, this.#commentsModel, this.#changeFilm);
     this.#filmComments.init(this.#film);
-    this.#popupComponent.setWatchlistClickHandler(this.#onWatchlistClick);
-    this.#popupComponent.setWatchedClickHandler(this.#onWatchedClick);
-    this.#popupComponent.setFavouriteClickHandler(this.#onFavouriteClick);
     this.#popupComponent.setCloseButtonClickHandler(this.#onCloseButtonClick);
     document.body.addEventListener('keydown', this.#onDocumentEscKeydown);
     if (prevPopupComponent === null) {
@@ -43,21 +44,6 @@ export default class PopupPresenter {
   destroy = () => {
     remove(this.#popupComponent);
     document.body.removeEventListener('keydown', this.#onDocumentEscKeydown);
-  };
-
-  #onWatchlistClick = () => this.#handleCardControls('Watchlist', {...this.#film, userDetails: {...this.#film.userDetails, watchlist: !this.#film.userDetails.watchlist}});
-
-  #onWatchedClick = () => this.#handleCardControls('History', {...this.#film, userDetails: {...this.#film.userDetails, alreadyWatched: !this.#film.userDetails.alreadyWatched}});
-
-  #onFavouriteClick = () => this.#handleCardControls('Favorites', {...this.#film, userDetails: {...this.#film.userDetails, favorite: !this.#film.userDetails.favorite}});
-
-  #handleCardControls = (filter, updatedFilm) => {
-    const currentFilter = document.querySelector('.main-navigation__item--active').dataset.filterType;
-    this.#changeFilm(
-      UserAction.UPDATE_FILM,
-      (currentFilter === filter) ? UpdateType.MINOR : UpdateType.PATCH,
-      updatedFilm,
-    );
   };
 
   #onDocumentEscKeydown = (evt) => {

@@ -63,7 +63,6 @@ export default class FilmPresenter {
   #onFavouriteClick = () => this.#handleCardControls('Favorites', {...this.#film, userDetails: {...this.#film.userDetails, favorite: !this.#film.userDetails.favorite}});
 
   #handleCardControls = (filter, updatedFilm) => {
-
     const currentFilter = document.querySelector('.main-navigation__item--active').dataset.filterType;
     this.#changeFilm(
       UserAction.UPDATE_FILM,
@@ -72,7 +71,7 @@ export default class FilmPresenter {
     );
   };
 
-  updatedPopup(film) {
-    this.#filmPopup.init(film);
+  updatedPopup(film, scroll) {
+    this.#filmPopup.init(film, scroll);
   }
 }

@@ -145,11 +145,8 @@ export default class FilmCommentsView extends AbstractStatefulView {
 
   #onSubmitFormPress = () =>
     ({
-      id: nanoid(),
-      author: 'Tom Fisher',
-      comment: he.encode(this.element.querySelector('.film-details__comment-input').value),
-      date: humanizeCommentDate(new Date()),
-      emotion: this.element.querySelector('.film-details__emoji-item:checked').value
+      'comment': he.encode(this.element.querySelector('.film-details__comment-input').value),
+      'emotion': this.element.querySelector('.film-details__emoji-item:checked').value
     });
 
   #setInnerHandlers = () => {

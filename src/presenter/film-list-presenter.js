@@ -67,7 +67,7 @@ export default class FilmListPresenter {
         break;
       case UserAction.DELETE_COMMENT:
         this.#filmsModel.updateFilm(updateType, update);
-        this.#commentsModel.deleteComment(updateType,update, updatedComment);
+        this.#commentsModel.deleteComment(updateType, update, updatedComment);
         break;
     }
   };
@@ -79,11 +79,11 @@ export default class FilmListPresenter {
   };
 
   #updatePopUp = (film) => {
-    const scroll = document.body.querySelector('.film-details').scrollTop;
+    const scroll = document.querySelector('.film-details').scrollTop;
     const clickedFilm = this.#filmPresenter.get(film.id);
     document.querySelector('.film-details').remove();
     clickedFilm.updatedPopup(film);
-    document.body.querySelector('.film-details').scrollTop = scroll;
+    document.querySelector('.film-details').scrollTop = scroll;
   };
 
   #handleModelEvent = (updateType, data) => {
