@@ -19,6 +19,7 @@ export default class PopupButtonsPresenter {
   }
 
   init = (film) => {
+    this.#film = film;
     const prevButtonsComponent = this.#buttonsComponent;
 
     this.#buttonsComponent = new PopupButtonsView(film.userDetails);
@@ -54,8 +55,11 @@ export default class PopupButtonsPresenter {
 
   #handlePopupButtonsModelEvent = (filter, updatedFilm) => {
     const currentFilter = document.querySelector('.main-navigation__item--active').dataset.filterType;
-    const updateType = (currentFilter === filter) ? UpdateType.MINOR : UpdateType.PATCH;
-    this.#filmsModel.updateFilm(updateType, updatedFilm);
+    this.#changeFilm(
+      UserAction.UPDATE_FILM,
+      (currentFilter === filter) ? UpdateType.MINOR : UpdateType.PATCH,
+      updatedFilm,
+    );
   };
 
   #handle = (updateType, updatedFilm) => {

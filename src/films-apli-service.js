@@ -72,11 +72,9 @@ export default class FilmsApiService extends ApiService {
     delete adaptedFilm.film_info.ageRating;
     delete adaptedFilm.film_info.alternativeTitle;
     delete adaptedFilm.film_info.totalRating;
-    delete adaptedFilm.filmInfo.release.releaseCountry;
     delete adaptedFilm.userDetails;
     delete adaptedFilm.user_details.alreadyWatched;
     delete adaptedFilm.user_details.watchingDate;
-
     return adaptedFilm;
   };
 }
