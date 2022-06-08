@@ -1,8 +1,7 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view';
-import { humanizeCommentDate, humanizeDateAndTime } from '../utils/film';
+import { humanizeDateAndTime } from '../utils/film';
 import dayjs from 'dayjs';
 import { UpdateType, UserAction } from '../const';
-import { nanoid } from 'nanoid';
 import he from 'he';
 
 const showSelectedEmoji = (emoji) => emoji ? `<img src="./images/emoji/${emoji}.png" width="55" height="55" alt="emoji">` : '';
