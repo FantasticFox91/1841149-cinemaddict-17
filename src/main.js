@@ -5,7 +5,7 @@ import FilmListPresenter from './presenter/film-list-presenter';
 import FilmsModel from './model/films-model';
 import CommentsModel from './model/comments-model';
 import FilterModel from './model/filter-model';
-import FilmsApiService from './films-apli-service';
+import FilmsApiService from './films-api-service';
 
 const AUTHORIZATION = 'Basic kjnsfd67sdflj';
 const END_POINT = 'https://17.ecmascript.pages.academy/cinemaddict/';
