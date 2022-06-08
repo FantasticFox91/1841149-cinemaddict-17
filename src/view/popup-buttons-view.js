@@ -52,18 +52,15 @@ export default class PopupButtonsView extends AbstarctView {
   #onFavoriteClick = (evt) => {
     evt.preventDefault();
     this._callback.favoriteClick();
-    this.element.querySelector('.film-details__control-button--favorite').classList.toggle('film-details__control-button--active');
   };
 
   #onWatchedClick = (evt) => {
     evt.preventDefault();
     this._callback.watchedClick();
-    this.element.querySelector('.film-details__control-button--watched').classList.toggle('film-details__control-button--active');
   };
 
   #onWatchlistClick = (evt) => {
     evt.preventDefault();
     this._callback.watchlistClick();
-    this.element.querySelector('.film-details__control-button--watchlist').classList.toggle('film-details__control-button--active');
   };
 }

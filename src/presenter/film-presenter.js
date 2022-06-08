@@ -56,11 +56,14 @@ export default class FilmPresenter {
     this.#filmPopup.init(film);
   };
 
-  #onWatchlistClick = () => this.#handleCardControls('Watchlist', {...this.#film, userDetails: {...this.#film.userDetails, watchlist: !this.#film.userDetails.watchlist}});
+  #onWatchlistClick = () => this.#handleCardControls(
+    'Watchlist', {...this.#film, userDetails: {...this.#film.userDetails, watchlist: !this.#film.userDetails.watchlist}});
 
-  #onWatchedClick = () => this.#handleCardControls('History', {...this.#film, userDetails: {...this.#film.userDetails, alreadyWatched: !this.#film.userDetails.alreadyWatched}});
+  #onWatchedClick = () => this.#handleCardControls(
+    'History', {...this.#film, userDetails: {...this.#film.userDetails, alreadyWatched: !this.#film.userDetails.alreadyWatched}});
 
-  #onFavouriteClick = () => this.#handleCardControls('Favorites', {...this.#film, userDetails: {...this.#film.userDetails, favorite: !this.#film.userDetails.favorite}});
+  #onFavouriteClick = () => this.#handleCardControls(
+    'Favorites', {...this.#film, userDetails: {...this.#film.userDetails, favorite: !this.#film.userDetails.favorite}});
 
   #handleCardControls = (filter, updatedFilm) => {
     const currentFilter = document.querySelector('.main-navigation__item--active').dataset.filterType;

@@ -1,4 +1,3 @@
-import { UserAction, UpdateType } from '../const.js';
 import { render, replace, remove } from '../framework/render.js';
 import { isPressedEscapeKey } from '../utils/common.js';
 import PopupView from '../view/popup-view';
@@ -29,7 +28,7 @@ export default class PopupPresenter {
     this.#popupButtons = new PopupButtonsPresenter(this.#popupComponent.element, film, this.#filmsModel, this.#changeFilm);
     this.#popupButtons.init(film);
     this.#filmComments = new FilmCommentsPresenter(this.#popupComponent.element, film, this.#commentsModel, this.#changeFilm);
-    this.#filmComments.init(this.#film);
+    this.#filmComments.init(film);
     this.#popupComponent.setCloseButtonClickHandler(this.#onCloseButtonClick);
     document.body.addEventListener('keydown', this.#onDocumentEscKeydown);
     if (prevPopupComponent === null) {
