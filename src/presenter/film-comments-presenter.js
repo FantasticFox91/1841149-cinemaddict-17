@@ -6,11 +6,13 @@ export default class FilmCommentsPresenter {
   #commentsComponent = null;
   #commentsModel = null;
   #changeFilm = null;
+  #film = null;
 
-  constructor(commentsContainer, commentsModel, changeFilm) {
+  constructor(commentsContainer, film, commentsModel, changeFilm) {
     this.#commentsContainer = commentsContainer;
     this.#commentsModel = commentsModel;
     this.#changeFilm = changeFilm;
+    this.#film = film;
     this.#commentsModel.addObserver(this.#handleCommentModelChange);
   }
 
@@ -18,9 +20,10 @@ export default class FilmCommentsPresenter {
     remove(this.#commentsComponent);
   };
 
-  init(film) {
+  init = async (film) => {
+    const comments = await this.#commentsModel.init(film).then(() => this.#commentsModel.comments);
     const prevCommentsComponent = this.#commentsComponent;
-    this.#commentsComponent = new FilmCommentsView(film, film.comments, this.#commentsModel.comments, this.#changeFilm);
+    this.#commentsComponent = new FilmCommentsView(film, comments, this.#changeFilm);
     if (!prevCommentsComponent) {
       render(this.#commentsComponent, this.#commentsContainer);
       return;
@@ -29,7 +32,7 @@ export default class FilmCommentsPresenter {
       replace(this.#commentsComponent, prevCommentsComponent);
     }
     remove(prevCommentsComponent);
-  }
+  };
 
   #handleCommentModelChange = (updateType, updatedFilm) => {
     this.init(updatedFilm);

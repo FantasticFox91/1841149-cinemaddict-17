@@ -1,22 +1,9 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view';
 import { humanizeDate } from '../utils/film';
 import { calculateDuration, isPressedEscapeKey } from '../utils/common';
-import { BLANK_FILM } from '../const';
 
-const createPopupTemplate = (film = BLANK_FILM) => {
-  const { userDetails, filmInfo } = film;
-
-  const watchlistClassName = userDetails.watchlist
-    ? 'film-details__control-button--active'
-    : '';
-
-  const watchedClassName = userDetails.alreadyWatched
-    ? 'film-details__control-button--active'
-    : '';
-
-  const favoriteClassName = userDetails.favorite
-    ? 'film-details__control-button--active'
-    : '';
+const createPopupTemplate = (film) => {
+  const { filmInfo } = film;
 
   const createGenreTemplate = (genre) => `<span class="film-details__genre">${genre}</span>`;
 
@@ -86,11 +73,6 @@ const createPopupTemplate = (film = BLANK_FILM) => {
               </p>
             </div>
           </div>
-          <section class="film-details__controls">
-            <button type="button" class="film-details__control-button film-details__control-button--watchlist ${watchlistClassName}" id="watchlist" name="watchlist">Add to watchlist</button>
-            <button type="button" class="film-details__control-button film-details__control-button--watched ${watchedClassName}" id="watched" name="watched">Already watched</button>
-            <button type="button" class="film-details__control-button film-details__control-button--favorite ${favoriteClassName}" id="favorite" name="favorite">Add to favorites</button>
-          </section>
         </div>
       </form>
     </section>
@@ -100,18 +82,16 @@ const createPopupTemplate = (film = BLANK_FILM) => {
 export default class PopupView extends AbstractStatefulView {
   #changeFilm = null;
   #film = null;
-  #filmsModel = null;
 
-  constructor(film, filmsModel, changeFilm) {
+  constructor(film, changeFilm) {
     super();
     this._state = PopupView.parseDataToState(film);
     this.#changeFilm = changeFilm;
     this.#film = film;
-    this.#filmsModel = filmsModel;
   }
 
   get template() {
-    return createPopupTemplate(this._state, this._state.emojiSelected, this._state.typedComment);
+    return createPopupTemplate(this._state);
   }
 
   setWatchlistClickHandler = (callback) => {

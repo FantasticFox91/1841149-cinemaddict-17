@@ -1,8 +1,7 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view';
-import { humanizeCommentDate, humanizeDateAndTime } from '../utils/film';
+import { humanizeDateAndTime } from '../utils/film';
 import dayjs from 'dayjs';
 import { UpdateType, UserAction } from '../const';
-import { nanoid } from 'nanoid';
 import he from 'he';
 
 const showSelectedEmoji = (emoji) => emoji ? `<img src="./images/emoji/${emoji}.png" width="55" height="55" alt="emoji">` : '';
@@ -34,7 +33,6 @@ const createCommentTemplate = (commentData) => {
 const generateComments = (comments) => comments.sort((commentA, commentB) => dayjs(commentA.date).diff(dayjs(commentB.date))).reduce((acc, comment) => `${acc} ${createCommentTemplate(comment)}`, '');
 
 const createFilmListTemplate = (commentsData, state) => {
-
   const isSmile = state.emojiSelected === 'smile'
     ? 'checked'
     : '';
@@ -100,11 +98,11 @@ export default class FilmCommentsView extends AbstractStatefulView {
   #filmComments = null;
   #changeComments = null;
 
-  constructor(film, filmComments, comments, changeComments) {
+  constructor(film, filmComments, changeComments) {
     super();
     this.#filmCommentsIds = filmComments;
     this.#changeComments = changeComments;
-    this.#filmComments = comments.filter(({id}) => this.#filmCommentsIds.some((commentId) => commentId === id));
+    this.#filmComments = filmComments;
     this.#setInnerHandlers();
     this._state = FilmCommentsView.parseDataToState(film, this.#filmComments);
     this.element.querySelectorAll('.film-details__comment').forEach((comment) => comment.addEventListener('click', this.#onDeleteButtonClick));
@@ -131,10 +129,8 @@ export default class FilmCommentsView extends AbstractStatefulView {
       const scrollPosition = this.element.scrollTop;
       const comment = this.#onSubmitFormPress();
       this._state.comments.push(comment);
-      this.updateElement({emojiSelected: null, typedComment: null});
       this.element.scrollTop = scrollPosition;
       const commentsId = [];
-      this._state.comments.forEach((el) => commentsId.push(el.id));
       this.#changeComments(
         UserAction.ADD_COMMENT,
         UpdateType.PATCH,
@@ -146,11 +142,8 @@ export default class FilmCommentsView extends AbstractStatefulView {
 
   #onSubmitFormPress = () =>
     ({
-      id: nanoid(),
-      author: 'Tom Fisher',
-      comment: he.encode(this.element.querySelector('.film-details__comment-input').value),
-      date: humanizeCommentDate(new Date()),
-      emotion: this.element.querySelector('.film-details__emoji-item:checked').value
+      'comment': he.encode(this.element.querySelector('.film-details__comment-input').value),
+      'emotion': this.element.querySelector('.film-details__emoji-item:checked').value
     });
 
   #setInnerHandlers = () => {
@@ -166,10 +159,11 @@ export default class FilmCommentsView extends AbstractStatefulView {
     evt.preventDefault();
     if (evt.target.nodeName === 'BUTTON') {
       const commentId = evt.target.parentNode.parentNode.parentNode.dataset.id;
-      const selectedComment = this.#filmComments.filter((comments) =>  commentId === String(comments.id));
+      const selectedComment = this.#filmComments.filter((comments) => commentId === String(comments.id));
       const updatedFilmComments = this._state.comments.filter((comments) => commentId !== comments.id);
       this._state.comments = updatedFilmComments;
       const commentsId = [];
+      evt.target.textContent = 'Deleting...';
       this._state.comments.forEach((el) => commentsId.push(el.id));
       this.#changeComments(
         UserAction.DELETE_COMMENT,

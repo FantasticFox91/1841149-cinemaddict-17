@@ -19,15 +19,13 @@ export default class FilmPresenter {
     this.#filmsModel = filmsModel;
     this.#changeFilm = changeFilm;
     this.#commentsModel = commentsModel;
-
-    // this.#filmsModel.addObserver(this.#handlePopupModelEvent);
   }
 
   init(film) {
     this.#film = film;
     const prevFilmComponent = this.#filmComponent;
     this.#filmComponent = new FilmCardView(film);
-    this.#filmPopup = new PopupPresenter(siteFooterElement, film, this.#filmsModel, this.#commentsModel, this.#changeFilm);
+    this.#filmPopup = new PopupPresenter(siteFooterElement, film, this.#commentsModel, this.#changeFilm);
     this.#filmComponent.setWatchlistClickHandler(this.#onWatchlistClick);
     this.#filmComponent.setWatchedClickHandler(this.#onWatchedClick);
     this.#filmComponent.setFavouriteClickHandler(this.#onFavouriteClick);
@@ -44,12 +42,6 @@ export default class FilmPresenter {
 
   destroy = () => remove(this.#filmComponent);
 
-  // #handlePopupModelEvent = (updateType, updatedFilm) => {
-  //   if(this.#film.id === updatedFilm.id) {
-  //     this.#filmPopup.init(updatedFilm);
-  //   }
-  // };
-
   #onCardClick = (film) => {
     if(document.querySelector('.film-details')) {
       document.querySelector('.film-details').remove();
@@ -64,14 +56,16 @@ export default class FilmPresenter {
     this.#filmPopup.init(film);
   };
 
-  #onWatchlistClick = () => this.#handleCardControls('Watchlist', {...this.#film, userDetails: {...this.#film.userDetails, watchlist: !this.#film.userDetails.watchlist}});
+  #onWatchlistClick = () => this.#handleCardControls(
+    'Watchlist', {...this.#film, userDetails: {...this.#film.userDetails, watchlist: !this.#film.userDetails.watchlist}});
 
-  #onWatchedClick = () => this.#handleCardControls('History', {...this.#film, userDetails: {...this.#film.userDetails, alreadyWatched: !this.#film.userDetails.alreadyWatched}});
+  #onWatchedClick = () => this.#handleCardControls(
+    'History', {...this.#film, userDetails: {...this.#film.userDetails, alreadyWatched: !this.#film.userDetails.alreadyWatched}});
 
-  #onFavouriteClick = () => this.#handleCardControls('Favorites', {...this.#film, userDetails: {...this.#film.userDetails, favorite: !this.#film.userDetails.favorite}});
+  #onFavouriteClick = () => this.#handleCardControls(
+    'Favorites', {...this.#film, userDetails: {...this.#film.userDetails, favorite: !this.#film.userDetails.favorite}});
 
   #handleCardControls = (filter, updatedFilm) => {
-
     const currentFilter = document.querySelector('.main-navigation__item--active').dataset.filterType;
     this.#changeFilm(
       UserAction.UPDATE_FILM,
@@ -80,7 +74,7 @@ export default class FilmPresenter {
     );
   };
 
-  updatedPopup(film) {
-    this.#filmPopup.init(film);
+  updatedPopup(film, scroll) {
+    this.#filmPopup.init(film, scroll);
   }
 }
