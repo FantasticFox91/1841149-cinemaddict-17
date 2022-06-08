@@ -130,10 +130,8 @@ export default class FilmCommentsView extends AbstractStatefulView {
       const scrollPosition = this.element.scrollTop;
       const comment = this.#onSubmitFormPress();
       this._state.comments.push(comment);
-      this.updateElement({emojiSelected: null, typedComment: null});
       this.element.scrollTop = scrollPosition;
       const commentsId = [];
-      this._state.comments.forEach((el) => commentsId.push(el.id));
       this.#changeComments(
         UserAction.ADD_COMMENT,
         UpdateType.PATCH,
@@ -162,10 +160,11 @@ export default class FilmCommentsView extends AbstractStatefulView {
     evt.preventDefault();
     if (evt.target.nodeName === 'BUTTON') {
       const commentId = evt.target.parentNode.parentNode.parentNode.dataset.id;
-      const selectedComment = this.#filmComments.filter((comments) =>  commentId === String(comments.id));
+      const selectedComment = this.#filmComments.filter((comments) => commentId === String(comments.id));
       const updatedFilmComments = this._state.comments.filter((comments) => commentId !== comments.id);
       this._state.comments = updatedFilmComments;
       const commentsId = [];
+      evt.target.textContent = 'Deleting...';
       this._state.comments.forEach((el) => commentsId.push(el.id));
       this.#changeComments(
         UserAction.DELETE_COMMENT,

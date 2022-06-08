@@ -50,6 +50,10 @@ export default class FilmsModel extends Observable {
         ageRating: film.film_info.age_rating,
         alternativeTitle: film.film_info.alternative_title,
         totalRating: film.film_info.total_rating,
+        release: {
+          date: film.film_info.release.date,
+          releaseCountry: film.film_info.release.release_country
+        }
       },
       userDetails: {...film.user_details,
         alreadyWatched: film.user_details.already_watched,
@@ -61,6 +65,8 @@ export default class FilmsModel extends Observable {
     delete adaptedFilm.filmInfo.age_rating;
     delete adaptedFilm.filmInfo.alternative_title;
     delete adaptedFilm.filmInfo.total_rating;
+    delete adaptedFilm.filmInfo.total_rating;
+    delete adaptedFilm.filmInfo.release.release_country;
     delete adaptedFilm.user_details;
     delete adaptedFilm.userDetails.already_watched;
     delete adaptedFilm.userDetails.watching_date;

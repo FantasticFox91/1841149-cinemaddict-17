@@ -57,6 +57,10 @@ export default class FilmsApiService extends ApiService {
         'age_rating': filmInfo.ageRating,
         'alternative_title': filmInfo.alternativeTitle,
         'total_rating': filmInfo.totalRating,
+        'release': {
+          'date': filmInfo.release.date,
+          'release_country': filmInfo.release.releaseCountry
+        },
       },
       'user_details': {...userDetails,
         'already_watched': userDetails.alreadyWatched,
@@ -68,6 +72,7 @@ export default class FilmsApiService extends ApiService {
     delete adaptedFilm.film_info.ageRating;
     delete adaptedFilm.film_info.alternativeTitle;
     delete adaptedFilm.film_info.totalRating;
+    delete adaptedFilm.filmInfo.release.releaseCountry;
     delete adaptedFilm.userDetails;
     delete adaptedFilm.user_details.alreadyWatched;
     delete adaptedFilm.user_details.watchingDate;
