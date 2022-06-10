@@ -124,15 +124,17 @@ export default class FilmListPresenter {
   };
 
   #handleCommentError = (commentContainer) => {
+    const deleteCommentButton = commentContainer.querySelector('button');
     commentContainer.classList.add('shake');
-    commentContainer.querySelector('button').textContent = 'Delete';
-    commentContainer.querySelector('button').disabled = false;
+    deleteCommentButton.textContent = 'Delete';
+    deleteCommentButton.disabled = false;
     setTimeout(() => commentContainer.classList.remove('shake'), 500);
   };
 
   #handleNewCommentError = (commentContainer) => {
+    const newCommentTextarea = commentContainer.querySelector('textarea');
     commentContainer.classList.add('shake');
-    commentContainer.querySelector('textarea').disabled = false;
+    newCommentTextarea.disabled = false;
     setTimeout(() => commentContainer.classList.remove('shake'), 500);
   };
 
