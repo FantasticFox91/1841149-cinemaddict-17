@@ -132,9 +132,8 @@ export default class FilmListPresenter {
   };
 
   #handleNewCommentError = (commentContainer) => {
-    const newCommentTextarea = commentContainer.querySelector('textarea');
     commentContainer.classList.add('shake');
-    newCommentTextarea.disabled = false;
+    commentContainer.querySelector('textarea').disabled = false;
     setTimeout(() => commentContainer.classList.remove('shake'), 500);
   };
 
