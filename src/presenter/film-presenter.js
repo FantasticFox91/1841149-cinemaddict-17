@@ -13,6 +13,7 @@ export default class FilmPresenter {
   #filmsModel = null;
   #commentsModel = null;
   #filmPopup = null;
+  #isDisabled = null;
 
   constructor(filmListContainer, filmsModel, commentsModel, changeFilm) {
     this.#filmListContainer = filmListContainer;
@@ -22,9 +23,10 @@ export default class FilmPresenter {
   }
 
   init(film) {
+    this.#isDisabled = false;
     this.#film = film;
     const prevFilmComponent = this.#filmComponent;
-    this.#filmComponent = new FilmCardView(film);
+    this.#filmComponent = new FilmCardView(film, this.#isDisabled);
     this.#filmPopup = new PopupPresenter(siteFooterElement, film, this.#commentsModel, this.#changeFilm);
     this.#filmComponent.setWatchlistClickHandler(this.#onWatchlistClick);
     this.#filmComponent.setWatchedClickHandler(this.#onWatchedClick);
@@ -66,6 +68,7 @@ export default class FilmPresenter {
     'Favorites', {...this.#film, userDetails: {...this.#film.userDetails, favorite: !this.#film.userDetails.favorite}});
 
   #handleCardControls = (filter, updatedFilm) => {
+    this.setDisabled();
     const currentFilter = document.querySelector('.main-navigation__item--active').dataset.filterType;
     this.#changeFilm(
       UserAction.UPDATE_FILM,
@@ -77,4 +80,22 @@ export default class FilmPresenter {
   updatedPopup(film, scroll) {
     this.#filmPopup.init(film, scroll);
   }
+
+  setDisabled = () => {
+    this.#filmComponent.updateElement({
+      isDisabled: true,
+    });
+  };
+
+  setAborting = () => {
+    const resetButtons = () => {
+      this.#filmComponent.updateElement({
+        isDisabled: false,
+      });
+    };
+    if (document.querySelector('.film-details')) {
+      return this.#filmPopup.setAborting();
+    }
+    this.#filmComponent.shake(resetButtons);
+  };
 }

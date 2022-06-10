@@ -61,4 +61,8 @@ export default class PopupPresenter {
     document.body.removeEventListener('keydown', this.#onDocumentEscKeydown);
     this.destroy();
   };
+
+  setAborting = () => {
+    this.#popupButtons.setAborting();
+  };
 }

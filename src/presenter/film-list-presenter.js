@@ -13,6 +13,12 @@ import SortListView from '../view/sort-list-view';
 import FilterPresenter from './filter-presenter';
 import { Filter } from '../data/filters';
 import LoadingView from '../view/loading-view';
+import UiBlocker from '../framework/ui-blocker/ui-blocker';
+
+const TimeLimit = {
+  LOWER_LIMIT: 350,
+  UPPER_LIMIT: 1000,
+};
 
 export default class FilmListPresenter {
   #filmListContainer = null;
@@ -40,6 +46,7 @@ export default class FilmListPresenter {
   #currentSortType = SortType.DEFAULT;
   #filterType = FilterType.ALL;
   #isLoading = true;
+  #uiBlocker = new UiBlocker(TimeLimit.LOWER_LIMIT, TimeLimit.UPPER_LIMIT);
 
   constructor(filmListContainer, filmsModel, commentsModel, filterModel) {
     this.#filmListContainer = filmListContainer;
@@ -55,18 +62,33 @@ export default class FilmListPresenter {
     this.#filterModel.addObserver(this.#handleModelEvent);
   }
 
-  #handleViewAction = (actionType, updateType, update, updatedComment) => {
+  #handleViewAction = async (actionType, updateType, updatedFilm, updatedComment) => {
     switch (actionType) {
       case UserAction.UPDATE_FILM:
-        this.#filmsModel.updateFilm(updateType, update);
+        try {
+          await this.#filmsModel.updateFilm(updateType, updatedFilm);
+        } catch (err) {
+          this.#filmPresenter.get(updatedFilm.id).setAborting();
+        }
         break;
       case UserAction.ADD_COMMENT:
-        this.#filmsModel.updateFilm(updateType, update);
-        this.#commentsModel.addComment(updateType, update, updatedComment);
+        this.#uiBlocker.block();
+        try {
+          await this.#commentsModel.addComment(updateType, updatedFilm, updatedComment[0]);
+          await this.#filmsModel.updateFilm(updateType, updatedFilm);
+        } catch (err) {
+          this.#uiBlocker.unblock();
+          this.#handleNewCommentError(updatedComment[1]);
+        }
+        this.#uiBlocker.unblock();
         break;
       case UserAction.DELETE_COMMENT:
-        this.#filmsModel.updateFilm(updateType, update);
-        this.#commentsModel.deleteComment(updateType, update, updatedComment);
+        try {
+          await this.#filmsModel.updateFilm(updateType, updatedFilm);
+          await this.#commentsModel.deleteComment(updateType, updatedFilm, updatedComment[0]);
+        } catch (err) {
+          this.#handleCommentError(updatedComment[1]);
+        }
         break;
     }
   };
@@ -99,6 +121,19 @@ export default class FilmListPresenter {
         this.#renderList();
         break;
     }
+  };
+
+  #handleCommentError = (commentContainer) => {
+    commentContainer.classList.add('shake');
+    commentContainer.querySelector('button').textContent = 'Delete';
+    commentContainer.querySelector('button').disabled = false;
+    setTimeout(() => commentContainer.classList.remove('shake'), 500);
+  };
+
+  #handleNewCommentError = (commentContainer) => {
+    commentContainer.classList.add('shake');
+    commentContainer.querySelector('textarea').disabled = false;
+    setTimeout(() => commentContainer.classList.remove('shake'), 500);
   };
 
   get films() {
@@ -140,7 +175,7 @@ export default class FilmListPresenter {
 
   #renderFilm = (film, container, presenter) => {
     const filmPresenter = new FilmPresenter(container, this.#filmsModel, this.#commentsModel, this.#handleViewAction);
-    filmPresenter.init(film, container);
+    filmPresenter.init(film, true);
     if(presenter === this.#filmPresenter) {
       this.#filmPresenter.set(film.id, filmPresenter);
     } else if (presenter === this.#topRatedPresnter) {

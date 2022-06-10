@@ -8,12 +8,14 @@ export default class PopupButtonsPresenter {
   #buttonsComponent = null;
   #film = null;
   #changeFilm = null;
+  #isDisabled = null;
 
-  constructor(buttonsContainer, film, filmsModel, changeFilm) {
+  constructor(buttonsContainer, film, filmsModel, changeFilm, isDisabled) {
     this.#film = film;
     this.#filmsModel = filmsModel;
     this.#buttonsContainer = buttonsContainer;
     this.#changeFilm = changeFilm;
+    this.#isDisabled = isDisabled;
 
     this.#filmsModel.addObserver(this.#handle);
   }
@@ -21,8 +23,8 @@ export default class PopupButtonsPresenter {
   init = (film) => {
     this.#film = film;
     const prevButtonsComponent = this.#buttonsComponent;
-
-    this.#buttonsComponent = new PopupButtonsView(film.userDetails);
+    this.#isDisabled = false;
+    this.#buttonsComponent = new PopupButtonsView(film.userDetails, this.#isDisabled);
 
     this.#buttonsComponent.setFavoriteClickHandler(() => this.#onFavoriteClick());
     this.#buttonsComponent.setWatchedClickHandler(() => this.#onWatchedClick());
@@ -55,11 +57,27 @@ export default class PopupButtonsPresenter {
 
   #handlePopupButtonsModelEvent = (filter, updatedFilm) => {
     const currentFilter = document.querySelector('.main-navigation__item--active').dataset.filterType;
+    this.setDisabled();
     this.#changeFilm(
       UserAction.UPDATE_FILM,
       (currentFilter === filter) ? UpdateType.MINOR : UpdateType.PATCH,
       updatedFilm,
     );
+  };
+
+  setDisabled = () => {
+    this.#buttonsComponent.updateElement({
+      isDisabled: true,
+    });
+  };
+
+  setAborting = () => {
+    const resetButtons = () => {
+      this.#buttonsComponent.updateElement({
+        isDisabled: false,
+      });
+    };
+    this.#buttonsComponent.shake(resetButtons);
   };
 
   #handle = (updateType, updatedFilm) => {
