@@ -10,7 +10,7 @@ const createPopupTemplate = (film) => {
   const showGenres = ({genre}) => genre.reduce((acc, genr) => `${acc} ${createGenreTemplate(genr)}`, '');
 
   return (`
-  <section class="film-details">
+  <section class="film-details" data-id='${film.id}'>
       <form class="film-details__inner" action="" method="get">
         <div class="film-details__top-container">
           <div class="film-details__close">

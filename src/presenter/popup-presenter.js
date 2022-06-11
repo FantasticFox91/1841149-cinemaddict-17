@@ -35,7 +35,6 @@ export default class PopupPresenter {
       render(this.#popupComponent, this.#popupContainer);
       return;
     }
-
     replace(this.#popupComponent, prevPopupComponent);
     remove(prevPopupComponent);
   };

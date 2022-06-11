@@ -27,7 +27,7 @@ export default class FilmPresenter {
     this.#film = film;
     const prevFilmComponent = this.#filmComponent;
     this.#filmComponent = new FilmCardView(film, this.#isDisabled);
-    this.#filmPopup = new PopupPresenter(siteFooterElement, film, this.#commentsModel, this.#changeFilm);
+    this.#filmPopup = new PopupPresenter(siteFooterElement, film, this.#filmsModel, this.#commentsModel, this.#changeFilm);
     this.#filmComponent.setWatchlistClickHandler(this.#onWatchlistClick);
     this.#filmComponent.setWatchedClickHandler(this.#onWatchedClick);
     this.#filmComponent.setFavouriteClickHandler(this.#onFavouriteClick);
@@ -46,6 +46,7 @@ export default class FilmPresenter {
 
   #onCardClick = (film) => {
     if(document.querySelector('.film-details')) {
+      if(document.querySelector('.film-details').dataset.id === film.id) {return;}
       document.querySelector('.film-details').remove();
       document.body.classList.toggle('hide-overflow');
     }
