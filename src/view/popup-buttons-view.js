@@ -84,10 +84,4 @@ export default class PopupButtonsView extends AbstractStatefulView {
   };
 
   static parseUserDetailsToState = (userDetails) => ({...userDetails});
-
-  static parseStateToUserDetails = (state) => {
-    const userDetails = {...state};
-    delete userDetails.isDisabled;
-    return userDetails;
-  };
 }
