@@ -76,7 +76,7 @@ export default class FilmListPresenter {
         try {
           await this.#commentsModel.addComment(updateType, updatedFilm, updatedComment[0]);
           await this.#filmsModel.updateFilm(updateType, updatedFilm);
-          this.#renderMostCommentedFilms();
+          this.#rerenderMostCommentedFilms();
         } catch (err) {
           this.#uiBlocker.unblock();
           this.#handleNewCommentError(updatedComment[1]);
@@ -87,7 +87,7 @@ export default class FilmListPresenter {
         try {
           await this.#filmsModel.updateFilm(updateType, updatedFilm);
           await this.#commentsModel.deleteComment(updateType, updatedFilm, updatedComment[0]);
-          this.#renderMostCommentedFilms();
+          this.#rerenderMostCommentedFilms();
         } catch (err) {
           this.#handleCommentError(updatedComment[1]);
         }
@@ -99,12 +99,15 @@ export default class FilmListPresenter {
     switch (updateType) {
       case UpdateType.PATCH:
         if (this.#filmPresenter.get(data.id)) {
+          console.log('filmPresenter', data)
           this.#filmPresenter.get(data.id).init(data);
         }
         if (this.#topRatedPresnter.get(data.id)) {
+          console.log('topRatedPresnter', data)
           this.#topRatedPresnter.get(data.id).init(data);
         }
         if (this.#mostCommentedPresenter.get(data.id)) {
+          console.log('mostCommentedPresenter', data)
           this.#mostCommentedPresenter.get(data.id).init(data);
         }
         break;
@@ -164,7 +167,6 @@ export default class FilmListPresenter {
     const films = this.films.slice(this.#renderFilmCount, newRenderedFilmCount);
     this.#renderFilms(films, this.#filmPresenter);
     this.#renderFilmCount = newRenderedFilmCount;
-
     if(this.#renderFilmCount >= filmCount) {
       remove(this.#showMoreButtonComponent);
     }
@@ -178,7 +180,6 @@ export default class FilmListPresenter {
 
   #renderFilm = (film, container, presenter) => {
     const filmPresenter = new FilmPresenter(container, this.#filmsModel, this.#commentsModel, this.#handleViewAction);
-    filmPresenter.init(film, true);
     if(presenter === this.#filmPresenter) {
       this.#filmPresenter.set(film.id, filmPresenter);
     } else if (presenter === this.#topRatedPresnter) {
@@ -186,6 +187,7 @@ export default class FilmListPresenter {
     } else if (presenter === this.#mostCommentedPresenter) {
       this.#mostCommentedPresenter.set(film.id, filmPresenter);
     }
+    filmPresenter.init(film, true);
   };
 
   #clearFilmList = () => {
@@ -239,6 +241,7 @@ export default class FilmListPresenter {
   };
 
   #renderMostCommentedFilms = () => {
+    console.log(this.#filmsModel.films)
     this.#mostCommentedFilms = this.#filmsModel.films.slice();
     this.#mostCommentedFilms = this.#mostCommentedFilms.sort((a, b) => b.comments.length - a.comments.length).slice(0,EXTRA_CARDS_COUNT);
     const isEmpty = this.#mostCommentedFilms.filter(({comments}) => comments.length === 0).length !== this.#mostCommentedFilms.length;
@@ -248,6 +251,12 @@ export default class FilmListPresenter {
       this.#mostCommentedPresenter.forEach((film) => film.destroy());
       this.#mostCommentedFilms.forEach((film) => this.#renderFilm(film, this.#mostCommentedfilmBoard.element, this.#mostCommentedPresenter));
     }
+  };
+
+  #rerenderMostCommentedFilms = () => {
+    this.#mostCommentedPresenter.forEach((film) => film.destroy());
+    this.#mostCommentedPresenter.clear();
+    this.#renderMostCommentedFilms();
   };
 
   #renderTopRatedFilms = () => {

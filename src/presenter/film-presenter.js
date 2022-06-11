@@ -45,9 +45,10 @@ export default class FilmPresenter {
   destroy = () => remove(this.#filmComponent);
 
   #onCardClick = (film) => {
-    if(document.querySelector('.film-details')) {
-      if(document.querySelector('.film-details').dataset.id === film.id) {return;}
-      document.querySelector('.film-details').remove();
+    const popupElement = document.querySelector('.film-details');
+    if(popupElement) {
+      if(popupElement.dataset.id === film.id) {return;}
+      popupElement.remove();
       document.body.classList.toggle('hide-overflow');
     }
     this.#showPopUp(film);
