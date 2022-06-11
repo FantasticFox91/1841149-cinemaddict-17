@@ -1,5 +1,5 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view';
-import { humanizeDateAndTime } from '../utils/film';
+import { humanizeCommentDate } from '../utils/film';
 import dayjs from 'dayjs';
 import { UpdateType, UserAction } from '../const';
 import he from 'he';
@@ -21,7 +21,7 @@ const createCommentTemplate = (commentData) => {
         <p class="film-details__comment-text">${comment}</p>
         <p class="film-details__comment-info">
           <span class="film-details__comment-author">${author}</span>
-          <span class="film-details__comment-day">${humanizeDateAndTime(date)}</span>
+          <span class="film-details__comment-day">${humanizeCommentDate(date)}</span>
           <button class="film-details__comment-delete">Delete</button>
         </p>
       </div>
