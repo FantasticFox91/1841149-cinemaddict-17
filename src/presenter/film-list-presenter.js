@@ -76,6 +76,7 @@ export default class FilmListPresenter {
         try {
           await this.#commentsModel.addComment(updateType, updatedFilm, updatedComment[0]);
           await this.#filmsModel.updateFilm(updateType, updatedFilm);
+          this.#renderMostCommentedFilms();
         } catch (err) {
           this.#uiBlocker.unblock();
           this.#handleNewCommentError(updatedComment[1]);
@@ -86,6 +87,7 @@ export default class FilmListPresenter {
         try {
           await this.#filmsModel.updateFilm(updateType, updatedFilm);
           await this.#commentsModel.deleteComment(updateType, updatedFilm, updatedComment[0]);
+          this.#renderMostCommentedFilms();
         } catch (err) {
           this.#handleCommentError(updatedComment[1]);
         }
@@ -239,17 +241,24 @@ export default class FilmListPresenter {
   #renderMostCommentedFilms = () => {
     this.#mostCommentedFilms = this.#filmsModel.films.slice();
     this.#mostCommentedFilms = this.#mostCommentedFilms.sort((a, b) => b.comments.length - a.comments.length).slice(0,EXTRA_CARDS_COUNT);
-    render(this.#mostCommendedFilmsComponent, this.#filmSectionComponent.element);
-    render(this.#mostCommentedfilmBoard , this.#mostCommendedFilmsComponent.element);
-    this.#mostCommentedFilms.forEach((film) => this.#renderFilm(film, this.#mostCommentedfilmBoard.element, this.#mostCommentedPresenter));
+    const isEmpty = this.#mostCommentedFilms.filter(({comments}) => comments.length === 0).length !== this.#mostCommentedFilms.length;
+    if (isEmpty) {
+      render(this.#mostCommendedFilmsComponent, this.#filmSectionComponent.element);
+      render(this.#mostCommentedfilmBoard, this.#mostCommendedFilmsComponent.element);
+      this.#mostCommentedPresenter.forEach((film) => film.destroy());
+      this.#mostCommentedFilms.forEach((film) => this.#renderFilm(film, this.#mostCommentedfilmBoard.element, this.#mostCommentedPresenter));
+    }
   };
 
   #renderTopRatedFilms = () => {
     this.#topRatedFilms = this.#filmsModel.films.slice();
     this.#topRatedFilms = this.#topRatedFilms.sort((a, b) => b.filmInfo.totalRating - a.filmInfo.totalRating).slice(0,EXTRA_CARDS_COUNT);
-    render(this.#topRatedFilmsComponent, this.#filmSectionComponent.element);
-    render(this.#topRatedfilmBoard, this.#topRatedFilmsComponent.element);
-    this.#topRatedFilms.forEach((film) => this.#renderFilm(film, this.#topRatedfilmBoard.element, this.#topRatedPresnter));
+    const isEmpty = this.#topRatedFilms.filter(({filmInfo}) => filmInfo.totalRating === 0).length !== this.#topRatedFilms.length;
+    if (isEmpty) {
+      render(this.#topRatedFilmsComponent, this.#filmSectionComponent.element);
+      render(this.#topRatedfilmBoard, this.#topRatedFilmsComponent.element);
+      this.#topRatedFilms.forEach((film) => this.#renderFilm(film, this.#topRatedfilmBoard.element, this.#topRatedPresnter));
+    }
   };
 
   #renderFilmsList = () => {
