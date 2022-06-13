@@ -242,7 +242,14 @@ export default class FilmListPresenter {
 
   #renderMostCommentedFilms = () => {
     this.#mostCommentedFilms = this.films.slice();
-    this.#mostCommentedFilms = this.#mostCommentedFilms.sort((a, b) => b.comments.length - a.comments.length).slice(0,EXTRA_CARDS_COUNT);
+    const isEqual = this.#mostCommentedFilms
+      .map((a) => a.comments.length)
+      .filter((el) => el === this.#mostCommentedFilms[0].comments).length === this.#mostCommentedFilms.length;
+    if (isEqual) {
+      this.#mostCommentedFilms = [this.#mostCommentedFilms[Math.floor(Math.random() * this.#mostCommentedFilms.length)], this.#mostCommentedFilms[Math.floor(Math.random() * this.#mostCommentedFilms.length)]];
+    } else {
+      this.#mostCommentedFilms = this.#mostCommentedFilms.sort((a, b) => b.comments.length - a.comments.length).slice(0,EXTRA_CARDS_COUNT);
+    }
     const isEmpty = this.#mostCommentedFilms.filter(({comments}) => comments.length === 0).length !== this.#mostCommentedFilms.length;
     if (isEmpty) {
       render(this.#mostCommendedFilmsComponent, this.#filmSectionComponent.element);
@@ -254,7 +261,14 @@ export default class FilmListPresenter {
 
   #renderTopRatedFilms = () => {
     this.#topRatedFilms = this.#filmsModel.films.slice();
-    this.#topRatedFilms = this.#topRatedFilms.sort((a, b) => b.filmInfo.totalRating - a.filmInfo.totalRating).slice(0,EXTRA_CARDS_COUNT);
+    const isEqual = this.#topRatedFilms
+      .map((a) => a.filmInfo.totalRating)
+      .filter((el) => el === this.#topRatedFilms[0].filmInfo.totalRating).length === this.#topRatedFilms.length;
+    if (isEqual) {
+      this.#topRatedFilms = [this.#topRatedFilms[Math.floor(Math.random() * this.#topRatedFilms.length)], this.#topRatedFilms[Math.floor(Math.random() * this.#topRatedFilms.length)]];
+    } else {
+      this.#topRatedFilms = this.#topRatedFilms.sort((a, b) => b.filmInfo.totalRating - a.filmInfo.totalRating).slice(0,EXTRA_CARDS_COUNT);
+    }
     const isEmpty = this.#topRatedFilms.filter(({filmInfo}) => filmInfo.totalRating === 0).length !== this.#topRatedFilms.length;
     if (isEmpty) {
       render(this.#topRatedFilmsComponent, this.#filmSectionComponent.element);
