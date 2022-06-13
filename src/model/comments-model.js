@@ -37,10 +37,41 @@ export default class CommentsModel extends Observable {
 
   addComment = async (updateType, updateFilm, updatedComment) => {
     try {
-      await this.#filmsApiService.addComment(updatedComment, updateFilm);
-      this._notify(updateType, updateFilm);
+      const updatedFilm = await this.#filmsApiService.addComment(updatedComment, updateFilm).then((movie) => movie.movie);
+      this._notify(updateType, this.#adaptToClient(updatedFilm));
     } catch(err) {
       throw new Error('Can\'t add comment');
     }
+  };
+
+  #adaptToClient = (film) => {
+    const adaptedFilm = {...film,
+      filmInfo: {
+        ...film.film_info,
+        ageRating: film.film_info.age_rating,
+        alternativeTitle: film.film_info.alternative_title,
+        totalRating: film.film_info.total_rating,
+        release: {
+          date: film.film_info.release.date,
+          releaseCountry: film.film_info.release.release_country
+        }
+      },
+      userDetails: {...film.user_details,
+        alreadyWatched: film.user_details.already_watched,
+        watchingDate: film.user_details.watching_date
+      }
+    };
+
+    delete adaptedFilm.film_info;
+    delete adaptedFilm.filmInfo.age_rating;
+    delete adaptedFilm.filmInfo.alternative_title;
+    delete adaptedFilm.filmInfo.total_rating;
+    delete adaptedFilm.filmInfo.total_rating;
+    delete adaptedFilm.filmInfo.release.release_country;
+    delete adaptedFilm.user_details;
+    delete adaptedFilm.userDetails.already_watched;
+    delete adaptedFilm.userDetails.watching_date;
+
+    return adaptedFilm;
   };
 }

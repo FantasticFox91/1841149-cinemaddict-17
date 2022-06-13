@@ -132,9 +132,10 @@ export default class FilmCommentsView extends AbstractStatefulView {
       delete updatedFilm.emojiSelected;
       delete updatedFilm.typedComment;
       this.element.scrollTop = scrollPosition;
+
       this.#changeComments(
         UserAction.ADD_COMMENT,
-        UpdateType.PATCH,
+        UpdateType.MINOR,
         updatedFilm,
         [newComment, newCommentContainer]
       );
@@ -173,7 +174,7 @@ export default class FilmCommentsView extends AbstractStatefulView {
 
       this.#changeComments(
         UserAction.DELETE_COMMENT,
-        UpdateType.PATCH,
+        UpdateType.MAJOR,
         updatedFilm,
         [deletedComment, commentContainer]
       );
