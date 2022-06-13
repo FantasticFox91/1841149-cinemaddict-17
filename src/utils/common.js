@@ -10,12 +10,9 @@ const getRandomInteger = (a = 0, b = 1) => {
 
 const generateRandomArrayFromArray = (array, number) => {
   const randomArray = [];
-  for (let i = 0; i < number; i++) {
+  while (randomArray.length < number) {
     const element = array[getRandomInteger(0, array.length - 1)];
-    const isExist = randomArray
-      .map((el) => el.id)
-      .includes(element.id);
-    if (!isExist) {
+    if (!randomArray.find((el) => el.id === element.id)) {
       randomArray.push(element);
     }
   }
