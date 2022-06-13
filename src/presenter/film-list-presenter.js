@@ -242,7 +242,6 @@ export default class FilmListPresenter {
 
   #renderMostCommentedFilms = () => {
     this.#mostCommentedFilms = this.films.slice();
-    console.log(this.#mostCommentedFilms)
     const isEqual = this.#mostCommentedFilms
       .map((a) => a.comments.length)
       .filter((el) => el === this.#mostCommentedFilms[0].comments).length === this.#mostCommentedFilms.length;
