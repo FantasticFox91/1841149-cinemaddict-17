@@ -135,7 +135,7 @@ export default class FilmCommentsView extends AbstractStatefulView {
 
       this.#changeComments(
         UserAction.ADD_COMMENT,
-        UpdateType.MAJOR,
+        UpdateType.MINOR,
         updatedFilm,
         [newComment, newCommentContainer]
       );
@@ -174,7 +174,7 @@ export default class FilmCommentsView extends AbstractStatefulView {
 
       this.#changeComments(
         UserAction.DELETE_COMMENT,
-        UpdateType.MAJOR,
+        UpdateType.MINOR,
         updatedFilm,
         [deletedComment, commentContainer]
       );
