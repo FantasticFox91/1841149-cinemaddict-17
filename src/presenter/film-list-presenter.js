@@ -105,11 +105,11 @@ export default class FilmListPresenter {
         if (this.#mostCommentedPresenter.get(data.id)) {
           this.#mostCommentedPresenter.get(data.id).init(data);
         }
+        this.#renderMostCommentedFilms();
         break;
       case UpdateType.MINOR:
         this.#clearFilmList();
         this.#renderFilmsList();
-        this.#renderMostCommentedFilms();
         break;
       case UpdateType.MAJOR:
         this.#clearBoard({resetRenderedFilmCount: true, resetSortType: true});
