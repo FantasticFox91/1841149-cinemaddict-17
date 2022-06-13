@@ -7,7 +7,7 @@ import MostCommendedFilmsView from '../view/most-commented-films-view';
 import ShowMoreButtonView from '../view/show-more-button-view';
 import EmptyFilmsListView from '../view/empty-films-list-view';
 import FilmPresenter from './film-presenter';
-import { sortDateDown, sortRateDown } from '../utils/common';
+import { sortDateDown, sortRateDown, generateRandomArrayFromArray } from '../utils/common';
 import { EXTRA_CARDS_COUNT, FILMS_PER_STEP, SortType, UpdateType, UserAction, FilterType } from '../const';
 import SortListView from '../view/sort-list-view';
 import FilterPresenter from './filter-presenter';
@@ -242,13 +242,19 @@ export default class FilmListPresenter {
 
   #renderMostCommentedFilms = () => {
     this.#mostCommentedFilms = this.films.slice();
+    console.log(this.#mostCommentedFilms)
     const isEqual = this.#mostCommentedFilms
       .map((a) => a.comments.length)
       .filter((el) => el === this.#mostCommentedFilms[0].comments).length === this.#mostCommentedFilms.length;
+
     this.#mostCommentedFilms = isEqual ?
-      [this.#mostCommentedFilms[Math.floor(Math.random() * this.#mostCommentedFilms.length)], this.#mostCommentedFilms[Math.floor(Math.random() * this.#mostCommentedFilms.length)]] :
-      this.#mostCommentedFilms.sort((a, b) => b.comments.length - a.comments.length).slice(0,EXTRA_CARDS_COUNT);
+      generateRandomArrayFromArray(this.#mostCommentedFilms, 2) :
+      this.#mostCommentedFilms
+        .sort((a, b) => b.comments.length - a.comments.length)
+        .slice(0,EXTRA_CARDS_COUNT);
+
     const isEmpty = this.#mostCommentedFilms.filter(({comments}) => comments.length === 0).length !== this.#mostCommentedFilms.length;
+
     if (isEmpty) {
       render(this.#mostCommendedFilmsComponent, this.#filmSectionComponent.element);
       render(this.#mostCommentedfilmBoard, this.#mostCommendedFilmsComponent.element);
@@ -259,13 +265,19 @@ export default class FilmListPresenter {
 
   #renderTopRatedFilms = () => {
     this.#topRatedFilms = this.#filmsModel.films.slice();
+
     const isEqual = this.#topRatedFilms
       .map((a) => a.filmInfo.totalRating)
       .filter((el) => el === this.#topRatedFilms[0].filmInfo.totalRating).length === this.#topRatedFilms.length;
+
     this.#topRatedFilms = isEqual ?
-      [this.#topRatedFilms[Math.floor(Math.random() * this.#topRatedFilms.length)], this.#topRatedFilms[Math.floor(Math.random() * this.#topRatedFilms.length)]] :
-      this.#topRatedFilms.sort((a, b) => b.filmInfo.totalRating - a.filmInfo.totalRating).slice(0,EXTRA_CARDS_COUNT);
+      generateRandomArrayFromArray(this.#topRatedFilms, 2) :
+      this.#topRatedFilms
+        .sort((a, b) => b.filmInfo.totalRating - a.filmInfo.totalRating)
+        .slice(0,EXTRA_CARDS_COUNT);
+
     const isEmpty = this.#topRatedFilms.filter(({filmInfo}) => filmInfo.totalRating === 0).length !== this.#topRatedFilms.length;
+
     if (isEmpty) {
       render(this.#topRatedFilmsComponent, this.#filmSectionComponent.element);
       render(this.#topRatedfilmBoard, this.#topRatedFilmsComponent.element);
