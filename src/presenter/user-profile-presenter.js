@@ -1,7 +1,7 @@
 import { remove, render, replace } from '../framework/render';
 import UserProfileView from '../view/user-profile-view';
 import { FilterType } from '../const.js';
-import { Filter } from '../data/filters.js';
+import { FiltersList } from '../data/filters-list.js';
 
 export default class UserProfilePresenter {
   #userProfileContainer = null;
@@ -16,7 +16,7 @@ export default class UserProfilePresenter {
 
   get films() {
     const films = this.#filmsModel.films;
-    return Filter[FilterType.History](films).length;
+    return FiltersList[FilterType.History](films).length;
   }
 
   init = () => {

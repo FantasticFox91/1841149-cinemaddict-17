@@ -11,7 +11,7 @@ import { sortDateDown, sortRateDown, generateRandomArrayFromArray } from '../uti
 import { EXTRA_CARDS_COUNT, FILMS_PER_STEP, SortType, UpdateType, UserAction, FilterType, TimeLimit } from '../const';
 import SortListView from '../view/sort-list-view';
 import FilterPresenter from './filter-presenter';
-import { Filter } from '../data/filters';
+import { FiltersList } from '../data/filters-list';
 import LoadingView from '../view/loading-view';
 import UiBlocker from '../framework/ui-blocker/ui-blocker';
 
@@ -58,10 +58,10 @@ export default class FilmListPresenter {
   }
 
   get films() {
-    this.#filterType = this.#filterModel.filter;
+    this.#filterType = this.#filterModel.filmListFilter;
     const films = this.#filmsModel.films;
     let filteredFilms = films.slice();
-    filteredFilms = Filter[this.#filterType](filteredFilms);
+    filteredFilms = FiltersList[this.#filterType](filteredFilms);
 
     switch(this.#currentSortType) {
       case SortType.DATE_DOWN:

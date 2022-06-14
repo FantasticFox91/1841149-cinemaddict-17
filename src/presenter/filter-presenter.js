@@ -1,7 +1,7 @@
 import { render, replace, remove } from '../framework/render.js';
 import FiltersView from '../view/filters-view';
 import { FilterType, UpdateType } from '../const.js';
-import { Filter } from '../data/filters.js';
+import { FiltersList } from '../data/filters-list.js';
 
 export default class FilterPresenter {
   #filterContainer = null;
@@ -18,38 +18,38 @@ export default class FilterPresenter {
     this.#filterModel.addObserver(this.#handleModelEvent);
   }
 
-  get filters() {
+  get filmListFilter() {
     const films = this.#filmsModel.films;
 
     return [
       {
         type: FilterType.ALL,
         name: 'All movies',
-        count: Filter[FilterType.ALL](films).length,
+        count: FiltersList[FilterType.ALL](films).length,
       },
       {
         type: FilterType.Watchlist,
         name: 'Watchlist',
-        count: Filter[FilterType.Watchlist](films).length,
+        count: FiltersList[FilterType.Watchlist](films).length,
       },
       {
         type: FilterType.History,
         name: 'History',
-        count: Filter[FilterType.History](films).length,
+        count: FiltersList[FilterType.History](films).length,
       },
       {
         type: FilterType.Favorites,
         name: 'Favorites',
-        count: Filter[FilterType.Favorites](films).length,
+        count: FiltersList[FilterType.Favorites](films).length,
       },
     ];
   }
 
   init = () => {
-    const filters = this.filters;
+    const filmListFilter = this.filmListFilter;
     const prevFilterComponent = this.#filterComponent;
 
-    this.#filterComponent = new FiltersView(filters, this.#filterModel.filter);
+    this.#filterComponent = new FiltersView(filmListFilter, this.#filterModel.filmListFilter);
     this.#filterComponent.setFilterTypeChangeHandler(this.#handleFilterTypeChange);
 
     if (prevFilterComponent === null) {
@@ -66,7 +66,7 @@ export default class FilterPresenter {
   #handleModelEvent = () => this.init();
 
   #handleFilterTypeChange = (filterType) => {
-    if (this.#filterModel.filter === filterType) {
+    if (this.#filterModel.filmListFilter === filterType) {
       return;
     }
 
