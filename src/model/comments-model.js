@@ -41,8 +41,9 @@ export default class CommentsModel extends Observable {
 
   addComment = async (updateType, updateFilm, updatedComment) => {
     try {
-      const updatedFilm = await this.#filmsApiService.addComment(updatedComment, updateFilm).then((movie) => movie.movie);
-      this._notify(updateType, this.#adaptToClient(updatedFilm));
+      const updatedFilm = await this.#filmsApiService.addComment(updatedComment, updateFilm).then((movie) => movie);
+      this.#comments = [...updatedFilm.comments];
+      this._notify(updateType, this.#adaptToClient(updatedFilm.movie));
     } catch(err) {
       throw new Error('Can\'t add comment');
     }

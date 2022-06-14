@@ -52,6 +52,7 @@ export default class FilmListPresenter {
     this.#topRatedFilms = this.#topRatedFilms.sort((a, b) => b.filmInfo.totalRating - a.filmInfo.totalRating).slice(0,EXTRA_CARDS_COUNT);
     this.#mostCommentedFilms = this.#filmsModel.films.slice();
     this.#mostCommentedFilms = this.#mostCommentedFilms.sort((a, b) => b.comments.length - a.comments.length).slice(0,EXTRA_CARDS_COUNT);
+    this.#commentsModel.addObserver(this.#handleModelEvent);
     this.#filmsModel.addObserver(this.#handleModelEvent);
     this.#filterModel.addObserver(this.#handleModelEvent);
   }
@@ -78,11 +79,13 @@ export default class FilmListPresenter {
   #handleViewAction = async (actionType, updateType, updatedFilm, updatedComment) => {
     switch (actionType) {
       case UserAction.UPDATE_FILM:
+        this.#uiBlocker.block();
         try {
           await this.#filmsModel.updateFilm(updateType, updatedFilm);
         } catch (err) {
           this.#filmPresenter.get(updatedFilm.id).setAborting();
         }
+        this.#uiBlocker.unblock();
         break;
       case UserAction.ADD_COMMENT:
         this.#uiBlocker.block();
