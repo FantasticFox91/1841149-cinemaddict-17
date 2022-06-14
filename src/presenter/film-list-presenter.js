@@ -123,10 +123,6 @@ export default class FilmListPresenter {
     }
   };
 
-  #handleCommentsModelEvent = async (updateType, updatedFilm) => {
-    await this.#filmsModel.updateFilm(updateType, updatedFilm);
-  };
-
   #handleCommentError = (commentContainer) => {
     const deleteCommentButton = commentContainer.querySelector('button');
     commentContainer.classList.add('shake');
