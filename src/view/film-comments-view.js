@@ -130,7 +130,7 @@ export default class FilmCommentsView extends AbstractStatefulView {
     }
   };
 
-  #onSubmitFormPress = () =>
+  #getNewComment = () =>
     ({
       'comment': he.encode(this.element.querySelector('.film-details__comment-input').value),
       'emotion': (this.element.querySelector('.film-details__emoji-item:checked') === null) ? 'smile' : this.element.querySelector('.film-details__emoji-item:checked').value
@@ -142,7 +142,7 @@ export default class FilmCommentsView extends AbstractStatefulView {
       const newCommentTextArea = newCommentContainer.querySelector('textarea');
       newCommentTextArea.disabled = true;
       const scrollPosition = this.element.scrollTop;
-      const newComment = this.#onSubmitFormPress();
+      const newComment = this.#getNewComment();
       const filteredFilmCommentIds = this._state.comments.map((comment) => comment.id);
       const updatedFilm = {...this._state, comments: filteredFilmCommentIds};
       delete updatedFilm.emojiSelected;
