@@ -83,6 +83,7 @@ export default class FilmListPresenter {
         try {
           await this.#filmsModel.updateFilm(updateType, updatedFilm);
         } catch (err) {
+          this.#uiBlocker.unblock();
           this.#filmPresenter.get(updatedFilm.id).setAborting();
         }
         this.#uiBlocker.unblock();
