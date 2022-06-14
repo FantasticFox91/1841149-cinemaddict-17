@@ -24,7 +24,7 @@ export default class PopupPresenter {
 
   init = (film) => {
     const prevPopupComponent = this.#popupComponent;
-    this.#popupComponent = new PopupView(film, this.#changeFilm);
+    this.#popupComponent = new PopupView(film);
     this.#popupButtons = new PopupButtonsPresenter(this.#popupComponent.element, film, this.#filmsModel, this.#changeFilm);
     this.#popupButtons.init(film);
     this.#filmComments = new FilmCommentsPresenter(this.#popupComponent.element, film, this.#commentsModel, this.#changeFilm);

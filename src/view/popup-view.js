@@ -80,14 +80,9 @@ const createPopupTemplate = (film) => {
 };
 
 export default class PopupView extends AbstractStatefulView {
-  #changeFilm = null;
-  #film = null;
-
-  constructor(film, changeFilm) {
+  constructor(film) {
     super();
     this._state = PopupView.parseDataToState(film);
-    this.#changeFilm = changeFilm;
-    this.#film = film;
   }
 
   get template() {

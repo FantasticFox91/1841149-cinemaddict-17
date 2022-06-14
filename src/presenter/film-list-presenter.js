@@ -57,8 +57,6 @@ export default class FilmListPresenter {
     this.#topRatedFilms = this.#topRatedFilms.sort((a, b) => b.filmInfo.totalRating - a.filmInfo.totalRating).slice(0,EXTRA_CARDS_COUNT);
     this.#mostCommentedFilms = this.#filmsModel.films.slice();
     this.#mostCommentedFilms = this.#mostCommentedFilms.sort((a, b) => b.comments.length - a.comments.length).slice(0,EXTRA_CARDS_COUNT);
-    this.#commentsModel.addObserver(this.#handleCommentsModelEvent);
-    this.#commentsModel.addObserver(this.#handleModelEvent);
     this.#filmsModel.addObserver(this.#handleModelEvent);
     this.#filterModel.addObserver(this.#handleModelEvent);
   }
@@ -85,7 +83,6 @@ export default class FilmListPresenter {
       case UserAction.DELETE_COMMENT:
         try {
           await this.#commentsModel.deleteComment(updateType, updatedFilm, updatedComment[0]);
-          await this.#filmsModel.updateFilm(updateType, updatedFilm);
         } catch (err) {
           this.#handleCommentError(updatedComment[1]);
         }

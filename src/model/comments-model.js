@@ -29,6 +29,10 @@ export default class CommentsModel extends Observable {
     }
     try {
       await this.#filmsApiService.deleteComment(updatedComment);
+      this.#comments = [
+        ...this.#comments.slice(0, index),
+        ...this.#comments.slice(index + 1),
+      ];
       this._notify(updateType, updateFilm);
     } catch(err) {
       throw new Error('Can\'t delete comment');
