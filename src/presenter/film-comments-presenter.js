@@ -1,6 +1,5 @@
 import { remove, render, replace } from '../framework/render';
 import FilmCommentsView from '../view/film-comments-view';
-import { UpdateType, UserAction } from '../const';
 
 export default class FilmCommentsPresenter {
   #commentsContainer = null;
