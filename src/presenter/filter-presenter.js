@@ -7,7 +7,6 @@ export default class FilterPresenter {
   #filterContainer = null;
   #filterModel = null;
   #filmsModel = null;
-
   #filterComponent = null;
 
   constructor(filterContainer, filterModel, filmsModel) {
@@ -64,9 +63,7 @@ export default class FilterPresenter {
 
   destroy = () => remove(this.#filterComponent);
 
-  #handleModelEvent = () => {
-    this.init();
-  };
+  #handleModelEvent = () => this.init();
 
   #handleFilterTypeChange = (filterType) => {
     if (this.#filterModel.filter === filterType) {

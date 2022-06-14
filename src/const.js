@@ -32,4 +32,9 @@ const FilterType = {
   Favorites: 'Favorites'
 };
 
-export { MIN, EMOTIONS, MAX_SHORT_DESCRIPTION_LENGTH, EXTRA_CARDS_COUNT, FILMS_PER_STEP, SortType, UserAction, UpdateType, FilterType };
+const TimeLimit = {
+  LOWER_LIMIT: 350,
+  UPPER_LIMIT: 1000,
+};
+
+export { MIN, EMOTIONS, MAX_SHORT_DESCRIPTION_LENGTH, EXTRA_CARDS_COUNT, FILMS_PER_STEP, SortType, UserAction, UpdateType, FilterType, TimeLimit };

@@ -41,7 +41,39 @@ export default class FilmPresenter {
     remove(prevFilmComponent);
   }
 
+  updatedPopup(film, scroll) {
+    this.#filmPopup.init(film, scroll);
+  }
+
+  setDisabled = () => {
+    this.#filmComponent.updateElement({
+      isDisabled: true,
+    });
+  };
+
+  setAborting = () => {
+    const resetButtons = () => {
+      this.#filmComponent.updateElement({
+        isDisabled: false,
+      });
+    };
+    if (document.querySelector('.film-details')) {
+      return this.#filmPopup.setAborting();
+    }
+    this.#filmComponent.shake(resetButtons);
+  };
+
   destroy = () => remove(this.#filmComponent);
+
+  #handleCardControls = (filter, updatedFilm) => {
+    this.setDisabled();
+    const currentFilter = document.querySelector('.main-navigation__item--active').dataset.filterType;
+    this.#changeFilm(
+      UserAction.UPDATE_FILM,
+      (currentFilter === filter) ? UpdateType.MINOR : UpdateType.PATCH,
+      updatedFilm,
+    );
+  };
 
   #onCardClick = (film) => {
     const popupElement = document.querySelector('.film-details');
@@ -67,36 +99,4 @@ export default class FilmPresenter {
 
   #onFavouriteClick = () => this.#handleCardControls(
     'Favorites', {...this.#film, userDetails: {...this.#film.userDetails, favorite: !this.#film.userDetails.favorite}});
-
-  #handleCardControls = (filter, updatedFilm) => {
-    this.setDisabled();
-    const currentFilter = document.querySelector('.main-navigation__item--active').dataset.filterType;
-    this.#changeFilm(
-      UserAction.UPDATE_FILM,
-      (currentFilter === filter) ? UpdateType.MINOR : UpdateType.PATCH,
-      updatedFilm,
-    );
-  };
-
-  updatedPopup(film, scroll) {
-    this.#filmPopup.init(film, scroll);
-  }
-
-  setDisabled = () => {
-    this.#filmComponent.updateElement({
-      isDisabled: true,
-    });
-  };
-
-  setAborting = () => {
-    const resetButtons = () => {
-      this.#filmComponent.updateElement({
-        isDisabled: false,
-      });
-    };
-    if (document.querySelector('.film-details')) {
-      return this.#filmPopup.setAborting();
-    }
-    this.#filmComponent.shake(resetButtons);
-  };
 }

@@ -8,17 +8,12 @@ import ShowMoreButtonView from '../view/show-more-button-view';
 import EmptyFilmsListView from '../view/empty-films-list-view';
 import FilmPresenter from './film-presenter';
 import { sortDateDown, sortRateDown, generateRandomArrayFromArray } from '../utils/common';
-import { EXTRA_CARDS_COUNT, FILMS_PER_STEP, SortType, UpdateType, UserAction, FilterType } from '../const';
+import { EXTRA_CARDS_COUNT, FILMS_PER_STEP, SortType, UpdateType, UserAction, FilterType, TimeLimit } from '../const';
 import SortListView from '../view/sort-list-view';
 import FilterPresenter from './filter-presenter';
 import { Filter } from '../data/filters';
 import LoadingView from '../view/loading-view';
 import UiBlocker from '../framework/ui-blocker/ui-blocker';
-
-const TimeLimit = {
-  LOWER_LIMIT: 350,
-  UPPER_LIMIT: 1000,
-};
 
 export default class FilmListPresenter {
   #filmListContainer = null;
@@ -60,6 +55,25 @@ export default class FilmListPresenter {
     this.#filmsModel.addObserver(this.#handleModelEvent);
     this.#filterModel.addObserver(this.#handleModelEvent);
   }
+
+  get films() {
+    this.#filterType = this.#filterModel.filter;
+    const films = this.#filmsModel.films;
+    let filteredFilms = films.slice();
+    filteredFilms = Filter[this.#filterType](filteredFilms);
+
+    switch(this.#currentSortType) {
+      case SortType.DATE_DOWN:
+        return filteredFilms.sort(sortDateDown);
+      case SortType.RATE_DOWN:
+        return filteredFilms.sort(sortRateDown);
+    }
+    return filteredFilms;
+  }
+
+  init = () => {
+    this.#renderList();
+  };
 
   #handleViewAction = async (actionType, updateType, updatedFilm, updatedComment) => {
     switch (actionType) {
@@ -135,25 +149,6 @@ export default class FilmListPresenter {
     commentContainer.classList.add('shake');
     commentContainer.querySelector('textarea').disabled = false;
     setTimeout(() => commentContainer.classList.remove('shake'), 500);
-  };
-
-  get films() {
-    this.#filterType = this.#filterModel.filter;
-    const films = this.#filmsModel.films;
-    let filteredFilms = films.slice();
-    filteredFilms = Filter[this.#filterType](filteredFilms);
-
-    switch(this.#currentSortType) {
-      case SortType.DATE_DOWN:
-        return filteredFilms.sort(sortDateDown);
-      case SortType.RATE_DOWN:
-        return filteredFilms.sort(sortRateDown);
-    }
-    return filteredFilms;
-  }
-
-  init = () => {
-    this.#renderList();
   };
 
   #onShowMoreButtonClick = () => {

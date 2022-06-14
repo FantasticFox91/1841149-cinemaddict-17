@@ -13,7 +13,7 @@ export default class FilmCommentsPresenter {
     this.#commentsModel = commentsModel;
     this.#changeFilm = changeFilm;
     this.#film = film;
-    this.#commentsModel.addObserver(this.#handle);
+    this.#commentsModel.addObserver(this.#handleCommentModelEvent);
   }
 
   destroy = () => {
@@ -38,7 +38,7 @@ export default class FilmCommentsPresenter {
     this.#changeFilm(actionType, updateType, updatedFilm, UpdatedComment);
   };
 
-  #handle = (updateType, updatedFilm) => {
+  #handleCommentModelEvent = (updateType, updatedFilm) => {
     this.init(updatedFilm, updateType);
   };
 }

@@ -50,12 +50,6 @@ export default class PopupButtonsView extends AbstractStatefulView {
     this.#setInnerHandlers();
   };
 
-  #setInnerHandlers = () => {
-    this.element.querySelector('.film-details__control-button--favorite').addEventListener('click', this.#onFavoriteClick);
-    this.element.querySelector('.film-details__control-button--watched').addEventListener('click', this.#onWatchedClick);
-    this.element.querySelector('.film-details__control-button--watchlist').addEventListener('click', this.#onWatchlistClick);
-  };
-
   setFavoriteClickHandler = (callback) => {
     this._callback.favoriteClick = callback;
   };
@@ -66,6 +60,12 @@ export default class PopupButtonsView extends AbstractStatefulView {
 
   setWatchlistClickHandler = (callback) => {
     this._callback.watchlistClick = callback;
+  };
+
+  #setInnerHandlers = () => {
+    this.element.querySelector('.film-details__control-button--favorite').addEventListener('click', this.#onFavoriteClick);
+    this.element.querySelector('.film-details__control-button--watched').addEventListener('click', this.#onWatchedClick);
+    this.element.querySelector('.film-details__control-button--watchlist').addEventListener('click', this.#onWatchlistClick);
   };
 
   #onFavoriteClick = (evt) => {

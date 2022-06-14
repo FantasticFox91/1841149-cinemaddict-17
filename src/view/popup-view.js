@@ -109,6 +109,12 @@ export default class PopupView extends AbstractStatefulView {
     this.element.querySelector('.film-details__close-btn').addEventListener('click', this.#onCloseButtonClick);
   };
 
+  #close = () => {
+    document.body.classList.toggle('hide-overflow');
+    document.body.removeEventListener('keydown', this.#onDocumentEscKeydown);
+    this.element.remove();
+  };
+
   #onWatchlistClick = (evt) => {
     evt.preventDefault();
     this._callback.watchlistClick();
@@ -139,12 +145,6 @@ export default class PopupView extends AbstractStatefulView {
       evt.preventDefault();
       this.#close();
     }
-  };
-
-  #close = () => {
-    document.body.classList.toggle('hide-overflow');
-    document.body.removeEventListener('keydown', this.#onDocumentEscKeydown);
-    this.element.remove();
   };
 
   static parseCommentToState = (comment) => this._state.comments.push(comment);

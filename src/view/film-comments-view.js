@@ -108,6 +108,16 @@ export default class FilmCommentsView extends AbstractStatefulView {
     return createFilmListTemplate(this.#filmComments, this._state);
   }
 
+  _restoreHandlers = () => {
+    this.#setInnerHandlers();
+  };
+
+  #setInnerHandlers = () => {
+    this.element.querySelector('.film-details__new-comment').addEventListener('keypress', this.#onSubmitForm);
+    this.element.querySelector('.film-details__emoji-list').addEventListener('click', this.#onEmojiImageClick);
+    this.element.querySelectorAll('.film-details__comment').forEach((comment) => comment.addEventListener('click', this.#onDeleteButtonClick));
+  };
+
   #onEmojiImageClick = (evt) => {
     const commentText = this.element.querySelector('.film-details__comment-input').value;
     if (evt.target.nodeName === 'INPUT') {
@@ -119,6 +129,12 @@ export default class FilmCommentsView extends AbstractStatefulView {
       }
     }
   };
+
+  #onSubmitFormPress = () =>
+    ({
+      'comment': he.encode(this.element.querySelector('.film-details__comment-input').value),
+      'emotion': (this.element.querySelector('.film-details__emoji-item:checked') === null) ? 'smile' : this.element.querySelector('.film-details__emoji-item:checked').value
+    });
 
   #onSubmitForm = (evt) => {
     if (evt.ctrlKey && evt.code === 'Enter') {
@@ -140,22 +156,6 @@ export default class FilmCommentsView extends AbstractStatefulView {
         [newComment, newCommentContainer]
       );
     }
-  };
-
-  #onSubmitFormPress = () =>
-    ({
-      'comment': he.encode(this.element.querySelector('.film-details__comment-input').value),
-      'emotion': (this.element.querySelector('.film-details__emoji-item:checked') === null) ? 'smile' : this.element.querySelector('.film-details__emoji-item:checked').value
-    });
-
-  #setInnerHandlers = () => {
-    this.element.querySelector('.film-details__new-comment').addEventListener('keypress', this.#onSubmitForm);
-    this.element.querySelector('.film-details__emoji-list').addEventListener('click', this.#onEmojiImageClick);
-    this.element.querySelectorAll('.film-details__comment').forEach((comment) => comment.addEventListener('click', this.#onDeleteButtonClick));
-  };
-
-  _restoreHandlers = () => {
-    this.#setInnerHandlers();
   };
 
   #onDeleteButtonClick = (evt) => {

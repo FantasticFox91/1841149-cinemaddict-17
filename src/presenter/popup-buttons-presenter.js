@@ -17,7 +17,7 @@ export default class PopupButtonsPresenter {
     this.#changeFilm = changeFilm;
     this.#isDisabled = isDisabled;
 
-    this.#filmsModel.addObserver(this.#handle);
+    this.#filmsModel.addObserver(this.#handleModelEvent);
   }
 
   init = (film) => {
@@ -46,25 +46,6 @@ export default class PopupButtonsPresenter {
     remove(this.#buttonsComponent);
   };
 
-  #onWatchlistClick = () => this.#handlePopupButtonsModelEvent(
-    'Watchlist', {...this.#film, userDetails: {...this.#film.userDetails, watchlist: !this.#film.userDetails.watchlist}});
-
-  #onWatchedClick = () => this.#handlePopupButtonsModelEvent(
-    'History', {...this.#film, userDetails: {...this.#film.userDetails, alreadyWatched: !this.#film.userDetails.alreadyWatched}});
-
-  #onFavoriteClick = () => this.#handlePopupButtonsModelEvent(
-    'Favorites', {...this.#film, userDetails: {...this.#film.userDetails, favorite: !this.#film.userDetails.favorite}});
-
-  #handlePopupButtonsModelEvent = (filter, updatedFilm) => {
-    const currentFilter = document.querySelector('.main-navigation__item--active').dataset.filterType;
-    this.setDisabled();
-    this.#changeFilm(
-      UserAction.UPDATE_FILM,
-      (currentFilter === filter) ? UpdateType.MINOR : UpdateType.PATCH,
-      updatedFilm,
-    );
-  };
-
   setDisabled = () => {
     this.#buttonsComponent.updateElement({
       isDisabled: true,
@@ -80,7 +61,26 @@ export default class PopupButtonsPresenter {
     this.#buttonsComponent.shake(resetButtons);
   };
 
-  #handle = (updateType, updatedFilm) => {
+  #handlePopupButtonsModelEvent = (filter, updatedFilm) => {
+    const currentFilter = document.querySelector('.main-navigation__item--active').dataset.filterType;
+    this.setDisabled();
+    this.#changeFilm(
+      UserAction.UPDATE_FILM,
+      (currentFilter === filter) ? UpdateType.MINOR : UpdateType.PATCH,
+      updatedFilm,
+    );
+  };
+
+  #handleModelEvent = (updateType, updatedFilm) => {
     this.init(updatedFilm);
   };
+
+  #onWatchlistClick = () => this.#handlePopupButtonsModelEvent(
+    'Watchlist', {...this.#film, userDetails: {...this.#film.userDetails, watchlist: !this.#film.userDetails.watchlist}});
+
+  #onWatchedClick = () => this.#handlePopupButtonsModelEvent(
+    'History', {...this.#film, userDetails: {...this.#film.userDetails, alreadyWatched: !this.#film.userDetails.alreadyWatched}});
+
+  #onFavoriteClick = () => this.#handlePopupButtonsModelEvent(
+    'Favorites', {...this.#film, userDetails: {...this.#film.userDetails, favorite: !this.#film.userDetails.favorite}});
 }

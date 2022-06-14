@@ -44,16 +44,7 @@ export default class PopupPresenter {
     document.body.removeEventListener('keydown', this.#onDocumentEscKeydown);
   };
 
-  #onDocumentEscKeydown = (evt) => {
-    if (isPressedEscapeKey(evt)) {
-      evt.preventDefault();
-      this.#closePopUp();
-    }
-  };
-
-  #onCloseButtonClick = () => {
-    this.#closePopUp();
-  };
+  setAborting = () => this.#popupButtons.setAborting();
 
   #closePopUp = () => {
     document.body.classList.toggle('hide-overflow', false);
@@ -61,7 +52,12 @@ export default class PopupPresenter {
     this.destroy();
   };
 
-  setAborting = () => {
-    this.#popupButtons.setAborting();
+  #onDocumentEscKeydown = (evt) => {
+    if (isPressedEscapeKey(evt)) {
+      evt.preventDefault();
+      this.#closePopUp();
+    }
   };
+
+  #onCloseButtonClick = () => this.#closePopUp();
 }
