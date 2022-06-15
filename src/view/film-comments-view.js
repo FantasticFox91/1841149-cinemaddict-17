@@ -111,7 +111,7 @@ export default class FilmCommentsView extends AbstractStatefulView {
   _restoreHandlers = () => this.#setInnerHandlers();
 
   #setInnerHandlers = () => {
-    this.element.querySelector('.film-details__new-comment').addEventListener('keypress', this.#onSubmitForm);
+    this.element.querySelector('.film-details__new-comment').addEventListener('keypress', this.#onFormSubmit);
     this.element.querySelector('.film-details__emoji-list').addEventListener('click', this.#onEmojiImageClick);
     this.element.querySelectorAll('.film-details__comment').forEach((comment) => comment.addEventListener('click', this.#onDeleteButtonClick));
   };
@@ -134,7 +134,7 @@ export default class FilmCommentsView extends AbstractStatefulView {
       'emotion': (this.element.querySelector('.film-details__emoji-item:checked') === null) ? 'smile' : this.element.querySelector('.film-details__emoji-item:checked').value
     });
 
-  #onSubmitForm = (evt) => {
+  #onFormSubmit = (evt) => {
     if (evt.ctrlKey && evt.code === 'Enter') {
       const newCommentContainer = evt.currentTarget;
       const newCommentTextArea = newCommentContainer.querySelector('textarea');

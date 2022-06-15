@@ -2,6 +2,7 @@ import Observable from '../framework/observable';
 
 export default class CommentsModel extends Observable {
   #filmsApiService = null;
+  #filmsModel = null;
   #comments = [];
 
   constructor(filmsApiService) {
