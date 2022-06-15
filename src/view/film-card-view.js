@@ -1,7 +1,7 @@
 import { humanizeYear} from '../utils/film';
 import { calculateDuration } from '../utils/common';
 import { MAX_SHORT_DESCRIPTION_LENGTH, MIN } from '../const';
-import AbstractView from '../framework/view/abstract-view';
+import AbstractStatefulView from '../framework/view/abstract-stateful-view';
 
 const generateDescription = (description) => {
   if (description.length > MAX_SHORT_DESCRIPTION_LENGTH) {
@@ -29,7 +29,7 @@ const createFilmCardTemplate = (film) => {
     `<article class="film-card" data-id='${id}'>
       <a class="film-card__link">
         <h3 class="film-card__title">${filmInfo.title}</h3>
-        <p class="film-card__rating">${filmInfo.totalRating}</p>
+        <p class="film-card__rating">${filmInfo.totalRating.toFixed(1)}</p>
         <p class="film-card__info">
           <span class="film-card__year">${humanizeYear(filmInfo.release.date)}</span>
           <span class="film-card__duration">${calculateDuration(filmInfo.runtime)}</span>
@@ -40,48 +40,53 @@ const createFilmCardTemplate = (film) => {
         <span class="film-card__comments">${comments.length} comment${comments.length > 1 ? 's' : ''}</span>
       </a>
       <div class="film-card__controls">
-        <button class="film-card__controls-item film-card__controls-item--add-to-watchlist ${watchlistClassName}" type="button">Add to watchlist</button>
-        <button class="film-card__controls-item film-card__controls-item--mark-as-watched ${watchedClassName}" type="button">Mark as watched</button>
-        <button class="film-card__controls-item film-card__controls-item--favorite ${favoriteClassName}" type="button">Mark as favorite</button>
+        <button class="film-card__controls-item film-card__controls-item--add-to-watchlist ${watchlistClassName}" type="button" ${film.isDisabled ? 'disabled' : ''}>Add to watchlist</button>
+        <button class="film-card__controls-item film-card__controls-item--mark-as-watched ${watchedClassName}" type="button" ${film.isDisabled ? 'disabled' : ''}>Mark as watched</button>
+        <button class="film-card__controls-item film-card__controls-item--favorite ${favoriteClassName}" type="button" ${film.isDisabled ? 'disabled' : ''}>Mark as favorite</button>
       </div>
     </article>`
   );
 };
-export default class FilmCardView extends AbstractView {
-  #film = null;
-
-  constructor(film) {
+export default class FilmCardView extends AbstractStatefulView {
+  constructor(film, isDisabled) {
     super();
-    this.#film = film;
+    this._state = FilmCardView.parseFilmToState(film);
+    this._state.isDisabled = isDisabled;
+    this.#setInnerHandlers();
   }
 
   get template() {
-    return createFilmCardTemplate(this.#film);
+    return createFilmCardTemplate(this._state);
   }
 
-  setClickHandler = (callback) => {
-    this._callback.click = callback;
-    this.element.querySelector('.film-card__link').addEventListener('click', this.#clickHandler);
+  _restoreHandlers = () => this.#setInnerHandlers();
+
+  setCardClickHandler = (callback) => {
+    this._callback.cardClick = callback;
   };
 
   setWatchlistClickHandler = (callback) => {
     this._callback.watchlistClick = callback;
-    this.element.querySelector('.film-card__controls-item--add-to-watchlist').addEventListener('click', this.#onWatchlistClick);
   };
 
   setWatchedClickHandler = (callback) => {
     this._callback.watchedClick = callback;
-    this.element.querySelector('.film-card__controls-item--mark-as-watched').addEventListener('click', this.#onWatchedClick);
   };
 
   setFavouriteClickHandler = (callback) => {
     this._callback.favouriteClick = callback;
-    this.element.querySelector('.film-card__controls-item--favorite').addEventListener('click', this.#onFavouriteClick);
   };
 
-  #clickHandler = (evt) => {
+  #setInnerHandlers = () => {
+    this.element.querySelector('.film-card__controls-item--add-to-watchlist').addEventListener('click', this.#onWatchlistClick);
+    this.element.querySelector('.film-card__controls-item--mark-as-watched').addEventListener('click', this.#onWatchedClick);
+    this.element.querySelector('.film-card__controls-item--favorite').addEventListener('click', this.#onFavouriteClick);
+    this.element.querySelector('.film-card__link').addEventListener('click', this.#onCardClick);
+  };
+
+  #onCardClick = (evt) => {
     evt.preventDefault();
-    this._callback.click();
+    this._callback.cardClick();
   };
 
   #onWatchlistClick = (evt) => {
@@ -97,5 +102,13 @@ export default class FilmCardView extends AbstractView {
   #onFavouriteClick = (evt) => {
     evt.preventDefault();
     this._callback.favouriteClick();
+  };
+
+  static parseFilmToState = (film) => ({...film});
+
+  static parseStateToFilm = (state) => {
+    const film = {...state};
+    delete film.isDisabled;
+    return film;
   };
 }

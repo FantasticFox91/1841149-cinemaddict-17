@@ -1,5 +1,7 @@
 import dayjs from 'dayjs';
-import { getRandomInteger } from './common';
+import RelativeTime from 'dayjs/plugin/relativeTime';
+
+dayjs.extend(RelativeTime);
 
 const humanizeYear = (date) => dayjs(date).get('year');
 
@@ -7,12 +9,6 @@ const humanizeDate = (date) => dayjs(date).format('DD MMMM YYYY');
 
 const humanizeDateAndTime = (date) => dayjs(date).format('YYYY/MM/DD HH:mm');
 
-const humanizeCommentDate = (date) => dayjs(date).format('YYYY/MM/DD HH:mm:ss');
+const humanizeCommentDate = (date) => dayjs(date).fromNow();
 
-const generateRandomDate = (rangeType, min, max) => {
-  const daysGap = getRandomInteger(max, min);
-
-  return dayjs().add(daysGap, rangeType).toDate();
-};
-
-export { humanizeYear, generateRandomDate, humanizeDateAndTime, humanizeDate, humanizeCommentDate };
+export { humanizeYear, humanizeDateAndTime, humanizeDate, humanizeCommentDate };

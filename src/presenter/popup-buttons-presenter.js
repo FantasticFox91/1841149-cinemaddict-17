@@ -8,21 +8,23 @@ export default class PopupButtonsPresenter {
   #buttonsComponent = null;
   #film = null;
   #changeFilm = null;
+  #isDisabled = null;
 
-  constructor(buttonsContainer, film, filmsModel, changeFilm) {
+  constructor(buttonsContainer, film, filmsModel, changeFilm, isDisabled) {
     this.#film = film;
     this.#filmsModel = filmsModel;
     this.#buttonsContainer = buttonsContainer;
     this.#changeFilm = changeFilm;
+    this.#isDisabled = isDisabled;
 
-    this.#filmsModel.addObserver(this.#handle);
+    this.#filmsModel.addObserver(this.#handleModelEvent);
   }
 
   init = (film) => {
     this.#film = film;
     const prevButtonsComponent = this.#buttonsComponent;
-
-    this.#buttonsComponent = new PopupButtonsView(film.userDetails);
+    this.#isDisabled = false;
+    this.#buttonsComponent = new PopupButtonsView(film.userDetails, this.#isDisabled);
 
     this.#buttonsComponent.setFavoriteClickHandler(() => this.#onFavoriteClick());
     this.#buttonsComponent.setWatchedClickHandler(() => this.#onWatchedClick());
@@ -40,9 +42,30 @@ export default class PopupButtonsPresenter {
     remove(prevButtonsComponent);
   };
 
-  destroy = () => {
-    remove(this.#buttonsComponent);
+  destroy = () => remove(this.#buttonsComponent);
+
+  setDisabled = () => this.#buttonsComponent.updateElement({isDisabled: true,});
+
+  setAborting = () => {
+    const resetButtons = () => {
+      this.#buttonsComponent.updateElement({
+        isDisabled: false,
+      });
+    };
+    this.#buttonsComponent.shake(resetButtons);
   };
+
+  #handlePopupButtonsModelEvent = (filter, updatedFilm) => {
+    const currentFilter = document.querySelector('.main-navigation__item--active').dataset.filterType;
+    this.setDisabled();
+    this.#changeFilm(
+      UserAction.UPDATE_FILM,
+      (currentFilter === filter) ? UpdateType.MINOR : UpdateType.PATCH,
+      updatedFilm,
+    );
+  };
+
+  #handleModelEvent = (updateType, updatedFilm) => this.init(updatedFilm);
 
   #onWatchlistClick = () => this.#handlePopupButtonsModelEvent(
     'Watchlist', {...this.#film, userDetails: {...this.#film.userDetails, watchlist: !this.#film.userDetails.watchlist}});
@@ -52,17 +75,4 @@ export default class PopupButtonsPresenter {
 
   #onFavoriteClick = () => this.#handlePopupButtonsModelEvent(
     'Favorites', {...this.#film, userDetails: {...this.#film.userDetails, favorite: !this.#film.userDetails.favorite}});
-
-  #handlePopupButtonsModelEvent = (filter, updatedFilm) => {
-    const currentFilter = document.querySelector('.main-navigation__item--active').dataset.filterType;
-    this.#changeFilm(
-      UserAction.UPDATE_FILM,
-      (currentFilter === filter) ? UpdateType.MINOR : UpdateType.PATCH,
-      updatedFilm,
-    );
-  };
-
-  #handle = (updateType, updatedFilm) => {
-    this.init(updatedFilm);
-  };
 }

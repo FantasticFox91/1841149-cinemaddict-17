@@ -10,7 +10,7 @@ const createPopupTemplate = (film) => {
   const showGenres = ({genre}) => genre.reduce((acc, genr) => `${acc} ${createGenreTemplate(genr)}`, '');
 
   return (`
-  <section class="film-details">
+  <section class="film-details" data-id='${film.id}'>
       <form class="film-details__inner" action="" method="get">
         <div class="film-details__top-container">
           <div class="film-details__close">
@@ -80,14 +80,9 @@ const createPopupTemplate = (film) => {
 };
 
 export default class PopupView extends AbstractStatefulView {
-  #changeFilm = null;
-  #film = null;
-
-  constructor(film, changeFilm) {
+  constructor(film) {
     super();
     this._state = PopupView.parseDataToState(film);
-    this.#changeFilm = changeFilm;
-    this.#film = film;
   }
 
   get template() {
@@ -112,6 +107,12 @@ export default class PopupView extends AbstractStatefulView {
   setCloseButtonClickHandler = (callback) => {
     this._callback.closeButtonClick = callback;
     this.element.querySelector('.film-details__close-btn').addEventListener('click', this.#onCloseButtonClick);
+  };
+
+  #close = () => {
+    document.body.classList.toggle('hide-overflow');
+    document.body.removeEventListener('keydown', this.#onDocumentEscKeydown);
+    this.element.remove();
   };
 
   #onWatchlistClick = (evt) => {
@@ -144,12 +145,6 @@ export default class PopupView extends AbstractStatefulView {
       evt.preventDefault();
       this.#close();
     }
-  };
-
-  #close = () => {
-    document.body.classList.toggle('hide-overflow');
-    document.body.removeEventListener('keydown', this.#onDocumentEscKeydown);
-    this.element.remove();
   };
 
   static parseCommentToState = (comment) => this._state.comments.push(comment);

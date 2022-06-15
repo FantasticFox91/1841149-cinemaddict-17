@@ -43,9 +43,7 @@ export default class FilmsApiService extends ApiService {
       body: JSON.stringify(comment),
       headers: new Headers({'Content-Type': 'application/json'}),
     });
-
     const parsedResponse = await ApiService.parseResponse(response);
-
     return parsedResponse;
   };
 

@@ -1,7 +1,6 @@
-import AbstarctView from '../framework/view/abstract-view';
+import AbstractStatefulView from '../framework/view/abstract-stateful-view';
 
 const createPopupButtonsTemplate = (userDetails) => {
-
   const watchlistClassName = userDetails.watchlist
     ? 'film-details__control-button--active'
     : '';
@@ -16,36 +15,54 @@ const createPopupButtonsTemplate = (userDetails) => {
 
   return (`
   <section class="film-details__controls">
-    <button type="button" class="film-details__control-button film-details__control-button--watchlist ${watchlistClassName}" id="watchlist" name="watchlist">Add to watchlist</button>
-    <button type="button" class="film-details__control-button film-details__control-button--watched ${watchedClassName}" id="watched" name="watched">Already watched</button>
-    <button type="button" class="film-details__control-button film-details__control-button--favorite ${favoriteClassName}" id="favorite" name="favorite">Add to favorites</button>
+    <button
+      type="button"
+      class="film-details__control-button film-details__control-button--watchlist ${watchlistClassName}"
+      id="watchlist"
+      name="watchlist"
+      ${userDetails.isDisabled ? 'disabled' : ''}>Add to watchlist</button>
+    <button
+      type="button"
+      class="film-details__control-button film-details__control-button--watched ${watchedClassName}"
+      id="watched"
+      name="watched" ${userDetails.isDisabled ? 'disabled' : ''}>Already watched</button>
+    <button
+      type="button"
+      class="film-details__control-button film-details__control-button--favorite ${favoriteClassName}"
+      id="favorite"
+      name="favorite" ${userDetails.isDisabled ? 'disabled' : ''}>Add to favorites</button>
   </section>`);
 };
 
-export default class PopupButtonsView extends AbstarctView {
-  #userDetails = null;
-
-  constructor(userDetails) {
+export default class PopupButtonsView extends AbstractStatefulView {
+  constructor(userDetails, isDisabled) {
     super();
-    this.#userDetails = userDetails;
+    this._state = PopupButtonsView.parseUserDetailsToState(userDetails);
+    this._state.isDisabled = isDisabled;
+    this.#setInnerHandlers();
   }
 
   get template() {
-    return createPopupButtonsTemplate(this.#userDetails);
+    return createPopupButtonsTemplate(this._state);
   }
+
+  _restoreHandlers = () => this.#setInnerHandlers();
 
   setFavoriteClickHandler = (callback) => {
     this._callback.favoriteClick = callback;
-    this.element.querySelector('.film-details__control-button--favorite').addEventListener('click', this.#onFavoriteClick);
   };
 
   setWatchedClickHandler = (callback) => {
     this._callback.watchedClick = callback;
-    this.element.querySelector('.film-details__control-button--watched').addEventListener('click', this.#onWatchedClick);
   };
 
   setWatchlistClickHandler = (callback) => {
     this._callback.watchlistClick = callback;
+  };
+
+  #setInnerHandlers = () => {
+    this.element.querySelector('.film-details__control-button--favorite').addEventListener('click', this.#onFavoriteClick);
+    this.element.querySelector('.film-details__control-button--watched').addEventListener('click', this.#onWatchedClick);
     this.element.querySelector('.film-details__control-button--watchlist').addEventListener('click', this.#onWatchlistClick);
   };
 
@@ -63,4 +80,6 @@ export default class PopupButtonsView extends AbstarctView {
     evt.preventDefault();
     this._callback.watchlistClick();
   };
+
+  static parseUserDetailsToState = (userDetails) => ({...userDetails});
 }

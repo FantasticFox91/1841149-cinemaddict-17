@@ -24,7 +24,7 @@ export default class PopupPresenter {
 
   init = (film) => {
     const prevPopupComponent = this.#popupComponent;
-    this.#popupComponent = new PopupView(film, this.#changeFilm);
+    this.#popupComponent = new PopupView(film);
     this.#popupButtons = new PopupButtonsPresenter(this.#popupComponent.element, film, this.#filmsModel, this.#changeFilm);
     this.#popupButtons.init(film);
     this.#filmComments = new FilmCommentsPresenter(this.#popupComponent.element, film, this.#commentsModel, this.#changeFilm);
@@ -35,7 +35,6 @@ export default class PopupPresenter {
       render(this.#popupComponent, this.#popupContainer);
       return;
     }
-
     replace(this.#popupComponent, prevPopupComponent);
     remove(prevPopupComponent);
   };
@@ -45,6 +44,14 @@ export default class PopupPresenter {
     document.body.removeEventListener('keydown', this.#onDocumentEscKeydown);
   };
 
+  setAborting = () => this.#popupButtons.setAborting();
+
+  #closePopUp = () => {
+    document.body.classList.toggle('hide-overflow', false);
+    document.body.removeEventListener('keydown', this.#onDocumentEscKeydown);
+    this.destroy();
+  };
+
   #onDocumentEscKeydown = (evt) => {
     if (isPressedEscapeKey(evt)) {
       evt.preventDefault();
@@ -52,13 +59,5 @@ export default class PopupPresenter {
     }
   };
 
-  #onCloseButtonClick = () => {
-    this.#closePopUp();
-  };
-
-  #closePopUp = () => {
-    document.body.classList.toggle('hide-overflow', false);
-    document.body.removeEventListener('keydown', this.#onDocumentEscKeydown);
-    this.destroy();
-  };
+  #onCloseButtonClick = () => this.#closePopUp();
 }

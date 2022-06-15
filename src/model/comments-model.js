@@ -22,14 +22,18 @@ export default class CommentsModel extends Observable {
     }
   };
 
-  deleteComment = async (updateType, update, updatedComment) => {
+  deleteComment = async (updateType, updatedFilm, updatedComment) => {
     const index = this.#comments.findIndex((comment) => comment.id === updatedComment.id);
     if (index === -1) {
       throw new Error('Can\'t delete unexisting comment');
     }
     try {
       await this.#filmsApiService.deleteComment(updatedComment);
-      this._notify(updateType, update);
+      this.#comments = [
+        ...this.#comments.slice(0, index),
+        ...this.#comments.slice(index + 1),
+      ];
+      this._notify(updateType, updatedFilm);
     } catch(err) {
       throw new Error('Can\'t delete comment');
     }
@@ -37,15 +41,42 @@ export default class CommentsModel extends Observable {
 
   addComment = async (updateType, update, updatedComment) => {
     try {
-      await this.#filmsApiService.addComment(updatedComment, update);
-      this.#comments = [
-        ...this.#comments,
-        updatedComment,
-        ...this.#comments
-      ];
-      this._notify(updateType);
+      const updatedFilm = await this.#filmsApiService.addComment(updatedComment, update).then((movie) => movie);
+      this.#comments = [...updatedFilm.comments];
+      this._notify(updateType, this.#adaptToClient(updatedFilm.movie));
     } catch(err) {
       throw new Error('Can\'t add comment');
     }
+  };
+
+  #adaptToClient = (film) => {
+    const adaptedFilm = {...film,
+      filmInfo: {
+        ...film.film_info,
+        ageRating: film.film_info.age_rating,
+        alternativeTitle: film.film_info.alternative_title,
+        totalRating: film.film_info.total_rating,
+        release: {
+          date: film.film_info.release.date,
+          releaseCountry: film.film_info.release.release_country
+        }
+      },
+      userDetails: {...film.user_details,
+        alreadyWatched: film.user_details.already_watched,
+        watchingDate: film.user_details.watching_date
+      }
+    };
+
+    delete adaptedFilm.film_info;
+    delete adaptedFilm.filmInfo.age_rating;
+    delete adaptedFilm.filmInfo.alternative_title;
+    delete adaptedFilm.filmInfo.total_rating;
+    delete adaptedFilm.filmInfo.total_rating;
+    delete adaptedFilm.filmInfo.release.release_country;
+    delete adaptedFilm.user_details;
+    delete adaptedFilm.userDetails.already_watched;
+    delete adaptedFilm.userDetails.watching_date;
+
+    return adaptedFilm;
   };
 }

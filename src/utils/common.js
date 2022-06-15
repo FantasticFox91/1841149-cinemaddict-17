@@ -8,17 +8,16 @@ const getRandomInteger = (a = 0, b = 1) => {
   return Math.floor(lower + Math.random() * (upper - lower + 1));
 };
 
-const generateRandomNameFromArray = (array) => array[getRandomInteger(0, array.length - 1)];
-
 const generateRandomArrayFromArray = (array, number) => {
   const randomArray = [];
-  for (let i = 0; i < number; i++) {
-    randomArray.push(array[getRandomInteger(0, array.length - 1)]);
+  while (randomArray.length < number) {
+    const element = array[getRandomInteger(0, array.length - 1)];
+    if (!randomArray.find((el) => el.id === element.id)) {
+      randomArray.push(element);
+    }
   }
   return randomArray;
 };
-
-const getRandomDecimalNumber = (max, min) => ((Math.random() * (max - min)) + min).toFixed(1);
 
 const calculateDuration = (minutes) => {
   const MINUTES_IN_HOUR = 60;
@@ -37,4 +36,4 @@ const sortDateDown = (filmA, filmB) => dayjs(filmB.filmInfo.release.date).diff(d
 
 const sortRateDown = (filmA, filmB) => filmB.filmInfo.totalRating - filmA.filmInfo.totalRating;
 
-export { getRandomInteger, generateRandomNameFromArray, getRandomDecimalNumber, calculateDuration, generateRandomArrayFromArray, isPressedEscapeKey, sortDateDown, sortRateDown };
+export { getRandomInteger, calculateDuration, generateRandomArrayFromArray, isPressedEscapeKey, sortDateDown, sortRateDown };

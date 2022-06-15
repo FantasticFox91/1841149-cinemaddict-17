@@ -1,5 +1,5 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view';
-import { humanizeDateAndTime } from '../utils/film';
+import { humanizeCommentDate } from '../utils/film';
 import dayjs from 'dayjs';
 import { UpdateType, UserAction } from '../const';
 import he from 'he';
@@ -21,7 +21,7 @@ const createCommentTemplate = (commentData) => {
         <p class="film-details__comment-text">${comment}</p>
         <p class="film-details__comment-info">
           <span class="film-details__comment-author">${author}</span>
-          <span class="film-details__comment-day">${humanizeDateAndTime(date)}</span>
+          <span class="film-details__comment-day">${humanizeCommentDate(date)}</span>
           <button class="film-details__comment-delete">Delete</button>
         </p>
       </div>
@@ -65,7 +65,6 @@ const createFilmListTemplate = (commentsData, state) => {
             ${showTypedComment(state.typedComment)}
           </label>
 
-
           <div class="film-details__emoji-list">
             <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile" ${isSmile}>
             <label class="film-details__emoji-label" for="emoji-smile">
@@ -94,23 +93,28 @@ const createFilmListTemplate = (commentsData, state) => {
 };
 
 export default class FilmCommentsView extends AbstractStatefulView {
-  #filmCommentsIds = null;
   #filmComments = null;
   #changeComments = null;
 
   constructor(film, filmComments, changeComments) {
     super();
-    this.#filmCommentsIds = filmComments;
     this.#changeComments = changeComments;
     this.#filmComments = filmComments;
     this.#setInnerHandlers();
     this._state = FilmCommentsView.parseDataToState(film, this.#filmComments);
-    this.element.querySelectorAll('.film-details__comment').forEach((comment) => comment.addEventListener('click', this.#onDeleteButtonClick));
   }
 
   get template() {
     return createFilmListTemplate(this.#filmComments, this._state);
   }
+
+  _restoreHandlers = () => this.#setInnerHandlers();
+
+  #setInnerHandlers = () => {
+    this.element.querySelector('.film-details__new-comment').addEventListener('keypress', this.#onSubmitForm);
+    this.element.querySelector('.film-details__emoji-list').addEventListener('click', this.#onEmojiImageClick);
+    this.element.querySelectorAll('.film-details__comment').forEach((comment) => comment.addEventListener('click', this.#onDeleteButtonClick));
+  };
 
   #onEmojiImageClick = (evt) => {
     const commentText = this.element.querySelector('.film-details__comment-input').value;
@@ -124,52 +128,53 @@ export default class FilmCommentsView extends AbstractStatefulView {
     }
   };
 
+  #getNewComment = () =>
+    ({
+      'comment': he.encode(this.element.querySelector('.film-details__comment-input').value),
+      'emotion': (this.element.querySelector('.film-details__emoji-item:checked') === null) ? 'smile' : this.element.querySelector('.film-details__emoji-item:checked').value
+    });
+
   #onSubmitForm = (evt) => {
     if (evt.ctrlKey && evt.code === 'Enter') {
+      const newCommentContainer = evt.currentTarget;
+      const newCommentTextArea = newCommentContainer.querySelector('textarea');
+      newCommentTextArea.disabled = true;
       const scrollPosition = this.element.scrollTop;
-      const comment = this.#onSubmitFormPress();
-      this._state.comments.push(comment);
+      const newComment = this.#getNewComment();
+      const filteredFilmCommentIds = this._state.comments.map((comment) => comment.id);
+      const updatedFilm = {...this._state, comments: filteredFilmCommentIds};
+      delete updatedFilm.emojiSelected;
+      delete updatedFilm.typedComment;
       this.element.scrollTop = scrollPosition;
-      const commentsId = [];
+
       this.#changeComments(
         UserAction.ADD_COMMENT,
         UpdateType.PATCH,
-        {...this._state, comments: commentsId},
-        comment
+        updatedFilm,
+        [newComment, newCommentContainer]
       );
     }
   };
 
-  #onSubmitFormPress = () =>
-    ({
-      'comment': he.encode(this.element.querySelector('.film-details__comment-input').value),
-      'emotion': this.element.querySelector('.film-details__emoji-item:checked').value
-    });
-
-  #setInnerHandlers = () => {
-    this.element.addEventListener('keypress', this.#onSubmitForm);
-    this.element.querySelector('.film-details__emoji-list').addEventListener('click', this.#onEmojiImageClick);
-  };
-
-  _restoreHandlers = () => {
-    this.#setInnerHandlers();
-  };
-
   #onDeleteButtonClick = (evt) => {
-    evt.preventDefault();
+    const commentContainer = evt.currentTarget;
     if (evt.target.nodeName === 'BUTTON') {
-      const commentId = evt.target.parentNode.parentNode.parentNode.dataset.id;
-      const selectedComment = this.#filmComments.filter((comments) => commentId === String(comments.id));
-      const updatedFilmComments = this._state.comments.filter((comments) => commentId !== comments.id);
-      this._state.comments = updatedFilmComments;
-      const commentsId = [];
+      evt.preventDefault();
+      const commentId = commentContainer.dataset.id;
+      const filteredFilmCommentIds = this._state.comments.filter((comment) => comment.id !== commentId).map((comment) => comment.id);
+      const updatedFilm = {...this._state, comments: filteredFilmCommentIds};
+      const deletedComment = this._state.comments.find((comment) => comment.id === commentId);
+      evt.target.disabled = true;
       evt.target.textContent = 'Deleting...';
-      this._state.comments.forEach((el) => commentsId.push(el.id));
+
+      delete updatedFilm.emojiSelected;
+      delete updatedFilm.typedComment;
+
       this.#changeComments(
         UserAction.DELETE_COMMENT,
         UpdateType.PATCH,
-        {...this._state, comments: commentsId},
-        selectedComment[0]
+        updatedFilm,
+        [deletedComment, commentContainer]
       );
     }
   };

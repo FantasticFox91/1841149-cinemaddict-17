@@ -13,6 +13,7 @@ export default class FilmPresenter {
   #filmsModel = null;
   #commentsModel = null;
   #filmPopup = null;
+  #isDisabled = null;
 
   constructor(filmListContainer, filmsModel, commentsModel, changeFilm) {
     this.#filmListContainer = filmListContainer;
@@ -21,15 +22,15 @@ export default class FilmPresenter {
     this.#commentsModel = commentsModel;
   }
 
-  init(film) {
+  init = (film) => {
+    this.#isDisabled = false;
     this.#film = film;
     const prevFilmComponent = this.#filmComponent;
-    this.#filmComponent = new FilmCardView(film);
-    this.#filmPopup = new PopupPresenter(siteFooterElement, film, this.#commentsModel, this.#changeFilm);
+    this.#filmComponent = new FilmCardView(film, this.#isDisabled);
     this.#filmComponent.setWatchlistClickHandler(this.#onWatchlistClick);
     this.#filmComponent.setWatchedClickHandler(this.#onWatchedClick);
     this.#filmComponent.setFavouriteClickHandler(this.#onFavouriteClick);
-    this.#filmComponent.setClickHandler(() => this.#onCardClick(film));
+    this.#filmComponent.setCardClickHandler(() => this.#onCardClick(film));
     if (!prevFilmComponent) {
       render(this.#filmComponent, this.#filmListContainer);
       return;
@@ -38,13 +39,39 @@ export default class FilmPresenter {
       replace(this.#filmComponent, prevFilmComponent);
     }
     remove(prevFilmComponent);
-  }
+  };
+
+  updatedPopup = (film, scroll) => this.#filmPopup.init(film, scroll);
+
+  setDisabled = () => this.#filmComponent.updateElement({isDisabled: true,});
+
+  setAborting = () => {
+    const resetButtons = () => {
+      this.#filmComponent.updateElement({isDisabled: false,});
+    };
+    if (document.querySelector('.film-details')) {
+      return this.#filmPopup.setAborting();
+    }
+    this.#filmComponent.shake(resetButtons);
+  };
 
   destroy = () => remove(this.#filmComponent);
 
+  #handleCardControls = (filter, updatedFilm) => {
+    this.setDisabled();
+    const currentFilter = document.querySelector('.main-navigation__item--active').dataset.filterType;
+    this.#changeFilm(
+      UserAction.UPDATE_FILM,
+      (currentFilter === filter) ? UpdateType.MINOR : UpdateType.PATCH,
+      updatedFilm,
+    );
+  };
+
   #onCardClick = (film) => {
-    if(document.querySelector('.film-details')) {
-      document.querySelector('.film-details').remove();
+    const popupElement = document.querySelector('.film-details');
+    if(popupElement) {
+      if(popupElement.dataset.id === film.id) {return;}
+      popupElement.remove();
       document.body.classList.toggle('hide-overflow');
     }
     this.#showPopUp(film);
@@ -64,17 +91,4 @@ export default class FilmPresenter {
 
   #onFavouriteClick = () => this.#handleCardControls(
     'Favorites', {...this.#film, userDetails: {...this.#film.userDetails, favorite: !this.#film.userDetails.favorite}});
-
-  #handleCardControls = (filter, updatedFilm) => {
-    const currentFilter = document.querySelector('.main-navigation__item--active').dataset.filterType;
-    this.#changeFilm(
-      UserAction.UPDATE_FILM,
-      (currentFilter === filter) ? UpdateType.MINOR : UpdateType.PATCH,
-      updatedFilm,
-    );
-  };
-
-  updatedPopup(film, scroll) {
-    this.#filmPopup.init(film, scroll);
-  }
 }
