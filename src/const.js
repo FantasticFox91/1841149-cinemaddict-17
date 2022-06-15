@@ -1,11 +1,5 @@
 const MAX_SHORT_DESCRIPTION_LENGTH = 140;
 const MIN = 0;
-const EMOTIONS = [
-  'smile',
-  'sleeping',
-  'puke',
-  'angry'
-];
 const EXTRA_CARDS_COUNT = 2;
 const FILMS_PER_STEP = 5;
 const SortType = {
@@ -38,4 +32,4 @@ const TimeLimit = {
 const AUTHORIZATION = 'Basic kjnsfd67sdflj';
 const END_POINT = 'https://17.ecmascript.pages.academy/cinemaddict/';
 
-export { MIN, EMOTIONS, MAX_SHORT_DESCRIPTION_LENGTH, EXTRA_CARDS_COUNT, FILMS_PER_STEP, SortType, UserAction, UpdateType, FilterType, TimeLimit, AUTHORIZATION, END_POINT };
+export { MIN, MAX_SHORT_DESCRIPTION_LENGTH, EXTRA_CARDS_COUNT, FILMS_PER_STEP, SortType, UserAction, UpdateType, FilterType, TimeLimit, AUTHORIZATION, END_POINT };

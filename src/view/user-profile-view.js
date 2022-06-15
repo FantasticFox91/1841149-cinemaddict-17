@@ -8,9 +8,8 @@ const createUserProfileTemplate = (wathedFilmsCount) => {
       return 'Fan';
     } else if (filmsCount > 20) {
       return 'Movie buff';
-    } else {
-      return '';
     }
+    return '';
   };
 
   return (
