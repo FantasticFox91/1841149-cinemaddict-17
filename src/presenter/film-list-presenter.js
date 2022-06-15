@@ -8,7 +8,7 @@ import ShowMoreButtonView from '../view/show-more-button-view';
 import EmptyFilmsListView from '../view/empty-films-list-view';
 import FooterView from '../view/footer-view';
 import FilmPresenter from './film-presenter';
-import { sortDateDown, sortRateDown, generateRandomArrayFromArray } from '../utils/common';
+import { sortDateDown, sortRateDown, generateRandomFilms } from '../utils/common';
 import { EXTRA_CARDS_COUNT, FILMS_PER_STEP, SortType, UpdateType, UserAction, FilterType, TimeLimit } from '../const';
 import SortListView from '../view/sort-list-view';
 import FilterPresenter from './filter-presenter';
@@ -119,6 +119,7 @@ export default class FilmListPresenter {
         if (this.#mostCommentedPresenter.get(film.id)) {
           this.#mostCommentedPresenter.get(film.id).init(film);
         }
+        this.#filmsModel.updateLocalFilm(updateType, film);
         this.#renderMostCommentedFilms();
         break;
       case UpdateType.MINOR:
@@ -237,7 +238,7 @@ export default class FilmListPresenter {
       .filter((el) => el === this.#mostCommentedFilms[0].comments).length === this.#mostCommentedFilms.length;
 
     this.#mostCommentedFilms = isEqual ?
-      generateRandomArrayFromArray(this.#mostCommentedFilms, 2) :
+      generateRandomFilms(this.#mostCommentedFilms, 2) :
       this.#mostCommentedFilms
         .sort((a, b) => b.comments.length - a.comments.length)
         .slice(0,EXTRA_CARDS_COUNT);
@@ -260,7 +261,7 @@ export default class FilmListPresenter {
       .filter((el) => el === this.#topRatedFilms[0].filmInfo.totalRating).length === this.#topRatedFilms.length;
 
     this.#topRatedFilms = isEqual ?
-      generateRandomArrayFromArray(this.#topRatedFilms, 2) :
+      generateRandomFilms(this.#topRatedFilms, 2) :
       this.#topRatedFilms
         .sort((a, b) => b.filmInfo.totalRating - a.filmInfo.totalRating)
         .slice(0,EXTRA_CARDS_COUNT);
