@@ -18,7 +18,7 @@ export default class FilterPresenter {
     this.#filterModel.addObserver(this.#handleModelEvent);
   }
 
-  get filmListFilter() {
+  get filmListFilters() {
     const films = this.#filmsModel.films;
 
     return [
@@ -46,11 +46,11 @@ export default class FilterPresenter {
   }
 
   init = () => {
-    const filmListFilter = this.filmListFilter;
+    const filmListFilters = this.filmListFilters;
     const prevFilterComponent = this.#filterComponent;
 
-    this.#filterComponent = new FiltersView(filmListFilter, this.#filterModel.filmListFilter);
-    this.#filterComponent.setFilterTypeChangeHandler(this.#handleFilterTypeChange);
+    this.#filterComponent = new FiltersView(filmListFilters, this.#filterModel.filmListFilter);
+    this.#filterComponent.setFilterTypeChangeHandler(this.#onFilterTypeChange);
 
     if (prevFilterComponent === null) {
       render(this.#filterComponent, this.#filterContainer);
@@ -65,7 +65,7 @@ export default class FilterPresenter {
 
   #handleModelEvent = () => this.init();
 
-  #handleFilterTypeChange = (filterType) => {
+  #onFilterTypeChange = (filterType) => {
     if (this.#filterModel.filmListFilter === filterType) {
       return;
     }

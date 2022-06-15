@@ -42,15 +42,9 @@ export default class PopupButtonsPresenter {
     remove(prevButtonsComponent);
   };
 
-  destroy = () => {
-    remove(this.#buttonsComponent);
-  };
+  destroy = () => remove(this.#buttonsComponent);
 
-  setDisabled = () => {
-    this.#buttonsComponent.updateElement({
-      isDisabled: true,
-    });
-  };
+  setDisabled = () => this.#buttonsComponent.updateElement({isDisabled: true,});
 
   setAborting = () => {
     const resetButtons = () => {

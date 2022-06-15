@@ -11,7 +11,7 @@ export default class UserProfilePresenter {
   constructor(userProfileContainer, filmsModel) {
     this.#userProfileContainer = userProfileContainer;
     this.#filmsModel = filmsModel;
-    this.#filmsModel.addObserver(this.#handleFilmModelChange);
+    this.#filmsModel.addObserver(this.#handleFilmsModelChange);
   }
 
   get films() {
@@ -33,5 +33,5 @@ export default class UserProfilePresenter {
     remove(prevCommentsComponent);
   };
 
-  #handleFilmModelChange = () => this.init();
+  #handleFilmsModelChange = () => this.init();
 }

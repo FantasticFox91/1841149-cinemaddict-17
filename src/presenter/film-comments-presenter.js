@@ -16,10 +16,6 @@ export default class FilmCommentsPresenter {
     this.#commentsModel.addObserver(this.#handleCommentModelEvent);
   }
 
-  destroy = () => {
-    remove(this.#commentsComponent);
-  };
-
   init = async (film, updateType) => {
     const comments = updateType ? this.#commentsModel.comments : await this.#commentsModel.init(film).then(() => this.#commentsModel.comments);
     const prevCommentsComponent = this.#commentsComponent;
@@ -32,6 +28,10 @@ export default class FilmCommentsPresenter {
       replace(this.#commentsComponent, prevCommentsComponent);
     }
     remove(prevCommentsComponent);
+  };
+
+  destroy = () => {
+    remove(this.#commentsComponent);
   };
 
   #handleCommentModelChange = (actionType, updateType, updatedFilm, UpdatedComment) => {

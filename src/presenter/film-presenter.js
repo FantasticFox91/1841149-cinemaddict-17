@@ -30,7 +30,7 @@ export default class FilmPresenter {
     this.#filmComponent.setWatchlistClickHandler(this.#onWatchlistClick);
     this.#filmComponent.setWatchedClickHandler(this.#onWatchedClick);
     this.#filmComponent.setFavouriteClickHandler(this.#onFavouriteClick);
-    this.#filmComponent.setClickHandler(() => this.#onCardClick(film));
+    this.#filmComponent.setCardClickHandler(() => this.#onCardClick(film));
     if (!prevFilmComponent) {
       render(this.#filmComponent, this.#filmListContainer);
       return;
@@ -41,21 +41,13 @@ export default class FilmPresenter {
     remove(prevFilmComponent);
   }
 
-  updatedPopup(film, scroll) {
-    this.#filmPopup.init(film, scroll);
-  }
+  updatedPopup = (film, scroll) => this.#filmPopup.init(film, scroll);
 
-  setDisabled = () => {
-    this.#filmComponent.updateElement({
-      isDisabled: true,
-    });
-  };
+  setDisabled = () => this.#filmComponent.updateElement({isDisabled: true,});
 
   setAborting = () => {
     const resetButtons = () => {
-      this.#filmComponent.updateElement({
-        isDisabled: false,
-      });
+      this.#filmComponent.updateElement({isDisabled: false,});
     };
     if (document.querySelector('.film-details')) {
       return this.#filmPopup.setAborting();

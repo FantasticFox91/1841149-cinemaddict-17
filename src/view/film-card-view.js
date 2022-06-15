@@ -63,8 +63,8 @@ export default class FilmCardView extends AbstractStatefulView {
     this.#setInnerHandlers();
   };
 
-  setClickHandler = (callback) => {
-    this._callback.click = callback;
+  setCardClickHandler = (callback) => {
+    this._callback.cardClick = callback;
   };
 
   setWatchlistClickHandler = (callback) => {
