@@ -108,9 +108,7 @@ export default class FilmCommentsView extends AbstractStatefulView {
     return createFilmListTemplate(this.#filmComments, this._state);
   }
 
-  _restoreHandlers = () => {
-    this.#setInnerHandlers();
-  };
+  _restoreHandlers = () => this.#setInnerHandlers();
 
   #setInnerHandlers = () => {
     this.element.querySelector('.film-details__new-comment').addEventListener('keypress', this.#onSubmitForm);

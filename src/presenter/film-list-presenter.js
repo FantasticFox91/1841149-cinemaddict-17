@@ -73,9 +73,7 @@ export default class FilmListPresenter {
     return filteredFilms;
   }
 
-  init = () => {
-    this.#renderList();
-  };
+  init = () => this.#renderList();
 
   #handleViewAction = async (actionType, updateType, updatedFilm, updatedComment) => {
     switch (actionType) {

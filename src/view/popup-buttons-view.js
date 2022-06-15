@@ -46,9 +46,7 @@ export default class PopupButtonsView extends AbstractStatefulView {
     return createPopupButtonsTemplate(this._state);
   }
 
-  _restoreHandlers = () => {
-    this.#setInnerHandlers();
-  };
+  _restoreHandlers = () => this.#setInnerHandlers();
 
   setFavoriteClickHandler = (callback) => {
     this._callback.favoriteClick = callback;

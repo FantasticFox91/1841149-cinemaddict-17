@@ -65,9 +65,7 @@ export default class PopupButtonsPresenter {
     );
   };
 
-  #handleModelEvent = (updateType, updatedFilm) => {
-    this.init(updatedFilm);
-  };
+  #handleModelEvent = (updateType, updatedFilm) => this.init(updatedFilm);
 
   #onWatchlistClick = () => this.#handlePopupButtonsModelEvent(
     'Watchlist', {...this.#film, userDetails: {...this.#film.userDetails, watchlist: !this.#film.userDetails.watchlist}});

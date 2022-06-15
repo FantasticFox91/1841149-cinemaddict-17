@@ -30,15 +30,9 @@ export default class FilmCommentsPresenter {
     remove(prevCommentsComponent);
   };
 
-  destroy = () => {
-    remove(this.#commentsComponent);
-  };
+  destroy = () => remove(this.#commentsComponent);
 
-  #handleCommentModelChange = (actionType, updateType, updatedFilm, UpdatedComment) => {
-    this.#changeFilm(actionType, updateType, updatedFilm, UpdatedComment);
-  };
+  #handleCommentModelChange = (actionType, updateType, updatedFilm, UpdatedComment) => this.#changeFilm(actionType, updateType, updatedFilm, UpdatedComment);
 
-  #handleCommentModelEvent = (updateType, updatedFilm) => {
-    this.init(updatedFilm, updateType);
-  };
+  #handleCommentModelEvent = (updateType, updatedFilm) => this.init(updatedFilm, updateType);
 }

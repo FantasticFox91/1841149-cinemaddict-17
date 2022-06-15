@@ -22,7 +22,7 @@ export default class FilmPresenter {
     this.#commentsModel = commentsModel;
   }
 
-  init(film) {
+  init = (film) => {
     this.#isDisabled = false;
     this.#film = film;
     const prevFilmComponent = this.#filmComponent;
@@ -39,7 +39,7 @@ export default class FilmPresenter {
       replace(this.#filmComponent, prevFilmComponent);
     }
     remove(prevFilmComponent);
-  }
+  };
 
   updatedPopup = (film, scroll) => this.#filmPopup.init(film, scroll);
 

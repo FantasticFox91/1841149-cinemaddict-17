@@ -59,9 +59,7 @@ export default class FilmCardView extends AbstractStatefulView {
     return createFilmCardTemplate(this._state);
   }
 
-  _restoreHandlers = () => {
-    this.#setInnerHandlers();
-  };
+  _restoreHandlers = () => this.#setInnerHandlers();
 
   setCardClickHandler = (callback) => {
     this._callback.cardClick = callback;
